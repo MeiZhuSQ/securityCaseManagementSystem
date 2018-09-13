@@ -2,5 +2,5 @@ package service;
 
 public class UserService {
 
-	private 
+	private int a;
 }
