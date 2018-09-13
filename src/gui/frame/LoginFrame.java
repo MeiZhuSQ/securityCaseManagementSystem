@@ -14,15 +14,15 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 
 /**
- * 程序主窗体
- * 设置了程序窗体的长宽标题和退出操作等
+ * 登录窗体
+ * @date 2018-09-11
  */
 
 public class LoginFrame extends JFrame {
     private static final long serialVersionUID = -2717090889684605270L;
 
     static {
-        //GUIUtil.useLNF();
+        GUIUtil.useLNF();
     }
 
     public static LoginFrame frame = new LoginFrame();;
