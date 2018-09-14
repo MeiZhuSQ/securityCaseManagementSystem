@@ -68,7 +68,7 @@ public class LoginFrame extends JFrame {
         final JButton jb1 = new JButton("确认");
         jb1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                
+                new MainFrame().setVisible(true);
             }
         });
         JButton jb2 = new JButton("退出");
