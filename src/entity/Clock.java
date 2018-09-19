@@ -17,6 +17,10 @@ public class Clock {
 		this.setOwnerId(ownerId);
 	}
 
+	public Clock() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getId() {
 		return id;
 	}

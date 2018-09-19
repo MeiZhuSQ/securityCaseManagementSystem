@@ -26,6 +26,10 @@ public class Note {
 		this.setPoliceList(policeList);
 	}
 
+	public Note() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getId() { 
 		return id;
 	}

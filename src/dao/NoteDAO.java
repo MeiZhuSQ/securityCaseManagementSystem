@@ -121,4 +121,39 @@ public class NoteDAO {
 		}
 		return notes;
 	}
+	
+	public List<Note> selectByCaseId(int caseId) {
+		String sql = "select * from note where case_id = ?";
+		List<Note> notes = new ArrayList<>();
+		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setInt(1, caseId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Note note = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
+						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
+						rs.getString("place"), rs.getString("file_name"), rs.getString("police_list"));
+				notes.add(note);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return notes;
+	}
+
+	public Note selectById(int id) {
+		String sql = "select * from note where id = ?";
+		Note note = new Note();
+		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				note = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
+						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
+						rs.getString("place"), rs.getString("file_name"), rs.getString("police_list"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return note;
+	}
 }

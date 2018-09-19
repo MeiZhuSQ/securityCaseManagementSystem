@@ -87,6 +87,42 @@ public class ClockDAO {
         return list(0, Short.MAX_VALUE);
     }
 
+    public List<Clock> selectByTypeAndOwnerId(String type, int ownerId) {
+        String sql = "select * from clock where type = ? and owner_id = ?";
+        List<Clock> clocks = new ArrayList<>();
+        try (Connection c = DBUtil.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, type);
+            ps.setInt(2, ownerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Clock clock = new Clock(rs.getString("id"),rs.getString("name"),
+                		rs.getString("remark"),rs.getString("type"),rs.getInt("owner_id"));
+                clocks.add(clock);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return clocks;
+    }
+    
+    public Clock selectById(int id) {
+        String sql = "select * from clock where type = ? and owner_id = ?";
+		Clock clock = new Clock();
+        try (Connection c = DBUtil.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                clock = new Clock(rs.getString("id"),rs.getString("name"),
+                		rs.getString("remark"),rs.getString("type"),rs.getInt("owner_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return clock;
+    }
+    
     public int getTotal() {
         String sql = "select count(*) from clock";
         try (Connection c = DBUtil.getConnection();
@@ -100,5 +136,7 @@ public class ClockDAO {
         }
         return 0;
     }
+    
+    
 
 }

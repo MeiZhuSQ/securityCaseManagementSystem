@@ -18,6 +18,10 @@ public class AskedPerson extends Person{
 		this.setDisabledFlag(disabledFlag);;
 	}
 
+	public AskedPerson() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getIdCard() {
 		return idCard;
 	}

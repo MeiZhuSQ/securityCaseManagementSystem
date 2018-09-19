@@ -73,7 +73,7 @@ public class OtherPersonDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 OtherPerson otherPerson = new OtherPerson(rs.getInt("id"),rs.getString("name"),rs.getString("sex"),
-                		rs.getString("type"),rs.getString("id_card"));
+                		rs.getString("type"),rs.getString("id_card"),rs.getInt("note_id"));
                 otherPersons.add(otherPerson);
             }
         } catch (SQLException e) {
@@ -84,6 +84,24 @@ public class OtherPersonDAO {
 
     public List<OtherPerson> list() {
         return list(0, Short.MAX_VALUE);
+    }
+    
+    public List<OtherPerson> selectByNoteId(int noteId) {
+        String sql = "select * from other_person where note_id = ?";
+        List<OtherPerson> otherPersons = new ArrayList<>();
+        try (Connection c = DBUtil.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, noteId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                OtherPerson otherPerson = new OtherPerson(rs.getInt("id"),rs.getString("name"),rs.getString("sex"),
+                		rs.getString("type"),rs.getString("id_card"),rs.getInt("note_id"));
+                otherPersons.add(otherPerson);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return otherPersons;
     }
 
     public int getTotal() {

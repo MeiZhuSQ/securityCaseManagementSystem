@@ -16,6 +16,10 @@ public class Procedures {
 		this.setRemark(remark);
 	}
 
+	public Procedures() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getId() { 
 		return id;
 	}

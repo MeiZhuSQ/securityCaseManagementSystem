@@ -5,10 +5,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import service.base.BaseService;
-import dao.ClockDAO;
 import dao.UserDAO;
 import dto.ResultDTO;
-import entity.Clock;
 import entity.User;
 
 public class UserService extends BaseService {
