@@ -12,7 +12,7 @@ public class Police extends Person {
 
 	public String getPoliceNumber() {
 		return policeNumber;
-	}
+	} 
 
 	public void setPoliceNumber(String policeNumber) {
 		this.policeNumber = policeNumber;

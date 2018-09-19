@@ -4,6 +4,7 @@ package entity;
 public class Procedures {
 
 	private int id;
+	private int caseId;// 案件编号
 	private String name;
 	private String time;
 	private String remark;
@@ -15,7 +16,7 @@ public class Procedures {
 		this.setRemark(remark);
 	}
 
-	public int getId() {
+	public int getId() { 
 		return id;
 	}
 
@@ -45,5 +46,13 @@ public class Procedures {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public int getCaseId() {
+		return caseId;
+	}
+
+	public void setCaseId(int caseId) {
+		this.caseId = caseId;
 	}
 }

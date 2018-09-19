@@ -3,10 +3,11 @@ package entity;
 public class AskedPerson extends Person{
 	private int noteId;
 	private String type;
-	private String adultFlag;
 	private String idCard;
+	private String adultFlag;
+	private String disabledFlag;
 
-	public AskedPerson(int id, int noteId, String name, String sex, String type, String adultFlag, String idCard) {
+	public AskedPerson(int id, int noteId, String name, String sex, String type, String adultFlag, String idCard,String disabledFlag) {
 		this.setId(noteId);
 		this.setNoteId(noteId);
 		this.setName(name);
@@ -14,6 +15,7 @@ public class AskedPerson extends Person{
 		this.setType(type);
 		this.setAdultFlag(adultFlag);
 		this.setIdCard(idCard);
+		this.setDisabledFlag(disabledFlag);;
 	}
 
 	public String getIdCard() {
@@ -47,5 +49,13 @@ public class AskedPerson extends Person{
 
 	public void setAdultFlag(String adultFlag) {
 		this.adultFlag = adultFlag;
+	}
+
+	public String getDisabledFlag() {
+		return disabledFlag;
+	}
+
+	public void setDisabledFlag(String disabledFlag) {
+		this.disabledFlag = disabledFlag;
 	}
 }

@@ -12,7 +12,7 @@ import util.DBUtil;
 import entity.Police;
 
 public class PoliceDAO {
-	public void add(Police police) {
+	public void add(Police police) throws Exception{
         String sql = "insert into police (`name`,`sex`,police_number) values (?,?,?)";
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -27,6 +27,7 @@ public class PoliceDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw e;
         }
     }
 

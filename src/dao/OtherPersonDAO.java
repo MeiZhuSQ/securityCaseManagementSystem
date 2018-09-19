@@ -12,7 +12,7 @@ import util.DBUtil;
 import entity.OtherPerson;
 
 public class OtherPersonDAO {
-	public void add(OtherPerson otherPerson) {
+	public void add(OtherPerson otherPerson) throws Exception{
         String sql = "insert into other_person (`name`,`sex`,type,id_card) values (?,?,?,?)";
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -28,6 +28,7 @@ public class OtherPersonDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw e;
         }
     }
 

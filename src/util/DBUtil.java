@@ -10,6 +10,8 @@ import java.sql.SQLException;
 
 public class DBUtil {
 	static final String database = "db/data.db";
+	
+	static Connection Connection = null;
 
 	static {
 		try {
@@ -20,8 +22,11 @@ public class DBUtil {
 	}
 
 	public static Connection getConnection() throws SQLException {
-		String url = String.format("jdbc:sqlite:%s", database);
-		return DriverManager.getConnection(url);
+		if (Connection == null) {
+			String url = String.format("jdbc:sqlite:%s", database);
+			return DriverManager.getConnection(url);
+		}
+		return Connection;
 	}
 
 	public static void main(String[] args) {

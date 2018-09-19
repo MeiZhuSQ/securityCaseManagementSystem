@@ -13,12 +13,14 @@ import entity.Clock;
 
 public class ClockDAO {
 	public void add(Clock clock) {
-        String sql = "insert into clock (`name`,`time`,remark) values (?,?,?)";
+        String sql = "insert into clock (`name`,`time`,remark,type,owner_id) values (?,?,?,?,?)";
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, clock.getName());
             ps.setString(2, clock.getTime());
             ps.setString(3, clock.getRemark());
+            ps.setString(4, clock.getType());
+            ps.setInt(5, clock.getOwnerId());
             ps.execute();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -30,6 +32,8 @@ public class ClockDAO {
         }
     }
 
+	
+	
     public int update(Clock clock) {
         String sql = "update clock set name = ?,time = ? ,remark = ? where id = ?";
         int result = 0;
@@ -70,7 +74,7 @@ public class ClockDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Clock clock = new Clock(rs.getString("id"),rs.getString("name"),
-                		rs.getString("remark"));
+                		rs.getString("remark"),rs.getString("type"),rs.getInt("owner_id"));
                 clocks.add(clock);
             }
         } catch (SQLException e) {
@@ -96,4 +100,5 @@ public class ClockDAO {
         }
         return 0;
     }
+
 }

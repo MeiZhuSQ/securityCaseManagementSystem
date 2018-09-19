@@ -12,13 +12,14 @@ import util.DBUtil;
 import entity.Procedures;
 
 public class ProceduresDAO {
-	public void add(Procedures procedures) {
-        String sql = "insert into procedures (`name`,`time`,remark) values (?,?,?,?)";
+	public void add(Procedures procedures) throws Exception{
+        String sql = "insert into procedures (`name`,`time`,remark,case_id) values (?,?,?,?)";
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, procedures.getName());
             ps.setString(2, procedures.getTime());
             ps.setString(3, procedures.getRemark());
+            ps.setInt(4, procedures.getCaseId());
             ps.execute();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -27,18 +28,20 @@ public class ProceduresDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw e;
         }
     }
 
     public int update(Procedures procedures) {
-        String sql = "update procedures set name = ?,time = ? ,remark = ? where id = ?";
+        String sql = "update procedures set name = ?,time = ? ,remark = ? ,case_id = ? where id = ?";
         int result = 0;
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, procedures.getName());
             ps.setString(2, procedures.getTime());
             ps.setString(3, procedures.getRemark());
-            ps.setInt(3, procedures.getId());
+            ps.setInt(4, procedures.getCaseId());
+            ps.setInt(5, procedures.getId());
             result = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
