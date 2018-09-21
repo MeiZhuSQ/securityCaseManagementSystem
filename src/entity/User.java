@@ -16,6 +16,10 @@ public class User {
 		this.password = password;
 	}
 
+	public User(String username) {
+		this.userName = username;
+	}
+
 	public int getId() {
 		return id;
 	}

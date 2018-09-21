@@ -4,17 +4,20 @@ package entity;
 /**
  * 案件实体类
  */
-public class Case {
+public class LegalCase {
 	private int id;//编号
 	private String name;//名称
 	private String time;//时间
-	private String procedures;//法律程序
 
-	public Case(int id, String name, String time, String procedures) {
+	public LegalCase(int id, String name, String time) {
 		this.id = id;
 		this.name = name;
 		this.time = time;
-		this.procedures = procedures;
+	}
+
+	public LegalCase(String name, String time) {
+		this.name = name;
+		this.time = time;
 	}
 
 	public int getId() {
@@ -41,12 +44,5 @@ public class Case {
 		this.time = time;
 	}
 
-	public String getProcedures() {
-		return procedures;
-	}
-
-	public void setProcedures(String procedures) {
-		this.procedures = procedures;
-	}
 
 }

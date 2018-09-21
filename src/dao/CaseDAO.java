@@ -9,16 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import util.DBUtil;
-import entity.Case;
+import entity.LegalCase;
 
 public class CaseDAO {
-	public void add(Case legalCase) {
+	public void add(LegalCase legalCase) throws Exception{
         String sql = "insert into case (`name`,`time`,remark) values (?,?,?)";
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, legalCase.getName());
             ps.setString(2, legalCase.getTime());
-            ps.setString(3, legalCase.getProcedures());
             ps.execute();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -27,17 +26,17 @@ public class CaseDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw e;
         }
     }
 
-    public int update(Case legalCase) {
+    public int update(LegalCase legalCase) {
         String sql = "update case set name = ?,time = ? ,remark = ? where id = ?";
         int result = 0;
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, legalCase.getName());
             ps.setString(2, legalCase.getTime());
-            ps.setString(3, legalCase.getProcedures());
             ps.setInt(3, legalCase.getId());
             result = ps.executeUpdate();
         } catch (SQLException e) {
@@ -60,17 +59,16 @@ public class CaseDAO {
     }
 
 
-    public List<Case> list(int start, int count) {
+    public List<LegalCase> list(int start, int count) {
         String sql = "select * from case order by id desc limit ?,?";
-        List<Case> legalCases = new ArrayList<>();
+        List<LegalCase> legalCases = new ArrayList<>();
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, start);
             ps.setInt(2, count);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Case legalCase = new Case(rs.getInt("id"),rs.getString("time"),rs.getString("name"),
-                		rs.getString("procedures"));
+                LegalCase legalCase = new LegalCase(rs.getInt("id"),rs.getString("time"),rs.getString("name"));
                 legalCases.add(legalCase);
             }
         } catch (SQLException e) {
@@ -79,7 +77,7 @@ public class CaseDAO {
         return legalCases;
     }
 
-    public List<Case> list() {
+    public List<LegalCase> list() {
         return list(0, Short.MAX_VALUE);
     }
 
