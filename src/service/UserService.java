@@ -1,9 +1,7 @@
 package service;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
-
 import service.base.BaseService;
 import dao.UserDAO;
 import dto.ResultDTO;
