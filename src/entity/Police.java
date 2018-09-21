@@ -1,7 +1,11 @@
 package entity;
 
 public class Police extends Person {
-	private String policeNumber;//警号
+	private String policeNumber;// 警号
+
+	public Police() {
+
+	}
 
 	public Police(int id, String name, String sex, String policeNumber) {
 		super.setId(id);

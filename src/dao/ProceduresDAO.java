@@ -12,13 +12,14 @@ import util.DBUtil;
 import entity.Procedures;
 
 public class ProceduresDAO {
-	public void add(Procedures procedures) {
-        String sql = "insert into procedures (`name`,`time`,remark) values (?,?,?,?)";
+	public void add(Procedures procedures) throws Exception{
+        String sql = "insert into procedures (`name`,`time`,remark,case_id) values (?,?,?,?)";
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, procedures.getName());
             ps.setString(2, procedures.getTime());
             ps.setString(3, procedures.getRemark());
+            ps.setInt(4, procedures.getCaseId());
             ps.execute();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -27,18 +28,20 @@ public class ProceduresDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw e;
         }
     }
 
     public int update(Procedures procedures) {
-        String sql = "update procedures set name = ?,time = ? ,remark = ? where id = ?";
+        String sql = "update procedures set name = ?,time = ? ,remark = ? ,case_id = ? where id = ?";
         int result = 0;
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, procedures.getName());
             ps.setString(2, procedures.getTime());
             ps.setString(3, procedures.getRemark());
-            ps.setInt(3, procedures.getId());
+            ps.setInt(4, procedures.getCaseId());
+            ps.setInt(5, procedures.getId());
             result = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -82,6 +85,24 @@ public class ProceduresDAO {
     public List<Procedures> list() {
         return list(0, Short.MAX_VALUE);
     }
+    
+    public List<Procedures> selectByCaseId(int caseId) {
+        String sql = "select * from procedures where case_id = ?";
+        List<Procedures> proceduress = new ArrayList<>();
+        try (Connection c = DBUtil.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, caseId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Procedures procedures = new Procedures(rs.getInt("id"),rs.getString("name"),rs.getString("time"),
+                		rs.getString("remark"));
+                proceduress.add(procedures);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return proceduress;
+    }
 
     public int getTotal() {
         String sql = "select count(*) from procedures";
@@ -96,4 +117,21 @@ public class ProceduresDAO {
         }
         return 0;
     }
+
+	public Procedures selectById(int id) {
+		String sql = "select * from procedures where case_id = ?";
+        Procedures procedures = new Procedures();
+        try (Connection c = DBUtil.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                procedures = new Procedures(rs.getInt("id"),rs.getString("name"),rs.getString("time"),
+                		rs.getString("remark"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return procedures;
+	}
 }
