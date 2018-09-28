@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.*;
 
 /**
@@ -68,6 +67,7 @@ public class LoginFrame extends JFrame {
         final JButton jb1 = new JButton("确认");
         jb1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
+                LoginFrame.frame.dispose();
                 new MainFrame().setVisible(true);
             }
         });

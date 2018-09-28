@@ -187,6 +187,8 @@ public class CaseService extends BaseService {
 		List<Note> notes = caseService.selectNoteByTimeAndPlaceAndPolic("123456", "2018-09-19 01:00:00",
 				"2018-09-19 02:00:00", "aaa");
 		System.out.println(notes.size());
+		 List<LegalCase> listCases = caseService.listCase();
+		 System.out.println(listCases);
 	}
 
 	/**

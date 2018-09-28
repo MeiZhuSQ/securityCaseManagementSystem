@@ -13,7 +13,7 @@ import entity.LegalCase;
 
 public class CaseDAO {
 	public void add(LegalCase legalCase) throws Exception{
-        String sql = "insert into case (`name`,`time`,remark) values (?,?,?)";
+        String sql = "insert into cases (`name`,`time`,remark) values (?,?,?)";
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, legalCase.getName());
@@ -31,7 +31,7 @@ public class CaseDAO {
     }
 
     public int update(LegalCase legalCase) {
-        String sql = "update case set name = ?,time = ? ,remark = ? where id = ?";
+        String sql = "update cases set name = ?,time = ? ,remark = ? where id = ?";
         int result = 0;
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -46,7 +46,7 @@ public class CaseDAO {
     }
 
     public int delete(int id) {
-        String sql = "delete from legalCase where id = ?";
+        String sql = "delete from cases where id = ?";
         int result = 0;
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -60,7 +60,7 @@ public class CaseDAO {
 
 
     public List<LegalCase> list(int start, int count) {
-        String sql = "select * from case order by id desc limit ?,?";
+        String sql = "select * from cases order by id desc limit ?,?";
         List<LegalCase> legalCases = new ArrayList<>();
         try (Connection c = DBUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -82,7 +82,7 @@ public class CaseDAO {
     }
 
     public int getTotal() {
-        String sql = "select count(*) from legalCase";
+        String sql = "select count(*) from cases";
         try (Connection c = DBUtil.getConnection();
              Statement s = c.createStatement()) {
             ResultSet rs = s.executeQuery(sql);
