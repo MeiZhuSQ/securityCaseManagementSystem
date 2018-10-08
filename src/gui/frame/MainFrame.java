@@ -7,19 +7,25 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import entity.LegalCase;
+import gui.frame.Test3.ActionPanelEditorRenderer;
 import service.CaseService;
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -29,6 +35,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
+import javax.swing.JButton;
+import javax.swing.AbstractCellEditor;
 import javax.swing.AbstractListModel;
 
 public class MainFrame extends BaseFrame {
@@ -37,12 +45,11 @@ public class MainFrame extends BaseFrame {
     private static JFrame frame;
     private ClosableTabbedPane tabbedPane;
     private DefaultTableModel caseTableModel;
-    private JTable table;
     private JTable caseTable;
     private TableColumn column;
     private JList<Object> clockList;
     private DefaultListModel clockModel;
-
+    
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     private int DEFAULE_WIDTH = 1000;
     private int DEFAULE_HEIGH = 600;
@@ -70,7 +77,7 @@ public class MainFrame extends BaseFrame {
     private void initialize() {
         frame = new JFrame();
         frame.setTitle("案件管理系统");
-        frame.setBounds(100, 100, 800, 600);
+        frame.setBounds(100, 100, 1024, 768);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.getContentPane().setLayout(new BorderLayout(0, 0));
@@ -83,7 +90,7 @@ public class MainFrame extends BaseFrame {
         JScrollPane caseScrollPane = new JScrollPane();
         splitPane.setLeftComponent(caseScrollPane);
         
-        initTable();
+        initMainTable();
         caseScrollPane.setViewportView(caseTable);
         
         JScrollPane clockScrollPane = new JScrollPane();
@@ -104,17 +111,19 @@ public class MainFrame extends BaseFrame {
         JMenuItem caseMenuItem = new JMenuItem("新建案件");
         caseMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JPanel createPanel = new JPanel();
-                tabbedPane.addTab("新建案件", createPanel, null);
+                JPanel legalCasePanel = new LegalCasePanel();
+                tabbedPane.addTab("新建案件", legalCasePanel, null);
+                tabbedPane.setSelectedComponent(legalCasePanel);
             }
         });
         createMenu.add(caseMenuItem);
 
-        JMenuItem lawsMenuItem = new JMenuItem("新建法规");
+        JMenuItem lawsMenuItem = new JMenuItem("新建闹钟");
         lawsMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JPanel createPanel = new JPanel();
-                tabbedPane.addTab("新建法规", createPanel, null);
+                tabbedPane.addTab("新建闹钟", createPanel, null);
+                tabbedPane.setSelectedComponent(createPanel);
             }
         });
         createMenu.add(lawsMenuItem);
@@ -126,23 +135,25 @@ public class MainFrame extends BaseFrame {
         splitPane.setDividerLocation(0.8);
     }
 
-    public void initTable() {
+    public void initMainTable() {
         caseTable = new JTable();
+        caseTable.setRowHeight(30);
         caseTableModel = new DefaultTableModel(
                 new Object[][] {
                 },
                 new String[] {
-                    "\u5E8F\u53F7", "\u6848\u4EF6\u7F16\u53F7", "\u6848\u4EF6\u540D\u79F0", "\u5907\u6CE8"
+                    "案件编号", "案件名称", "时间", "操作"
                 }
             );
         CaseService caseService = new CaseService();
         List<LegalCase> listCases = caseService.listCase();
         for (LegalCase legalCase : listCases) {
-            String[] s ={"1","2"};
+            String name = legalCase.getName();
+            String time = legalCase.getTime();
+            String[] s ={"201800902", name, time};
             caseTableModel.addRow(s);
         }
         caseTable.setModel(caseTableModel);
-        caseTable.setEnabled(false);
         JTableHeader head = caseTable.getTableHeader(); // 创建表格标题对象
         head.setPreferredSize(new Dimension(head.getWidth(), 15));// 设置表头大小
         //head.setFont(new Font("楷体", Font.PLAIN, 18));// 设置表格字体
@@ -155,13 +166,96 @@ public class MainFrame extends BaseFrame {
                 column.setPreferredWidth(50);
             }
         }*/
+        ActionPanelEditorRenderer er = new ActionPanelEditorRenderer();
+        TableColumn column = caseTable.getColumnModel().getColumn(3);
+        column.setCellRenderer(er);
+        column.setCellEditor(er);
     }
     
+    class ActionPanelEditorRenderer extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {
+        private JButton viewButton =  new JButton("详情");;
+        
+        private JButton editButton = new JButton("修改");
+        
+        private JButton deleteButton = new JButton("删除"); 
+        JPanel panel1 = new JPanel();
+        JPanel panel2 = new JPanel();
+ 
+        public ActionPanelEditorRenderer() {
+            super();
+            panel2.add(viewButton);
+            panel2.add(editButton);
+            panel2.add(deleteButton);
+            viewButton.setBackground(Color.red);
+            
+            viewButton.addActionListener(new ActionListener() {
+                
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    // TODO Auto-generated method stub
+                    
+                    int i = caseTable.getSelectedRow();
+                    String s = (String)caseTableModel.getValueAt(i, 0);
+                    
+                    JPanel viewPanel = new ViewCasePanel();
+                    tabbedPane.addTab("案件详情", viewPanel, null);
+                    tabbedPane.setSelectedComponent(viewPanel);
+                }
+            });
+            
+            editButton.addActionListener(new ActionListener() {
+                
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    // TODO Auto-generated method stub
+                    
+                    int i = caseTable.getSelectedRow();
+                    String s = (String)caseTableModel.getValueAt(i, 0);
+                    
+                    JOptionPane.showMessageDialog(null, s);
+                }
+            });
+            
+            deleteButton.addActionListener(new ActionListener() {
+                
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    // TODO Auto-generated method stub
+                    
+                    int i = caseTable.getSelectedRow();
+                    String s = (String)caseTableModel.getValueAt(i, 0);
+                    
+                    JOptionPane.showMessageDialog(null, s);
+                }
+            });
+        }
+ 
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                int row, int column) {
+            panel2.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+            panel2.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+            return panel2;
+        }
+ 
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            panel2.setBackground(table.getSelectionBackground());
+            return panel2;
+        }
+ 
+        @Override
+        public Object getCellEditorValue() {
+            return null;
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
     public void initClock() {
         clockList = new JList();
         clockModel = new DefaultListModel<>();
         clockList.setModel(new AbstractListModel() {
-            String[] values = new String[] {"早上干活了 ", "起来嗨"};
+            String[] values = new String[] {"早上干活了 2018-09-20 ", "起来嗨 2018-09-30"};
             public int getSize() {
                 return values.length;
             }

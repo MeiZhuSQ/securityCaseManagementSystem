@@ -68,7 +68,7 @@ public class CaseDAO {
             ps.setInt(2, count);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                LegalCase legalCase = new LegalCase(rs.getInt("id"),rs.getString("time"),rs.getString("name"));
+                LegalCase legalCase = new LegalCase(rs.getInt("id"),rs.getString("name"),rs.getString("time"));
                 legalCases.add(legalCase);
             }
         } catch (SQLException e) {
