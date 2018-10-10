@@ -1,6 +1,5 @@
 package entity;
 
-
 public class Note {
 	private int id;// 编号
 	private int caseId;// 案件编号
@@ -11,26 +10,33 @@ public class Note {
 	private String place;
 	private String fileName;
 	private String policeList;
-	
-	
 
-	public Note(int id, int caseId, String name, String startTime, String endTime,String remark,String place,String fileName,String policeList) {
-		this.id = id;
-		this.caseId = caseId;
-		this.name = name;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.remark = remark;
-		this.place = place;
+	public Note(int caseId, String name, String startTime, String endTime, String remark, String place,
+			String fileName, String policeList) {
+		this.setCaseId(caseId);
+		this.setName(name);
+		this.setStartTime(startTime);
+		this.setEndTime(endTime);
+		this.setRemark(remark);
+		this.setPlace(place);
 		this.setFileName(fileName);
 		this.setPoliceList(policeList);
 	}
 
-	public Note() {
-		// TODO Auto-generated constructor stub
+	public Note(int id, int caseId, String name, String startTime, String endTime, String remark, String place,
+			String fileName, String policeList) {
+		this.setId(id);
+		this.setCaseId(caseId);
+		this.setName(name);
+		this.setStartTime(startTime);
+		this.setEndTime(endTime);
+		this.setRemark(remark);
+		this.setPlace(place);
+		this.setFileName(fileName);
+		this.setPoliceList(policeList);
 	}
 
-	public int getId() { 
+	public int getId() {
 		return id;
 	}
 
