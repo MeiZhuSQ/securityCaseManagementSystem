@@ -63,7 +63,7 @@ public class LegalCasePanel extends JPanel {
                 String date = datePickerField.getText();
                 CaseService caseService = new CaseService();
                 try {
-                    caseService.addCase(caseName, date);
+                    caseService.addCase(caseName, date, "");
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }

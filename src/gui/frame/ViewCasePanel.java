@@ -81,7 +81,7 @@ public class ViewCasePanel extends JPanel {
                 }
             );
         CaseService caseService = new CaseService();
-        List<Note> listNote = caseService.listNote();
+        List<Note> listNote = caseService.selectNoteByCaseId(1);
         for (Note note : listNote) {
             String name = note.getName();
             String[] s ={"201800902", name, "11"};
