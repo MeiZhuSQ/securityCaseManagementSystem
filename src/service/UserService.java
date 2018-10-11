@@ -1,7 +1,10 @@
 package service;
 
+import java.sql.SQLException;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
+
 import service.base.BaseService;
 import dao.UserDAO;
 import dto.ResultDTO;
@@ -18,7 +21,7 @@ public class UserService extends BaseService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ResultDTO userLogin(String username, String password) throws Exception {
+	public ResultDTO userLogin(String username, String password) {
 		if (StringUtils.isBlank(username) || StringUtils.trimToEmpty(username).length() != 6) {
 			return requestFail("请输入六位警号");
 		}
@@ -28,15 +31,21 @@ public class UserService extends BaseService {
 		if (!checkPassword(username, password)) {
 			return requestFail("密码错误");
 		}
-		List<User> users = userDAO.list();
+		List<User> users;
 		boolean usernameExistFlag = false;
-		for (User user2 : users) {
-			if (user2.getUserName().equals(username)) {
-				usernameExistFlag = true;
+		try {
+			users = userDAO.list();
+			for (User user : users) {
+				if (user.getUserName().equals(username)) {
+					usernameExistFlag = true;
+				}
 			}
-		}
-		if (!usernameExistFlag) {
-			userDAO.add(new User(username));
+			if (!usernameExistFlag) {
+				userDAO.add(new User(username));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return requestFail();
 		}
 		return requestSuccess();
 	}
@@ -59,5 +68,7 @@ public class UserService extends BaseService {
 		User user = new User("123456", "774073");
 		String username = user.getUserName();
 		String password = user.getPassword();
+		ResultDTO resultDTO = UserService.userLogin(username, password);
+		System.out.println(resultDTO);
 	}
 }

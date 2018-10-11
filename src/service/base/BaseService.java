@@ -38,4 +38,12 @@ public abstract class BaseService {
 		resultDTO.setCode(CommonConstant.RESULT_CODE_FAIL);
 		return resultDTO;
 	}
+	
+	protected ResultDTO requestFail(String message,Object object) {
+		ResultDTO resultDTO = new ResultDTO();
+		resultDTO.setData(object);
+		resultDTO.setMessage(message);
+		resultDTO.setCode(CommonConstant.RESULT_CODE_FAIL);
+		return resultDTO;
+	}
 }

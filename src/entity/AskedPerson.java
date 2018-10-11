@@ -8,7 +8,7 @@ public class AskedPerson extends Person{
 	private String disabledFlag;
 
 	public AskedPerson(int id, int noteId, String name, String sex, String type, String adultFlag, String idCard,String disabledFlag) {
-		this.setId(noteId);
+		this.setId(id);
 		this.setNoteId(noteId);
 		this.setName(name);
 		this.setSex(sex);
@@ -20,6 +20,16 @@ public class AskedPerson extends Person{
 
 	public AskedPerson() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public AskedPerson(int noteId, String name, String sex, String type, String adultFlag, String idCard,String disabledFlag) {
+		this.setNoteId(noteId);
+		this.setName(name);
+		this.setSex(sex);
+		this.setType(type);
+		this.setAdultFlag(adultFlag);
+		this.setIdCard(idCard);
+		this.setDisabledFlag(disabledFlag);;
 	}
 
 	public String getIdCard() {

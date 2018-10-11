@@ -1,7 +1,7 @@
 package entity;
 
 
-public class Procedures {
+public class Procedure {
 
 	private int id;
 	private int caseId;// 案件编号
@@ -9,14 +9,22 @@ public class Procedures {
 	private String time;
 	private String remark;
 
-	public Procedures(int id, String name, String time, String remark) {
-		this.setId(id);
+	public Procedure(int caseId, String name, String time, String remark) {
+		this.setCaseId(caseId);
 		this.setName(name);
 		this.setTime(time);
 		this.setRemark(remark);
 	}
 
-	public Procedures() {
+	public Procedure(int id ,int caseId, String name, String time, String remark) {
+		this.setId(id);
+		this.setCaseId(caseId);
+		this.setName(name);
+		this.setTime(time);
+		this.setRemark(remark);
+	}
+
+	public Procedure() {
 		// TODO Auto-generated constructor stub
 	}
 

@@ -91,7 +91,7 @@ public class UserDAO {
 	        return user;
 	    }
 
-	    public List<User> list(int start, int count) {
+	    public List<User> list(int start, int count) throws SQLException {
 	        String sql = "select * from user order by id desc limit ?,?";
 	        List<User> users = new ArrayList<>();
 	        try (Connection c = DBUtil.getConnection();
@@ -106,11 +106,12 @@ public class UserDAO {
 	            }
 	        } catch (SQLException e) {
 	            e.printStackTrace();
+	            throw e;
 	        }
 	        return users;
 	    }
 
-	    public List<User> list() {
+	    public List<User> list() throws SQLException {
 	        return list(0, Short.MAX_VALUE);
 	    }
 
@@ -128,7 +129,7 @@ public class UserDAO {
 	        return 0;
 	    }
 	    
-	    public static void main(String[] args) {
+	    public static void main(String[] args) throws SQLException {
 			UserDAO userDao = new UserDAO();
 			//userDao.add(new User( "username1", "pwd"));
 			
@@ -146,6 +147,6 @@ public class UserDAO {
 			for (User user3 : users) {
 				System.out.println(user3);
 			}
-		}
-	    
+	}
+
 }
