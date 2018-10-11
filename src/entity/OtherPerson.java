@@ -5,13 +5,21 @@ public class OtherPerson extends Person {
 	private String type;
 	private String idCard;
 
-	public OtherPerson(int id, String name, String sex, String type, String idCard,int noteId) {
+	public OtherPerson(int id, int noteId, String name, String sex, String type, String idCard) {
 		this.setId(id);
 		this.setName(name);
 		this.setSex(sex);
 		this.setType(type);
 		this.setIdCard(idCard);
 		this.setNoteId(noteId);
+	}
+
+	public OtherPerson(int nodeId, String name, String sex, String type, String idCard) {
+		this.setNoteId(nodeId);
+		this.setName(name);
+		this.setSex(sex);
+		this.setType(type);
+		this.setIdCard(idCard);
 	}
 
 	public String getType() {

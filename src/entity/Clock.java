@@ -7,7 +7,16 @@ public class Clock {
 	private String remark;
 	private String type;//1笔录2法律手续
 	private int ownerId;
-	
+
+
+	public Clock(int id,String name, String time, String remark, String type, int ownerId) {
+		this.setId(id);
+		this.setName(name);
+		this.setTime(time);
+		this.setRemark(remark);;
+		this.setType(type);
+		this.setOwnerId(ownerId);
+	}
 
 	public Clock(String name, String time, String remark, String type, int ownerId) {
 		this.setName(name);

@@ -121,7 +121,7 @@ public class NoteDAO {
 		}
 		return notes;
 	}
-	
+
 	public List<Note> selectByCaseId(int caseId) {
 		String sql = "select * from note where case_id = ?";
 		List<Note> notes = new ArrayList<>();
@@ -142,7 +142,7 @@ public class NoteDAO {
 
 	public Note selectById(int id) {
 		String sql = "select * from note where id = ?";
-		Note note = new Note();
+		Note note = null;
 		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
@@ -155,5 +155,12 @@ public class NoteDAO {
 			e.printStackTrace();
 		}
 		return note;
+	}
+
+	public static void main(String[] args) {
+		NoteDAO noteDAO = new NoteDAO();
+		List<Note> notes = noteDAO.selectByCaseId(1);
+		System.out.println(notes);
+
 	}
 }

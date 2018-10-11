@@ -81,18 +81,40 @@ public class PoliceDAO {
 
 	public Police selectByPoliceNumber(String policeNumber) {
 		String sql = "select * from police where police_number = ?";
-		Police police = new Police();
+		Police police = null;
 		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, policeNumber);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				police = new Police(rs.getInt("id"), rs.getString("sex"), rs.getString("name"),
+				police = new Police(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
 						rs.getString("police_number"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return police;
+	}
+
+	public List<Police> selectForNote(String policeList) {
+		String[] policeNumbers = policeList.split(",");
+		String sql = "select * from police where police_number in (" ;
+		for (String string : policeNumbers) {
+			sql += "'" + string + "'" + ",";
+		}
+		sql = sql.substring(0, sql.length()-1);
+		sql += ")";
+		List<Police> polices = new ArrayList<>();
+		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Police police = new Police(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
+						rs.getString("police_number"));
+				polices.add(police);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return polices;
 	}
 
 	public int getTotal() {

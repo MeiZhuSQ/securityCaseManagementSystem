@@ -7,10 +7,16 @@ public class Police extends Person {
 
 	}
 
+	public Police(String name, String sex, String policeNumber) {
+		this.setName(name);
+		this.setSex(sex);
+		this.setPoliceNumber(policeNumber);
+	}
+
 	public Police(int id, String name, String sex, String policeNumber) {
-		super.setId(id);
-		super.setName(name);
-		super.setSex(sex);
+		this.setId(id);
+		this.setName(name);
+		this.setSex(sex);
 		this.setPoliceNumber(policeNumber);
 	}
 

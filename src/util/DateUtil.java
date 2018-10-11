@@ -1,7 +1,11 @@
 package util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.apache.commons.lang.time.DateFormatUtils;
 
 /**
  * 工具类 DateUtil 时间
@@ -100,6 +104,34 @@ public class DateUtil {
         today();
         return c.get(Calendar.MONTH);
     }
+
+    /**
+     * 
+     * @return 当前日期
+     */
+    public static String getDate() {
+		return DateFormatUtils.format(new Date(), "yyyy-MM-dd");
+	}
+    
+    /**
+     * 
+     * @return 当前时间
+     */
+    public static String getTime() {
+		return DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
+	}
+    
+    /**
+     * 判断起始时间是否早于结束时间
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws ParseException 
+     */
+    public static boolean	checkTime(String startTime,String endTime) throws ParseException{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return formatter.parse(startTime).before(formatter.parse(endTime));
+	}
 
 
 }
