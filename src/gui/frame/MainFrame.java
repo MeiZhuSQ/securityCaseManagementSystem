@@ -12,7 +12,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import entity.LegalCase;
-import gui.frame.Test3.ActionPanelEditorRenderer;
 import service.CaseService;
 
 import javax.swing.JPanel;
