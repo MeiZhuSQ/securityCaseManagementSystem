@@ -1,4 +1,4 @@
-package gui.frame;
+package swing;
 
 import java.awt.Color;
 import java.awt.Dimension;

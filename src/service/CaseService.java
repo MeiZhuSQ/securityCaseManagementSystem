@@ -180,7 +180,7 @@ public class CaseService extends BaseService {
 	 * @param caseId
 	 * @return
 	 */
-	public List<Procedure> selectByCaseId(int caseId) {
+	public List<Procedure> selectProcedureByCaseId(int caseId) {
 		return proceduresDAO.selectByCaseId(caseId);
 	}
 

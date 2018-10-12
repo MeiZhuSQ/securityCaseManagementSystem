@@ -1,4 +1,4 @@
-package gui.frame;
+package swing;
 
 import javax.swing.JPanel;
 

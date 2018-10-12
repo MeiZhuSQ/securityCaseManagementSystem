@@ -1,6 +1,8 @@
 package util;
 
 import javax.swing.*;
+import javax.swing.table.TableColumn;
+
 import java.awt.*;
 import java.io.File;
 
@@ -74,9 +76,8 @@ public class GUIUtil {
     public static void setImageIcon(JButton b, String fileName, String tip) {
         ImageIcon i = new ImageIcon((new File(imgFolder, fileName)).getAbsolutePath());
         b.setIcon(i);
-        b.setPreferredSize(new Dimension(61, 81));
+        b.setPreferredSize(new Dimension(30, 30));
         b.setToolTipText(tip);
-        b.setVerticalTextPosition(JButton.BOTTOM);
         b.setHorizontalTextPosition(JButton.CENTER);
         b.setText(tip);
     }
@@ -92,4 +93,22 @@ public class GUIUtil {
             c.setForeground(color);
         }
     }
+    
+    /** 
+    * 隐藏表格中的某一列 
+    * @param table  表格 
+    * @param index  要隐藏的列 的索引 
+    */ 
+    public static void hideColumn(JTable table,int index){ 
+        TableColumn tc= table.getColumnModel().getColumn(index); 
+        tc.setMaxWidth(0); 
+        tc.setPreferredWidth(0); 
+        tc.setMinWidth(0); 
+        tc.setWidth(0); 
+    
+        table.getTableHeader().getColumnModel().getColumn(index).setMaxWidth(0); 
+        table.getTableHeader().getColumnModel().getColumn(index).setMinWidth(0); 
+    }
+
+     
 }
