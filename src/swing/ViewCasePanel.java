@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.JButton;
 
 public class ViewCasePanel extends JPanel {
     
@@ -37,7 +38,7 @@ public class ViewCasePanel extends JPanel {
         setLayout(null);
         
         JPanel casePanel = new JPanel();
-        casePanel.setBounds(0, 0, 771, 77);
+        casePanel.setBounds(0, 0, 1000, 77);
         add(casePanel);
         casePanel.setLayout(null);
         
@@ -70,7 +71,7 @@ public class ViewCasePanel extends JPanel {
         caseRemarkField.setColumns(10);
         
         JScrollPane noteScrollPane = new JScrollPane();
-        noteScrollPane.setBounds(0, 90, 771, 238);
+        noteScrollPane.setBounds(0, 90, 1000, 168);
         add(noteScrollPane);
         
         Border noteTitleBorder,noteLineBorder;
@@ -84,19 +85,51 @@ public class ViewCasePanel extends JPanel {
         createNoteTable();
         noteScrollPane.setViewportView(noteTable);
         
+        JPanel panel = new JPanel();
+        panel.setBounds(0, 259, 771, 36);
+        add(panel);
+        
+        JButton btnNewButton_3 = new JButton("New button");
+        panel.add(btnNewButton_3);
+        
+        JButton btnNewButton_2 = new JButton("New button");
+        panel.add(btnNewButton_2);
+        
+        JButton btnNewButton_1 = new JButton("New button");
+        panel.add(btnNewButton_1);
+        
+        JButton btnNewButton = new JButton("New button");
+        panel.add(btnNewButton);
+        
         JScrollPane lawScrollPane = new JScrollPane();
-        lawScrollPane.setBounds(0, 338, 771, 155);
+        lawScrollPane.setBounds(0, 298, 771, 155);
         add(lawScrollPane);
         Border lawTitleBorder,lawLineBorder;
         lawLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
         lawTitleBorder = BorderFactory
                 .createTitledBorder(lawLineBorder 
-                        , "关联笔录" , TitledBorder.LEFT 
+                        , "关联法律程序" , TitledBorder.LEFT 
                         , TitledBorder.CENTER );
         lawScrollPane.setBorder(lawTitleBorder);
         lawTable = new JTable();
         createLawTable();
         lawScrollPane.setViewportView(lawTable);
+        
+        JPanel panel_1 = new JPanel();
+        panel_1.setBounds(0, 453, 1000, 40);
+        add(panel_1);
+        
+        JButton btnNewButton_7 = new JButton("New button");
+        panel_1.add(btnNewButton_7);
+        
+        JButton btnNewButton_6 = new JButton("New button");
+        panel_1.add(btnNewButton_6);
+        
+        JButton btnNewButton_5 = new JButton("New button");
+        panel_1.add(btnNewButton_5);
+        
+        JButton btnNewButton_4 = new JButton("New button");
+        panel_1.add(btnNewButton_4);
         
     }
     

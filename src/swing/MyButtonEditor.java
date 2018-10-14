@@ -1,6 +1,5 @@
 package swing;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -10,113 +9,104 @@ import java.util.ArrayList;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-public class MyButtonEditor extends AbstractCellEditor implements
-		TableCellEditor
-{
+import util.GUIUtil;
 
-	/**
-	 * serialVersionUID
-	 */
-	private static final long serialVersionUID = -6546334664166791132L;
+public class MyButtonEditor extends AbstractCellEditor implements TableCellEditor {
 
-	private JPanel panel;
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = -6546334664166791132L;
 
-	private JButton button;
-	
-	private JButton button1;
+    private JPanel panel;
 
-	private ArrayList<String> btnName;
+    private JButton button;
 
-	public MyButtonEditor()
-	{
+    private JButton button1;
 
-		initButton();
+    private JButton button2;
 
-		initPanel();
+    private ArrayList<String> btnName;
 
-		panel.add(button);
-		panel.add(button1);
-	}
+    public MyButtonEditor() {
 
-	private void initButton()
-	{
+        initButton();
 
-		button = new JButton();
-		button1 = new JButton();
-		  button.setSize(new Dimension(50, 25));
-	        button1.setSize(new Dimension(50, 25));
-		button.addActionListener(new ActionListener()
-		{
+        initPanel();
 
-			public void actionPerformed(ActionEvent e)
-			{
+        panel.add(button);
+        panel.add(button1);
+        panel.add(button2);
+    }
 
-				int res = JOptionPane.showConfirmDialog(null,
-						"我是"+button.getName(), "choose one",
-						JOptionPane.YES_NO_OPTION);
+    private void initButton() {
 
-				if (res == JOptionPane.YES_OPTION)
-				{
-					//num++;
-				}
-				// stopped!!!!
-				fireEditingStopped();
-
-			}
-		});
-		button1.addActionListener(new ActionListener()
-		{
-
-			public void actionPerformed(ActionEvent e)
-			{
-
-				int res = JOptionPane.showConfirmDialog(null,
-						"我是李四", "choose one",
-						JOptionPane.YES_NO_OPTION);
-
-				if (res == JOptionPane.YES_OPTION)
-				{
-					//num++;
-				}
-				// stopped!!!!
-				fireEditingStopped();
-
-			}
-		});
-
-	}
-
-	private void initPanel()
-	{
-
-		panel = new JPanel();
-
-		panel.setLayout(new FlowLayout());
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value,
-			boolean isSelected, int row, int column)
-	{
-
-		btnName = (ArrayList<String>) value;
+        button = new ImageButton("edit.png");
+        button1 = new ImageButton("edit.png");
+        button2 = new JButton();
+        button.setSize(new Dimension(16, 16));
+        button1.setSize(new Dimension(50, 25));
+        button2.setSize(new Dimension(50, 25));
+        GUIUtil.setImageIcon(button, "edit.png", null);
+        GUIUtil.setImageIcon(button, "edit.png", null);
+        GUIUtil.setImageIcon(button, "edit.png", null);
         
-        button.setText(value == null ? "" : btnName.get(0));
-        button1.setText(value == null ? "" : btnName.get(1));
-        
+        button.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                int i = MainFrame.caseTable.getSelectedRow();
+                String caseId = (String) MainFrame.caseTableModel.getValueAt(i, 0);
+                JPanel viewPanel = new ViewCasePanel(Integer.valueOf(caseId));
+                MainFrame.tabbedPane.addTab("案件详情", viewPanel, null);
+                MainFrame.tabbedPane.setSelectedComponent(viewPanel);
+                fireEditingStopped();
+            }
+        });
+        button1.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                fireEditingStopped();
+            }
+        });
+        button2.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                
+                fireEditingStopped();
+            }
+        });
+    }
+
+    private void initPanel() {
+
+        panel = new JPanel();
+
+        panel.setLayout(new FlowLayout());
+    }
+
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+
+        btnName = (ArrayList<String>) value;
+        GUIUtil.setImageIcon(button, "edit.png", "修改案件");
+        GUIUtil.setImageIcon(button1, "edit.png", "修改案件");
+        GUIUtil.setImageIcon(button2, "edit.png", "修改案件");
+        //button.setText(value == null ? "" : btnName.get(0));
+        //button1.setText(value == null ? "" : btnName.get(1));
+        //button2.setText(value == null ? "" : btnName.get(2));
+
         return panel;
-	}
+    }
 
-	@Override
-	public Object getCellEditorValue()
-	{
+    @Override
+    public Object getCellEditorValue() {
 
-		return btnName;
-	}
+        return btnName;
+    }
 
 }

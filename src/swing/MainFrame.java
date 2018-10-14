@@ -28,6 +28,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
@@ -44,9 +45,9 @@ public class MainFrame extends BaseFrame {
 
     private static final long serialVersionUID = 9154006143553537232L;
     private static JFrame frame;
-    private ClosableTabbedPane tabbedPane;
-    private DefaultTableModel caseTableModel;
-    private JTable caseTable;
+    public static ClosableTabbedPane tabbedPane;
+    public static DefaultTableModel caseTableModel;
+    public static JTable caseTable;
     private TableColumn column;
     private JList<Object> clockList;
     private DefaultListModel clockModel;
@@ -54,10 +55,12 @@ public class MainFrame extends BaseFrame {
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     private int DEFAULE_WIDTH = 1000;
     private int DEFAULE_HEIGH = 600;
-
+    private ArrayList<String> btnName = new ArrayList<String>();
     int Location_x = (int) (toolkit.getScreenSize().getWidth() - DEFAULE_WIDTH) / 2;
     int Location_y = (int) (toolkit.getScreenSize().getHeight() - DEFAULE_HEIGH) / 2;
-    
+    static {
+        GUIUtil.useLNF();
+    }
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -77,8 +80,9 @@ public class MainFrame extends BaseFrame {
 
     private void initialize() {
         this.setTitle("案件管理系统");
-        this.setBounds(100, 100, 1024, 768);
+        this.setBounds(100, 100, 1024, 600);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.getContentPane().setBackground(Color.white);
         this.setLocationRelativeTo(null);
         this.getContentPane().setLayout(new BorderLayout(0, 0));
         tabbedPane = new ClosableTabbedPane();
@@ -162,7 +166,7 @@ public class MainFrame extends BaseFrame {
             String id = String.valueOf(legalCase.getId());
             String name = legalCase.getName();
             String time = legalCase.getTime();
-            String[] row ={id, name, time};
+            Object[] row ={id, name, time,btnName};
             caseTableModel.addRow(row);
         }
         caseTable.setModel(caseTableModel);
@@ -179,85 +183,12 @@ public class MainFrame extends BaseFrame {
                 column.setPreferredWidth(50);
             }
         }*/
-        ActionPanelEditorRenderer er = new ActionPanelEditorRenderer();
+        btnName.add("详情");
+        btnName.add("修改");
+        btnName.add("删除");
         TableColumn column = caseTable.getColumnModel().getColumn(3);
-        column.setCellRenderer(er);
-        column.setCellEditor(er);
-    }
-    
-    class ActionPanelEditorRenderer extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {
-        private static final long serialVersionUID = -2793084082309432182L;
-
-        private JButton viewButton =  new JButton("详情");;
-        
-        private JButton editButton = new JButton("修改");
-        
-        private JButton deleteButton = new JButton("删除"); 
-        JPanel panel2 = new JPanel();
-        
-        public ActionPanelEditorRenderer() {
-            super();
-            panel2.add(viewButton);
-            panel2.add(editButton);
-            panel2.add(deleteButton);
-            panel2.setOpaque(true);
-            GUIUtil.setImageIcon(editButton, "edit.png", "修改案件");
-//            viewButton.setBackground(Color.red);
-            
-            viewButton.addActionListener(new ActionListener() {
-                
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    int i = caseTable.getSelectedRow();
-                    String caseId = (String) caseTableModel.getValueAt(i, 0);
-                    
-                    JPanel viewPanel = new ViewCasePanel(Integer.valueOf(caseId));
-                    tabbedPane.addTab("案件详情", viewPanel, null);
-                    tabbedPane.setSelectedComponent(viewPanel);
-                }
-            });
-            
-            editButton.addActionListener(new ActionListener() {
-                
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    int i = caseTable.getSelectedRow();
-                    String s = (String)caseTableModel.getValueAt(i, 0);
-                    
-                    JOptionPane.showMessageDialog(null, s);
-                }
-            });
-            
-            deleteButton.addActionListener(new ActionListener() {
-                
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    int i = caseTable.getSelectedRow();
-                    String s = (String)caseTableModel.getValueAt(i, 0);
-                    
-                    JOptionPane.showMessageDialog(null, s);
-                }
-            });
-        }
- 
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-                int row, int column) {
-            panel2.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
-            panel2.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
-            return panel2;
-        }
- 
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            panel2.setBackground(table.getSelectionBackground());
-            return panel2;
-        }
- 
-        @Override
-        public Object getCellEditorValue() {
-            return null;
-        }
+        column.setCellRenderer(new MyButtonRenderer());
+        column.setCellEditor(new MyButtonEditor());
     }
     
     @SuppressWarnings("unchecked")

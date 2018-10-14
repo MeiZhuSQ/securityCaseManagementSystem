@@ -11,12 +11,14 @@ import java.io.File;
  */
 public class GUIUtil {
     //图片的文件夹
-    private static final String imgFolder = "resources/img/";
+    public static String imgFolder = "resources/img/";
 
     //定义皮肤
     public static void useLNF() {
         try {
-            javax.swing.UIManager.setLookAndFeel("com.pagosoft.plaf.PgsLookAndFeel");
+            //org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+            //javax.swing.UIManager.setLookAndFeel("com.pagosoft.plaf.PgsLookAndFeel");
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,7 +81,7 @@ public class GUIUtil {
         b.setPreferredSize(new Dimension(30, 30));
         b.setToolTipText(tip);
         b.setHorizontalTextPosition(JButton.CENTER);
-        b.setText(tip);
+        //b.setText(tip);
     }
 
     /**
