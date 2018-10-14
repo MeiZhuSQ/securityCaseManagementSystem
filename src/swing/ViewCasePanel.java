@@ -19,6 +19,9 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.JButton;
+import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ViewCasePanel extends JPanel {
     
@@ -86,23 +89,42 @@ public class ViewCasePanel extends JPanel {
         noteScrollPane.setViewportView(noteTable);
         
         JPanel panel = new JPanel();
-        panel.setBounds(0, 259, 771, 36);
+        panel.setBounds(0, 259, 1000, 36);
         add(panel);
         
-        JButton btnNewButton_3 = new JButton("New button");
-        panel.add(btnNewButton_3);
+        JButton createNoteButton = new JButton("新建");
+        createNoteButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		JPanel notePanel = new NotePanel();
+                MainFrame.tabbedPane.addTab("新建笔录", notePanel, null);
+                MainFrame.tabbedPane.setSelectedComponent(notePanel);
+        	}
+        });
+        panel.add(createNoteButton);
         
-        JButton btnNewButton_2 = new JButton("New button");
-        panel.add(btnNewButton_2);
+        JButton editNoteButton = new JButton("修改");
+        editNoteButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        panel.add(editNoteButton);
         
-        JButton btnNewButton_1 = new JButton("New button");
-        panel.add(btnNewButton_1);
+        JButton deleteNoteButton = new JButton("删除");
+        deleteNoteButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        panel.add(deleteNoteButton);
         
-        JButton btnNewButton = new JButton("New button");
-        panel.add(btnNewButton);
+        JButton viewNoteButton = new JButton("详情");
+        viewNoteButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        panel.add(viewNoteButton);
         
         JScrollPane lawScrollPane = new JScrollPane();
-        lawScrollPane.setBounds(0, 298, 771, 155);
+        lawScrollPane.setBounds(0, 298, 1000, 155);
         add(lawScrollPane);
         Border lawTitleBorder,lawLineBorder;
         lawLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
@@ -118,18 +140,35 @@ public class ViewCasePanel extends JPanel {
         JPanel panel_1 = new JPanel();
         panel_1.setBounds(0, 453, 1000, 40);
         add(panel_1);
+        panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         
-        JButton btnNewButton_7 = new JButton("New button");
-        panel_1.add(btnNewButton_7);
+        JButton createLawButton = new JButton("新建");
+        createLawButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        panel_1.add(createLawButton);
         
-        JButton btnNewButton_6 = new JButton("New button");
-        panel_1.add(btnNewButton_6);
+        JButton editLawButton = new JButton("修改");
+        editLawButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        panel_1.add(editLawButton);
         
-        JButton btnNewButton_5 = new JButton("New button");
-        panel_1.add(btnNewButton_5);
+        JButton deleteLawButton = new JButton("删除");
+        deleteLawButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        panel_1.add(deleteLawButton);
         
-        JButton btnNewButton_4 = new JButton("New button");
-        panel_1.add(btnNewButton_4);
+        JButton viewLawButton = new JButton("详情");
+        viewLawButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        panel_1.add(viewLawButton);
         
     }
     
