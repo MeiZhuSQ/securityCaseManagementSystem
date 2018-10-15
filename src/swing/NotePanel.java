@@ -3,20 +3,41 @@ package swing;
 import java.awt.Color;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.eltima.components.ui.DatePicker;
+
+import util.DateUtil;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
 import javax.swing.border.LineBorder;
+import javax.swing.UIManager;
+import javax.swing.JButton;
+import javax.swing.JTextArea;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class NotePanel extends JPanel {
 	private JTextField askedNameField;
 	private JTextField askedIdCardField;
 	private JTextField otherNameField;
 	private JTextField otherIDField;
+	private JTextField noteNameField;
+    private DatePicker startTime;
+    private DatePicker endTime;
+    private JTextField placeField;
+    private JTextField policeCodeField;
 
     /**
      * Create the panel.
@@ -24,8 +45,67 @@ public class NotePanel extends JPanel {
     public NotePanel() {
     	setLayout(null);
     	
+    	JPanel notePanel = new JPanel();
+        notePanel.setBounds(14, 13, 807, 175);
+        add(notePanel);
+        Border noteTitleBorder,noteLineBorder;
+        noteLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
+        noteTitleBorder = BorderFactory
+                .createTitledBorder(noteLineBorder 
+                       , "笔录基本信息" , TitledBorder.LEFT 
+                       , TitledBorder.CENTER );
+        notePanel.setBorder(noteTitleBorder);
+        notePanel.setLayout(null);
+        
+        JLabel noteNameLabel = new JLabel("笔录名称");
+        noteNameLabel.setBounds(24, 32, 72, 18);
+        notePanel.add(noteNameLabel);
+        
+        noteNameField = new JTextField();
+        noteNameField.setBounds(102, 29, 137, 24);
+        notePanel.add(noteNameField);
+        noteNameField.setColumns(10);
+        
+        JLabel startTimeLabel = new JLabel("开始时间");
+        startTimeLabel.setBounds(24, 68, 72, 18);
+        notePanel.add(startTimeLabel);
+        
+        startTime = DateUtil.getDatePicker();
+        JPanel startTimePanel = new JPanel();
+        startTimePanel.setBounds(99, 55, 177, 30);
+        startTimePanel.add(startTime);
+        notePanel.add(startTimePanel);
+        
+        JLabel endTimelabel = new JLabel("结束时间");
+        endTimelabel.setBounds(303, 65, 72, 18);
+        notePanel.add(endTimelabel);
+        
+        JPanel endTimePanel = new JPanel();
+        endTimePanel.setBounds(374, 55, 177, 34);
+        endTime = DateUtil.getDatePicker();
+        endTimePanel.add(endTime);
+        notePanel.add(endTimePanel);
+        
+        JLabel placeLabel = new JLabel("地点");
+        placeLabel.setBounds(303, 32, 72, 18);
+        notePanel.add(placeLabel);
+        
+        placeField = new JTextField();
+        placeField.setBounds(381, 29, 137, 24);
+        notePanel.add(placeField);
+        placeField.setColumns(10);
+        
+        JLabel remarkLabel = new JLabel("备注");
+        remarkLabel.setBounds(24, 94, 61, 18);
+        notePanel.add(remarkLabel);
+        
+        JTextArea remarkTextArea = new JTextArea();
+        remarkTextArea.setBorder(new LineBorder(Color.LIGHT_GRAY));
+        remarkTextArea.setBounds(99, 92, 462, 63);
+        notePanel.add(remarkTextArea);
+        
     	JPanel askedPanel = new JPanel();
-    	askedPanel.setBounds(0, 0, 747, 155);
+    	askedPanel.setBounds(14, 223, 733, 155);
     	add(askedPanel);
     	Border askedTitleBorder,askedLineBorder;
     	askedLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
@@ -33,77 +113,109 @@ public class NotePanel extends JPanel {
                 .createTitledBorder(askedLineBorder 
                        , "被询问人" , TitledBorder.LEFT 
                        , TitledBorder.CENTER );
-        askedPanel.setBorder(new TitledBorder(new LineBorder(new Color(64, 64, 64)), "\u88AB\u8BE2\u95EE\u4EBA", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        askedPanel.setBorder(askedTitleBorder);
         askedPanel.setLayout(null);
         
         JLabel nameLabel = new JLabel("姓名：");
-        nameLabel.setBounds(24, 25, 36, 15);
+        nameLabel.setBounds(24, 21, 54, 19);
         askedPanel.add(nameLabel);
         
         askedNameField = new JTextField();
-        askedNameField.setBounds(58, 22, 156, 21);
+        askedNameField.setBounds(75, 21, 156, 21);
         askedPanel.add(askedNameField);
         askedNameField.setColumns(10);
         
-        JLabel sexLabel = new JLabel("性别：");
-        sexLabel.setBounds(277, 25, 54, 15);
-        askedPanel.add(sexLabel);
+        JLabel askedSexLabel = new JLabel("性别：");
+        askedSexLabel.setBounds(277, 21, 54, 19);
+        askedPanel.add(askedSexLabel);
         
-        JComboBox comboBox = new JComboBox();
-        comboBox.setBounds(313, 22, 66, 21);
-        askedPanel.add(comboBox);
+        JComboBox askedSexComboBox = new JComboBox();
+        askedSexComboBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+             // 只处理选中的状态
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    System.out.println("选中: " + askedSexComboBox.getSelectedIndex() + " = " + askedSexComboBox.getSelectedItem());
+                }
+            }
+        });
+        askedSexComboBox.setModel(new DefaultComboBoxModel(new String[] {"男", "女"}));
+        askedSexComboBox.setBounds(326, 22, 66, 21);
+        askedPanel.add(askedSexComboBox);
         
         JLabel askedIdCardLabel = new JLabel("身份证号：");
-        askedIdCardLabel.setBounds(439, 25, 66, 15);
+        askedIdCardLabel.setBounds(428, 21, 77, 19);
         askedPanel.add(askedIdCardLabel);
         
         askedIdCardField = new JTextField();
-        askedIdCardField.setBounds(495, 22, 168, 21);
+        askedIdCardField.setBounds(504, 21, 168, 21);
         askedPanel.add(askedIdCardField);
         askedIdCardField.setColumns(10);
         
-        JLabel lblNewLabel_1 = new JLabel("被询问人类型");
-        lblNewLabel_1.setBounds(24, 60, 77, 15);
-        askedPanel.add(lblNewLabel_1);
+        JLabel askedTypeLabel = new JLabel("被询问人类型");
+        askedTypeLabel.setBounds(24, 60, 90, 15);
+        askedPanel.add(askedTypeLabel);
         
-        JLabel lblNewLabel_2 = new JLabel("是否成人");
-        lblNewLabel_2.setBounds(24, 102, 54, 15);
-        askedPanel.add(lblNewLabel_2);
+        JLabel askedAdultLabel = new JLabel("是否成人");
+        askedAdultLabel.setBounds(24, 102, 90, 21);
+        askedPanel.add(askedAdultLabel);
         
-        JRadioButton rdbtnNewRadioButton = new JRadioButton("成年");
-        rdbtnNewRadioButton.setBounds(75, 98, 49, 23);
-        askedPanel.add(rdbtnNewRadioButton);
+        AskedAdultListener askedAdultListener = new AskedAdultListener();
+        JRadioButton CnRadioButton = new JRadioButton("成年");
+        CnRadioButton.addActionListener(askedAdultListener);
+        CnRadioButton.setBounds(132, 102, 66, 23);
+        askedPanel.add(CnRadioButton);
         
-        JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("未成年");
-        rdbtnNewRadioButton_1.setBounds(121, 98, 61, 23);
-        askedPanel.add(rdbtnNewRadioButton_1);
+        JRadioButton WcnRadioButton = new JRadioButton("未成年");
+        WcnRadioButton.addActionListener(askedAdultListener);
+        WcnRadioButton.setBounds(209, 102, 90, 23);
+        askedPanel.add(WcnRadioButton);
         
-        JLabel lblNewLabel_3 = new JLabel("是否健全");
-        lblNewLabel_3.setBounds(198, 102, 54, 15);
-        askedPanel.add(lblNewLabel_3);
+        JLabel askedAbleLabel = new JLabel("是否健全");
+        askedAbleLabel.setBounds(326, 106, 95, 17);
+        askedPanel.add(askedAbleLabel);
         
-        JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("健全");
-        rdbtnNewRadioButton_2.setBounds(258, 98, 54, 23);
-        askedPanel.add(rdbtnNewRadioButton_2);
+        AskedAbleListener askedAbleListener = new AskedAbleListener();
+        JRadioButton JqRadioButton = new JRadioButton("健全");
+        JqRadioButton.addActionListener(askedAbleListener);
+        JqRadioButton.setBounds(391, 102, 90, 23);
+        askedPanel.add(JqRadioButton);
         
-        JRadioButton rdbtnNewRadioButton_3 = new JRadioButton("非健全");
-        rdbtnNewRadioButton_3.setBounds(314, 98, 121, 23);
-        askedPanel.add(rdbtnNewRadioButton_3);
+        JRadioButton FjqRadioButton = new JRadioButton("非健全");
+        FjqRadioButton.addActionListener(askedAbleListener);
+        FjqRadioButton.setBounds(483, 102, 121, 23);
+        askedPanel.add(FjqRadioButton);
         
-        JRadioButton rdbtnNewRadioButton_4 = new JRadioButton("被害人");
-        rdbtnNewRadioButton_4.setBounds(115, 56, 71, 23);
-        askedPanel.add(rdbtnNewRadioButton_4);
+        AskedTypeListener askedTypeListener = new AskedTypeListener();
+        JRadioButton BhrRadioButton = new JRadioButton("被害人");
+        BhrRadioButton.addActionListener(askedTypeListener);
+        BhrRadioButton.setBounds(132, 56, 83, 23);
+        askedPanel.add(BhrRadioButton);
         
-        JRadioButton rdbtnNewRadioButton_5 = new JRadioButton("嫌疑人");
-        rdbtnNewRadioButton_5.setBounds(188, 56, 66, 23);
-        askedPanel.add(rdbtnNewRadioButton_5);
+        JRadioButton XyrRadioButton = new JRadioButton("嫌疑人");
+        XyrRadioButton.addActionListener(askedTypeListener);
+        XyrRadioButton.setBounds(237, 56, 83, 23);
+        askedPanel.add(XyrRadioButton);
         
-        JRadioButton rdbtnNewRadioButton_6 = new JRadioButton("证人");
-        rdbtnNewRadioButton_6.setBounds(266, 56, 77, 23);
-        askedPanel.add(rdbtnNewRadioButton_6);
+        JRadioButton ZrRadioButton = new JRadioButton("证人");
+        ZrRadioButton.addActionListener(askedTypeListener);
+        ZrRadioButton.setBounds(326, 56, 77, 23);
+        askedPanel.add(ZrRadioButton);
+        
+        ButtonGroup askedAdultTypeGroup = new ButtonGroup();
+        askedAdultTypeGroup.add(CnRadioButton);
+        askedAdultTypeGroup.add(WcnRadioButton);
+        
+        ButtonGroup askedAbleTypeGroup = new ButtonGroup();
+        askedAbleTypeGroup.add(JqRadioButton);
+        askedAbleTypeGroup.add(FjqRadioButton);
+        
+        ButtonGroup askedTypeGroup = new ButtonGroup();
+        askedTypeGroup.add(BhrRadioButton);
+        askedTypeGroup.add(XyrRadioButton);
+        askedTypeGroup.add(ZrRadioButton);
         
         JPanel otherPanel = new JPanel();
-        otherPanel.setBounds(0, 154, 747, 131);
+        otherPanel.setBounds(14, 391, 743, 101);
         add(otherPanel);
         Border otherTitleBorder,otherLineBorder;
     	otherLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
@@ -115,45 +227,112 @@ public class NotePanel extends JPanel {
     	otherPanel.setLayout(null);
     	
     	JLabel otherNamelabel = new JLabel("姓名：");
-    	otherNamelabel.setBounds(23, 28, 36, 15);
+    	otherNamelabel.setBounds(23, 22, 59, 21);
     	otherPanel.add(otherNamelabel);
     	
     	otherNameField = new JTextField();
     	otherNameField.setColumns(10);
-    	otherNameField.setBounds(57, 25, 156, 21);
+    	otherNameField.setBounds(73, 24, 156, 21);
     	otherPanel.add(otherNameField);
     	
-    	JLabel label_1 = new JLabel("性别：");
-    	label_1.setBounds(267, 31, 54, 15);
-    	otherPanel.add(label_1);
+    	JLabel otherSexLabel = new JLabel("性别：");
+    	otherSexLabel.setBounds(279, 22, 54, 21);
+    	otherPanel.add(otherSexLabel);
     	
-    	JComboBox comboBox_1 = new JComboBox();
-    	comboBox_1.setBounds(303, 28, 66, 21);
-    	otherPanel.add(comboBox_1);
+    	JComboBox otherSexComboBox = new JComboBox();
+    	otherSexComboBox.addItemListener(new ItemListener() {
+    	    public void itemStateChanged(ItemEvent e) {
+    	        if (e.getStateChange() == ItemEvent.SELECTED) {
+                    System.out.println("选中: " + otherSexComboBox.getSelectedIndex() + " = " + otherSexComboBox.getSelectedItem());
+                }
+    	    }
+    	});
+    	otherSexComboBox.setModel(new DefaultComboBoxModel(new String[] {"男", "女"}));
+    	otherSexComboBox.setBounds(327, 25, 66, 21);
+    	otherPanel.add(otherSexComboBox);
     	
     	JLabel otherIDlabel = new JLabel("身份证号：");
-    	otherIDlabel.setBounds(429, 31, 66, 15);
+    	otherIDlabel.setBounds(430, 24, 85, 19);
     	otherPanel.add(otherIDlabel);
     	
     	otherIDField = new JTextField();
     	otherIDField.setColumns(10);
-    	otherIDField.setBounds(485, 28, 168, 21);
+    	otherIDField.setBounds(515, 24, 168, 21);
     	otherPanel.add(otherIDField);
     	
+    	otherTypeListener otherTypeListener = new otherTypeListener();
     	JLabel otherTypeLabel = new JLabel("其他人员类型");
-    	otherTypeLabel.setBounds(22, 56, 77, 15);
+    	otherTypeLabel.setBounds(23, 68, 108, 21);
     	otherPanel.add(otherTypeLabel);
     	
-    	JRadioButton radioButton = new JRadioButton("监护人");
-    	radioButton.setBounds(113, 52, 71, 23);
-    	otherPanel.add(radioButton);
+    	JRadioButton jHRRadioButton = new JRadioButton("监护人");
+    	jHRRadioButton.addActionListener(otherTypeListener);
+    	jHRRadioButton.setBounds(141, 67, 88, 23);
+    	otherPanel.add(jHRRadioButton);
     	
-    	JRadioButton radioButton_1 = new JRadioButton("翻译");
-    	radioButton_1.setBounds(186, 52, 66, 23);
-    	otherPanel.add(radioButton_1);
+    	JRadioButton fYRadioButton = new JRadioButton("翻译");
+    	fYRadioButton.addActionListener(otherTypeListener);
+    	fYRadioButton.setBounds(235, 67, 66, 23);
+    	otherPanel.add(fYRadioButton);
     	
-    	JRadioButton radioButton_2 = new JRadioButton("其他人员");
-    	radioButton_2.setBounds(256, 52, 77, 23);
-    	otherPanel.add(radioButton_2);
+    	JRadioButton otherPersonRadioButton = new JRadioButton("其他人员");
+    	otherPersonRadioButton.addActionListener(otherTypeListener);
+    	otherPersonRadioButton.setBounds(316, 67, 97, 23);
+    	otherPanel.add(otherPersonRadioButton);
+    	
+    	ButtonGroup otherTypeGroup = new ButtonGroup();
+    	otherTypeGroup.add(jHRRadioButton);
+    	otherTypeGroup.add(fYRadioButton);
+    	otherTypeGroup.add(otherPersonRadioButton);
+    	
+    	JPanel policePanel = new JPanel();
+    	policePanel.setBounds(14, 505, 758, 71);
+    	add(policePanel);
+    	Border policeTitleBorder,policeLineBorder;
+    	policeLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
+        policeTitleBorder = BorderFactory
+                .createTitledBorder(policeLineBorder 
+                       , "民警" , TitledBorder.LEFT 
+                       , TitledBorder.CENTER );
+        policePanel.setBorder(policeTitleBorder);
+        policePanel.setLayout(null);
+        
+        JLabel policeCodeLabel = new JLabel("警号");
+        policeCodeLabel.setBounds(27, 32, 57, 25);
+        policePanel.add(policeCodeLabel);
+        
+        policeCodeField = new JTextField();
+        policeCodeField.setBounds(75, 32, 401, 24);
+        policePanel.add(policeCodeField);
+        policeCodeField.setColumns(10);
+        
+        JButton saveButton = new JButton("保存");
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String noteName = noteNameField.getText();
+                String place = placeField.getText();
+                String startTimeStr = startTime.getText();
+                String endTimeStr = endTime.getText();
+                String remark = remarkTextArea.getText();
+                if (StringUtils.isBlank(noteName)) {
+                    MainFrame.alert("笔录名称不能为空！");
+                }
+                if (StringUtils.isBlank(place)) {
+                    MainFrame.alert("地点不能为空！");
+                }
+                if (StringUtils.isBlank(startTimeStr)) {
+                    MainFrame.alert("开始时间不能为空！");
+                }
+                if (StringUtils.isBlank(endTimeStr)) {
+                    MainFrame.alert("结束时间不能为空！");
+                }
+                String askedName = askedNameField.getText();
+                int selectedIndex = askedSexComboBox.getSelectedIndex();
+                String idCard = askedIdCardField.getText();
+                
+            }
+        });
+        saveButton.setBounds(315, 589, 113, 27);
+        add(saveButton);
     }
 }
