@@ -18,7 +18,7 @@ public class SQLUtil {
     /**
      * 数据库源文件对象
      */
-    private static final File SQLFile = new File(DBUtil.database);
+    private static final File SQLFile = new File(JDBCUtil.database);
 
     /**
      * 直接复制数据库文件到指定文件
@@ -68,7 +68,7 @@ public class SQLUtil {
      * 清空数据库，重置自增值
      */
     public static void truncate(){
-        try(Connection c = DBUtil.getConnection();
+        try(Connection c = JDBCUtil.getConnection();
             Statement s = c.createStatement()){
             s.execute("delete from config;");
             s.execute("delete from record;");

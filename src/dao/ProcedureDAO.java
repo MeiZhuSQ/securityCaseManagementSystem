@@ -8,14 +8,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.DBUtil;
+import util.JDBCUtil;
 import util.DateUtil;
 import entity.Procedure;
 
 public class ProcedureDAO {
 	public void add(Procedure Procedure) throws Exception{
         String sql = "insert into procedure (`name`,`time`,remark,case_id) values (?,?,?,?)";
-        try (Connection c = DBUtil.getConnection();
+        try (Connection c = JDBCUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, Procedure.getName());
             ps.setString(2, Procedure.getTime());
@@ -36,7 +36,7 @@ public class ProcedureDAO {
     public int update(Procedure Procedure) {
         String sql = "update procedure set name = ?,time = ? ,remark = ? ,case_id = ? where id = ?";
         int result = 0;
-        try (Connection c = DBUtil.getConnection();
+        try (Connection c = JDBCUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, Procedure.getName());
             ps.setString(2, Procedure.getTime());
@@ -53,7 +53,7 @@ public class ProcedureDAO {
     public int delete(int id) {
         String sql = "delete from procedure where id = ?";
         int result = 0;
-        try (Connection c = DBUtil.getConnection();
+        try (Connection c = JDBCUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, id);
             result = ps.executeUpdate();
@@ -67,7 +67,7 @@ public class ProcedureDAO {
     public List<Procedure> list(int start, int count) {
         String sql = "select * from procedure order by id desc limit ?,?";
         List<Procedure> Procedures = new ArrayList<>();
-        try (Connection c = DBUtil.getConnection();
+        try (Connection c = JDBCUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, start);
             ps.setInt(2, count);
@@ -90,7 +90,7 @@ public class ProcedureDAO {
     public List<Procedure> selectByCaseId(int caseId) {
         String sql = "select * from procedure where case_id = ?";
         List<Procedure> Procedures = new ArrayList<>();
-        try (Connection c = DBUtil.getConnection();
+        try (Connection c = JDBCUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, caseId);
             ResultSet rs = ps.executeQuery();
@@ -107,7 +107,7 @@ public class ProcedureDAO {
 
     public int getTotal() {
         String sql = "select count(*) from procedure";
-        try (Connection c = DBUtil.getConnection();
+        try (Connection c = JDBCUtil.getConnection();
              Statement s = c.createStatement()) {
             ResultSet rs = s.executeQuery(sql);
             if (rs.next()) {
@@ -122,7 +122,7 @@ public class ProcedureDAO {
 	public Procedure selectById(int id) {
 		String sql = "select * from procedure where id = ?";
         Procedure Procedure = new Procedure();
-        try (Connection c = DBUtil.getConnection();
+        try (Connection c = JDBCUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();

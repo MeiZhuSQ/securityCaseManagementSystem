@@ -12,6 +12,9 @@ import org.apache.commons.lang.StringUtils;
 
 import com.eltima.components.ui.DatePicker;
 
+import constant.CommonConstant;
+import dto.ResultDTO;
+import service.CaseService;
 import util.DateUtil;
 
 import javax.swing.JLabel;
@@ -38,13 +41,15 @@ public class NotePanel extends JPanel {
     private DatePicker endTime;
     private JTextField placeField;
     private JTextField policeCodeField;
+    private JTextField policeNameField;
+    private int caseId;
 
     /**
      * Create the panel.
      */
-    public NotePanel() {
+    public NotePanel(int caseId) {
+        this.caseId = caseId;
     	setLayout(null);
-    	
     	JPanel notePanel = new JPanel();
         notePanel.setBounds(14, 13, 807, 175);
         add(notePanel);
@@ -105,7 +110,7 @@ public class NotePanel extends JPanel {
         notePanel.add(remarkTextArea);
         
     	JPanel askedPanel = new JPanel();
-    	askedPanel.setBounds(14, 223, 733, 155);
+    	askedPanel.setBounds(14, 201, 733, 155);
     	add(askedPanel);
     	Border askedTitleBorder,askedLineBorder;
     	askedLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
@@ -161,11 +166,13 @@ public class NotePanel extends JPanel {
         
         AskedAdultListener askedAdultListener = new AskedAdultListener();
         JRadioButton CnRadioButton = new JRadioButton("成年");
+        CnRadioButton.setActionCommand("1");
         CnRadioButton.addActionListener(askedAdultListener);
         CnRadioButton.setBounds(132, 102, 66, 23);
         askedPanel.add(CnRadioButton);
         
         JRadioButton WcnRadioButton = new JRadioButton("未成年");
+        WcnRadioButton.setActionCommand("2");
         WcnRadioButton.addActionListener(askedAdultListener);
         WcnRadioButton.setBounds(209, 102, 90, 23);
         askedPanel.add(WcnRadioButton);
@@ -176,27 +183,32 @@ public class NotePanel extends JPanel {
         
         AskedAbleListener askedAbleListener = new AskedAbleListener();
         JRadioButton JqRadioButton = new JRadioButton("健全");
+        JqRadioButton.setActionCommand("1");
         JqRadioButton.addActionListener(askedAbleListener);
         JqRadioButton.setBounds(391, 102, 90, 23);
         askedPanel.add(JqRadioButton);
         
         JRadioButton FjqRadioButton = new JRadioButton("非健全");
+        JqRadioButton.setActionCommand("2");
         FjqRadioButton.addActionListener(askedAbleListener);
         FjqRadioButton.setBounds(483, 102, 121, 23);
         askedPanel.add(FjqRadioButton);
         
         AskedTypeListener askedTypeListener = new AskedTypeListener();
         JRadioButton BhrRadioButton = new JRadioButton("被害人");
+        BhrRadioButton.setActionCommand("1");
         BhrRadioButton.addActionListener(askedTypeListener);
         BhrRadioButton.setBounds(132, 56, 83, 23);
         askedPanel.add(BhrRadioButton);
         
         JRadioButton XyrRadioButton = new JRadioButton("嫌疑人");
+        XyrRadioButton.setActionCommand("2");
         XyrRadioButton.addActionListener(askedTypeListener);
         XyrRadioButton.setBounds(237, 56, 83, 23);
         askedPanel.add(XyrRadioButton);
         
         JRadioButton ZrRadioButton = new JRadioButton("证人");
+        ZrRadioButton.setActionCommand("3");
         ZrRadioButton.addActionListener(askedTypeListener);
         ZrRadioButton.setBounds(326, 56, 77, 23);
         askedPanel.add(ZrRadioButton);
@@ -215,7 +227,7 @@ public class NotePanel extends JPanel {
         askedTypeGroup.add(ZrRadioButton);
         
         JPanel otherPanel = new JPanel();
-        otherPanel.setBounds(14, 391, 743, 101);
+        otherPanel.setBounds(14, 369, 743, 101);
         add(otherPanel);
         Border otherTitleBorder,otherLineBorder;
     	otherLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
@@ -260,22 +272,25 @@ public class NotePanel extends JPanel {
     	otherIDField.setBounds(515, 24, 168, 21);
     	otherPanel.add(otherIDField);
     	
-    	otherTypeListener otherTypeListener = new otherTypeListener();
+    	OtherTypeListener otherTypeListener = new OtherTypeListener();
     	JLabel otherTypeLabel = new JLabel("其他人员类型");
     	otherTypeLabel.setBounds(23, 68, 108, 21);
     	otherPanel.add(otherTypeLabel);
     	
     	JRadioButton jHRRadioButton = new JRadioButton("监护人");
+    	jHRRadioButton.setActionCommand("1");
     	jHRRadioButton.addActionListener(otherTypeListener);
     	jHRRadioButton.setBounds(141, 67, 88, 23);
     	otherPanel.add(jHRRadioButton);
     	
     	JRadioButton fYRadioButton = new JRadioButton("翻译");
+    	fYRadioButton.setActionCommand("2");
     	fYRadioButton.addActionListener(otherTypeListener);
     	fYRadioButton.setBounds(235, 67, 66, 23);
     	otherPanel.add(fYRadioButton);
     	
     	JRadioButton otherPersonRadioButton = new JRadioButton("其他人员");
+    	otherPersonRadioButton.setActionCommand("3");
     	otherPersonRadioButton.addActionListener(otherTypeListener);
     	otherPersonRadioButton.setBounds(316, 67, 97, 23);
     	otherPanel.add(otherPersonRadioButton);
@@ -286,7 +301,7 @@ public class NotePanel extends JPanel {
     	otherTypeGroup.add(otherPersonRadioButton);
     	
     	JPanel policePanel = new JPanel();
-    	policePanel.setBounds(14, 505, 758, 71);
+    	policePanel.setBounds(14, 475, 758, 65);
     	add(policePanel);
     	Border policeTitleBorder,policeLineBorder;
     	policeLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
@@ -298,13 +313,30 @@ public class NotePanel extends JPanel {
         policePanel.setLayout(null);
         
         JLabel policeCodeLabel = new JLabel("警号");
-        policeCodeLabel.setBounds(27, 32, 57, 25);
+        policeCodeLabel.setBounds(398, 26, 346, 25);
         policePanel.add(policeCodeLabel);
         
         policeCodeField = new JTextField();
-        policeCodeField.setBounds(75, 32, 401, 24);
+        policeCodeField.setBounds(446, 26, 298, 24);
         policePanel.add(policeCodeField);
         policeCodeField.setColumns(10);
+        
+        JLabel label = new JLabel("姓名：");
+        label.setBounds(14, 26, 59, 21);
+        policePanel.add(label);
+        
+        policeNameField = new JTextField();
+        policeNameField.setColumns(10);
+        policeNameField.setBounds(64, 28, 156, 21);
+        policePanel.add(policeNameField);
+        
+        JLabel label_1 = new JLabel("性别：");
+        label_1.setBounds(270, 26, 54, 21);
+        policePanel.add(label_1);
+        
+        JComboBox policeSexComboBox = new JComboBox();
+        policeSexComboBox.setBounds(318, 29, 66, 21);
+        policePanel.add(policeSexComboBox);
         
         JButton saveButton = new JButton("保存");
         saveButton.addActionListener(new ActionListener() {
@@ -313,26 +345,49 @@ public class NotePanel extends JPanel {
                 String place = placeField.getText();
                 String startTimeStr = startTime.getText();
                 String endTimeStr = endTime.getText();
+                String fileName = remarkTextArea.getText();
                 String remark = remarkTextArea.getText();
-                if (StringUtils.isBlank(noteName)) {
-                    MainFrame.alert("笔录名称不能为空！");
-                }
-                if (StringUtils.isBlank(place)) {
-                    MainFrame.alert("地点不能为空！");
-                }
-                if (StringUtils.isBlank(startTimeStr)) {
-                    MainFrame.alert("开始时间不能为空！");
-                }
-                if (StringUtils.isBlank(endTimeStr)) {
-                    MainFrame.alert("结束时间不能为空！");
-                }
+                //被询问人
                 String askedName = askedNameField.getText();
-                int selectedIndex = askedSexComboBox.getSelectedIndex();
+                Integer askedSex = askedSexComboBox.getSelectedIndex();
                 String idCard = askedIdCardField.getText();
-                
+                String selectedAskedType = askedTypeListener.selectedAskedType;
+                String selectedAskedAudlt = askedAdultListener.selectedAskedAudlt;
+                String selectedAbled = askedAbleListener.selectedAbled;
+                //其他人
+                String otherName = otherNameField.getText();
+                Integer otherSex = otherSexComboBox.getSelectedIndex();
+                String otherIdCard = otherIDField.getText();
+                String selectedOtherType = otherTypeListener.selectedOtherType;
+                //警员
+                String policeName = policeNameField.getText();
+                Integer policeSex = policeSexComboBox.getSelectedIndex();
+                String policeCode = policeCodeField.getText();
+                CaseService caseService = new CaseService();
+                //保存笔录信息
+                ResultDTO addNoteResult = caseService.addNote(caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, policeCode);
+                if (CommonConstant.RESULT_CODE_FAIL.equals(addNoteResult.getCode())) {
+                    MainFrame.alert(addNoteResult.getMessage());
+                    return;
+                }
+                //保存被询问人
+                int noteId = Integer.parseInt(String.valueOf(addNoteResult.getData()));
+                ResultDTO addAskedPerson = caseService.addAskedPerson(noteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
+                if (CommonConstant.RESULT_CODE_FAIL.equals(addAskedPerson.getCode())) {
+                    MainFrame.alert(addNoteResult.getMessage());
+                    return;
+                }
+                //保存其他人员
+                ResultDTO addOtherPerson = caseService.addOtherPerson(noteId, otherName, String.valueOf(otherSex), otherIdCard, selectedOtherType);
+                if (CommonConstant.RESULT_CODE_FAIL.equals(addOtherPerson.getCode())) {
+                    MainFrame.alert(addOtherPerson.getMessage());
+                    return;
+                }
+                //保存警员
+                caseService.addPolice(policeName, String.valueOf(policeSex), policeCode);
             }
         });
-        saveButton.setBounds(315, 589, 113, 27);
+        saveButton.setBounds(317, 553, 113, 27);
         add(saveButton);
     }
 }

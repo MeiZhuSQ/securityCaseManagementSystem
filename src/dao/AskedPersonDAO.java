@@ -8,13 +8,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.DBUtil;
+import util.JDBCUtil;
 import entity.AskedPerson;
 
 public class AskedPersonDAO {
 	public void add(AskedPerson askedPerson) throws Exception {
 		String sql = "insert into asked_person (`name`,`sex`,note_id,type,adult_flag,id_card,disabled_flag) values (?,?,?,?,?,?,?)";
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, askedPerson.getName());
 			ps.setString(2, askedPerson.getSex());
 			ps.setInt(3, askedPerson.getNoteId());
@@ -37,7 +37,7 @@ public class AskedPersonDAO {
 	public int update(AskedPerson askedPerson) {
 		String sql = "update asked_person set name = ?,sex = ? ,note_id = ?,type = ?,adult_flag = ?,id_card = ?,disabled_flag = ? where id = ?";
 		int result = 0;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, askedPerson.getName());
 			ps.setString(2, askedPerson.getSex());
 			ps.setInt(3, askedPerson.getNoteId());
@@ -56,7 +56,7 @@ public class AskedPersonDAO {
 	public int delete(int id) {
 		String sql = "delete from asked_person where id = ?";
 		int result = 0;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -68,7 +68,7 @@ public class AskedPersonDAO {
 	public List<AskedPerson> list(int start, int count) {
 		String sql = "select * from asked_person order by id desc limit ?,?";
 		List<AskedPerson> askedPersons = new ArrayList<>();
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, start);
 			ps.setInt(2, count);
 			ResultSet rs = ps.executeQuery();
@@ -91,7 +91,7 @@ public class AskedPersonDAO {
 	public List<AskedPerson> selectByNoteId(int noteId) {
 		String sql = "select * from asked_person where note_id = ?";
 		List<AskedPerson> askedPersons = new ArrayList<>();
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, noteId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -109,7 +109,7 @@ public class AskedPersonDAO {
 	public AskedPerson selectById(int id) {
 		String sql = "select * from asked_person where id = ?";
 		AskedPerson askedPerson = new AskedPerson();
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -125,7 +125,7 @@ public class AskedPersonDAO {
 
 	public int getTotal() {
 		String sql = "select count(*) from askedPerson";
-		try (Connection c = DBUtil.getConnection(); Statement s = c.createStatement()) {
+		try (Connection c = JDBCUtil.getConnection(); Statement s = c.createStatement()) {
 			ResultSet rs = s.executeQuery(sql);
 			if (rs.next()) {
 				return rs.getInt(1);

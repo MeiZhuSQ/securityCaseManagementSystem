@@ -132,6 +132,16 @@ public class MainFrame extends BaseFrame {
         });
         createMenu.add(lawsMenuItem);
         
+        JMenu policeMenu = new JMenu("警员维护");
+        policeMenu.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JPanel policePanel = new PolicePanel();
+                tabbedPane.addTab("警员维护", policePanel, null);
+                tabbedPane.setSelectedComponent(policePanel);
+            }
+        });
+        menuBar.add(policeMenu);
+        
         JMenu existMenu = new JMenu("退出");
         menuBar.add(existMenu);
         this.getContentPane().add(tabbedPane, BorderLayout.CENTER);

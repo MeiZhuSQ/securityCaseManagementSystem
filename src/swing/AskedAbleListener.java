@@ -4,10 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AskedAbleListener implements ActionListener {
-
+    public static String selectedAbled; 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String actionCommand = e.getActionCommand();
+        selectedAbled = e.getActionCommand();
     }
 
 }

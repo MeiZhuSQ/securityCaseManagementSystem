@@ -95,7 +95,7 @@ public class ViewCasePanel extends JPanel {
         JButton createNoteButton = new JButton("新建");
         createNoteButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
-        		JPanel notePanel = new NotePanel();
+        		JPanel notePanel = new NotePanel(caseId);
                 MainFrame.tabbedPane.addTab("新建笔录", notePanel, null);
                 MainFrame.tabbedPane.setSelectedComponent(notePanel);
         	}
@@ -209,8 +209,8 @@ public class ViewCasePanel extends JPanel {
         }
         noteTable.setModel(noteTableModel);
         GUIUtil.hideColumn(noteTable, 0);
-        JTableHeader head = noteTable.getTableHeader(); // 创建表格标题对象
-        head.setPreferredSize(new Dimension(head.getWidth(), 30));// 设置表头大小
+        JTableHeader head = noteTable.getTableHeader(); 
+        head.setPreferredSize(new Dimension(head.getWidth(), 30));
         
     }
     

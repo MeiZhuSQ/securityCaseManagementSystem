@@ -3,12 +3,11 @@ package swing;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class otherTypeListener implements ActionListener {
-
+public class OtherTypeListener implements ActionListener {
+    public static String selectedOtherType;
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-
+        selectedOtherType = e.getActionCommand();
     }
 
 }

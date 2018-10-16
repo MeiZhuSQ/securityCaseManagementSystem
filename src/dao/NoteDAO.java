@@ -8,13 +8,18 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.DBUtil;
+import util.JDBCUtil;
 import entity.Note;
 
 public class NoteDAO {
-	public void add(Note note) throws Exception {
+	public int add(Note note) throws Exception {
+	    ResultSet rs = null;
+	    PreparedStatement sta = null;
+	    Connection con = null;
 		String sql = "insert into note (`case_id`,`name`,`start_time`,`end_time`,remark,place,file_name,police_list) values (?,?,?,?,?,?,?,?)";
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+        try {
+		    con = JDBCUtil.getConnection();
+		    PreparedStatement ps = con.prepareStatement(sql);
 			ps.setInt(1, note.getCaseId());
 			ps.setString(2, note.getName());
 			ps.setString(3, note.getStartTime());
@@ -24,21 +29,25 @@ public class NoteDAO {
 			ps.setString(7, note.getFileName());
 			ps.setString(8, note.getPoliceList());
 			ps.execute();
-			ResultSet rs = ps.getGeneratedKeys();
+			rs = ps.getGeneratedKeys();
+			int id = 0;
 			if (rs.next()) {
-				int id = rs.getInt(1);
+				id = rs.getInt(1);
 				note.setId(id);
 			}
+			return id;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
-		}
+		} finally {
+            JDBCUtil.free(rs, sta, con);
+        }
 	}
 
 	public int update(Note note) {
 		String sql = "update note set case_id = ? ,name = ?,start_time = ? ,`end_time` = ?,remark = ? where id = ?";
 		int result = 0;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, note.getCaseId());
 			ps.setString(2, note.getName());
 			ps.setString(3, note.getStartTime());
@@ -55,7 +64,7 @@ public class NoteDAO {
 	public int delete(int id) {
 		String sql = "delete from note where id = ?";
 		int result = 0;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -67,7 +76,7 @@ public class NoteDAO {
 	public List<Note> list(int start, int count) {
 		String sql = "select * from note order by id desc limit ?,?";
 		List<Note> notes = new ArrayList<>();
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, start);
 			ps.setInt(2, count);
 			ResultSet rs = ps.executeQuery();
@@ -89,7 +98,7 @@ public class NoteDAO {
 
 	public int getTotal() {
 		String sql = "select count(*) from note";
-		try (Connection c = DBUtil.getConnection(); Statement s = c.createStatement()) {
+		try (Connection c = JDBCUtil.getConnection(); Statement s = c.createStatement()) {
 			ResultSet rs = s.executeQuery(sql);
 			if (rs.next()) {
 				return rs.getInt(1);
@@ -104,7 +113,7 @@ public class NoteDAO {
 			String place) {
 		String sql = "select * from note WHERE place = ? and start_time < ? and  end_time > ? and police_list like ?";
 		List<Note> notes = new ArrayList<>();
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, place);
 			ps.setString(2, endTime);
 			ps.setString(3, startTime);
@@ -125,7 +134,7 @@ public class NoteDAO {
 	public List<Note> selectByCaseId(int caseId) {
 		String sql = "select * from note where case_id = ?";
 		List<Note> notes = new ArrayList<>();
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, caseId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -143,7 +152,7 @@ public class NoteDAO {
 	public Note selectById(int id) {
 		String sql = "select * from note where id = ?";
 		Note note = null;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {

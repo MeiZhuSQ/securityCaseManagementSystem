@@ -268,8 +268,9 @@ public class CaseService extends BaseService {
 		}
 
 		try {
-			noteDAO.add(note);
-			return requestSuccess();
+		    //返回主键
+			int id = noteDAO.add(note);
+			return requestSuccess(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -774,7 +775,7 @@ public class CaseService extends BaseService {
 	
 	public static void main(String[] args) {
 		CaseService caseService = new CaseService();
-		ResultDTO resultDTO = caseService.addPolice("张三", "1", "123456");
+		ResultDTO resultDTO = caseService.addPolice("张三661", "2", "667778");
 		System.out.println(resultDTO);
 	}
 
