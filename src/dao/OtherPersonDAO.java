@@ -128,4 +128,20 @@ public class OtherPersonDAO {
 		}
 		return otherPerson;
 	}
+
+	public OtherPerson selectByIdCard(String idCard){
+		String sql = "select * from other_person where id_card = ?";
+		OtherPerson otherPerson = null;
+		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setString(1, idCard);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				otherPerson = new OtherPerson(rs.getInt("id"), rs.getInt("note_id"), rs.getString("name"),
+						rs.getString("sex"), rs.getString("type"), rs.getString("id_card"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return otherPerson;
+	}
 }

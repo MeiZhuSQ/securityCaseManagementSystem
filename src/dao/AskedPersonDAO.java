@@ -122,6 +122,23 @@ public class AskedPersonDAO {
 		}
 		return askedPerson;
 	}
+	
+	public AskedPerson selectByIdCard(String idCard) {
+		String sql = "select * from asked_person where id_card = ?";
+		AskedPerson askedPerson = null;
+		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setString(1, idCard);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				askedPerson = new AskedPerson(rs.getInt("id"), rs.getInt("note_id"), rs.getString("name"),
+						rs.getString("sex"), rs.getString("type"), rs.getString("adult_flag"), rs.getString("id_card"),
+						rs.getString("disabled_flag"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return askedPerson;
+	}
 
 	public int getTotal() {
 		String sql = "select count(*) from askedPerson";
@@ -135,4 +152,6 @@ public class AskedPersonDAO {
 		}
 		return 0;
 	}
+
+	
 }

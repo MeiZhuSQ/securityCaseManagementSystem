@@ -74,6 +74,23 @@ public class CaseDAO {
 		}
 		return null;
 	}
+	
+	public LegalCase selectByName(String name) throws Exception {
+		String sql = "select * from legal_case where name = ?";
+		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setString(1, name);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				return new LegalCase(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
+						rs.getString("remark"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return null;
+		
+	}
 
 	public List<LegalCase> list(int start, int count){
 		String sql = "select * from legal_case order by time desc limit ?,?";
@@ -109,4 +126,6 @@ public class CaseDAO {
 		}
 		return 0;
 	}
+
+
 }
