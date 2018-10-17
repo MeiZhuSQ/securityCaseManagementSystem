@@ -65,7 +65,7 @@ public class PoliceDAO {
 			ps.setInt(2, count);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				Police police = new Police(rs.getInt("id"), rs.getString("id"), rs.getString("name"),
+				Police police = new Police(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
 						rs.getString("police_number"));
 				polices.add(police);
 			}

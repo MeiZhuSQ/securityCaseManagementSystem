@@ -40,11 +40,13 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.AbstractCellEditor;
 import javax.swing.AbstractListModel;
+import javax.swing.event.MenuListener;
+import javax.swing.event.MenuEvent;
 
 public class MainFrame extends BaseFrame {
 
     private static final long serialVersionUID = 9154006143553537232L;
-    private static JFrame frame;
+    public static JFrame frame;
     public static ClosableTabbedPane tabbedPane;
     public static DefaultTableModel caseTableModel;
     public static JTable caseTable;
@@ -133,16 +135,40 @@ public class MainFrame extends BaseFrame {
         createMenu.add(lawsMenuItem);
         
         JMenu policeMenu = new JMenu("警员维护");
-        policeMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JPanel policePanel = new PolicePanel();
+        policeMenu.addMenuListener(new MenuListener() {
+            public void menuSelected(MenuEvent e) {
+                //注意：对（一个）单例容器对象进行操作 liupf 2018-10-17 19:00
+                JPanel policePanel = PolicePanel.getInstance();
                 tabbedPane.addTab("警员维护", policePanel, null);
                 tabbedPane.setSelectedComponent(policePanel);
+            }
+
+            @Override
+            public void menuDeselected(MenuEvent e) {
+                
+            }
+
+            @Override
+            public void menuCanceled(MenuEvent e) {
+                
             }
         });
         menuBar.add(policeMenu);
         
         JMenu existMenu = new JMenu("退出");
+        existMenu.addMenuListener(new MenuListener() {
+            public void menuSelected(MenuEvent e) {
+                System.exit(0);
+            }
+
+            @Override
+            public void menuDeselected(MenuEvent e) {
+            }
+
+            @Override
+            public void menuCanceled(MenuEvent e) {
+            }
+        });
         menuBar.add(existMenu);
         this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
         this.setVisible(true);
@@ -223,4 +249,5 @@ public class MainFrame extends BaseFrame {
         clockList.setSelectionForeground(new Color(40, 101, 156));
         clockList.setFixedCellHeight(25);
     }
+
 }
