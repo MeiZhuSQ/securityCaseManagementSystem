@@ -111,12 +111,12 @@ public class NoteDAO {
 
 	public List<Note> selectNoteByTimeAndPlaceAndPolic(String policeNumber, String startTime, String endTime,
 			String place) {
-		String sql = "select * from note WHERE place = ? and start_time < ? and  end_time > ? and police_list like ?";
+		String sql = "select * from note WHERE start_time < ? and  end_time > ? and  (place = ? or police_list like ?)";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
-			ps.setString(1, place);
-			ps.setString(2, endTime);
-			ps.setString(3, startTime);
+			ps.setString(1, endTime);
+			ps.setString(2, startTime);
+			ps.setString(3, place);
 			ps.setString(4, "%" + policeNumber + "%");
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {

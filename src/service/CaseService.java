@@ -55,6 +55,10 @@ public class CaseService extends BaseService {
 			return requestFail("备注不能超过50个字符");
 		}
 		try {
+			LegalCase legalCase = caseDAO.selectByName(name);
+			if (null != legalCase) {
+				return requestFail("已存在同名案件");
+			}
 			caseDAO.add(new LegalCase(name, time, remark));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -102,6 +106,14 @@ public class CaseService extends BaseService {
 	 */
 	public ResultDTO delCase(int id) {
 		try {
+			List<Procedure> procedures = selectProceduresByCaseId(id);
+			if (procedures.size() > 0) {
+				return requestFail("请先删除案件相关的法律手续");
+			}
+			List<Note> notes = selectNoteByCaseId(id);
+			if (notes.size() > 0) {
+				return requestFail("请先删除案件相关的笔录");
+			}
 			if (caseDAO.delete(id) == 1) {
 				return requestSuccess();
 			}
@@ -180,7 +192,7 @@ public class CaseService extends BaseService {
 	 * @param caseId
 	 * @return
 	 */
-	public List<Procedure> selectProcedureByCaseId(int caseId) {
+	public List<Procedure> selectProceduresByCaseId(int caseId) {
 		return proceduresDAO.selectByCaseId(caseId);
 	}
 
@@ -190,7 +202,7 @@ public class CaseService extends BaseService {
 	 * @param id
 	 * @return
 	 */
-	public Procedure selectProcedureById(int id) {
+	public Procedure selectProceduresById(int id) {
 		return proceduresDAO.selectById(id);
 	}
 
@@ -429,7 +441,8 @@ public class CaseService extends BaseService {
 	 *            笔录地点
 	 * @return 如有冲突将返回冲突笔录列表
 	 */
-	private ResultDTO checkNoteByTimeAndPlaceAndPolic(String policeNumber, String startTime, String endTime, String place) {
+	private ResultDTO checkNoteByTimeAndPlaceAndPolic(String policeNumber, String startTime, String endTime,
+			String place) {
 		List<Note> notes = noteDAO.selectNoteByTimeAndPlaceAndPolic(policeNumber, startTime, endTime, place);
 		if (notes.size() > 0) {
 			return requestFail("警员、时间、地点与其他笔录冲突", notes);
@@ -440,7 +453,6 @@ public class CaseService extends BaseService {
 	/**
 	 * 添加警员
 	 * 
-	 * @param legalCase
 	 * @return
 	 * @throws Exception
 	 */
@@ -539,10 +551,14 @@ public class CaseService extends BaseService {
 		if (StringUtils.isBlank(idCard)) {
 			return requestFail("身份证号不能为空");
 		}
-		if (idCard.length() < 15 || idCard.length() >18) {
+		if (idCard.length() < 15 || idCard.length() > 18) {
 			return requestFail("请输入15-18位的正确身份证号");
 		}
 		try {
+			OtherPerson otherPerson = otherPersonDAO.selectByIdCard(idCard);
+			if (null != otherPerson) {
+				return requestFail("身份证号已存在");
+			}
 			otherPersonDAO.add(new OtherPerson(noteId, name, sex, type, idCard));
 			return requestSuccess();
 		} catch (Exception e) {
@@ -613,10 +629,19 @@ public class CaseService extends BaseService {
 		if (StringUtils.isBlank(idCard)) {
 			return requestFail("身份证号不能为空");
 		}
-		if (idCard.length() < 15 || idCard.length() >18) {
+		if (idCard.length() < 15 || idCard.length() > 18) {
 			return requestFail("请输入15-18位的正确身份证号");
 		}
+		// 强制要求先添加其他人员再添加被询问人
+		ResultDTO result = checkAskedPerson(selectNoteById(noteId));
+		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+			return result;
+		}
 		try {
+			AskedPerson askedPerson = askedPersonDAO.selectByIdCard(idCard);
+			if (null != askedPerson) {
+				return requestFail("身份证号已存在");
+			}
 			askedPersonDAO.add(new AskedPerson(noteId, name, sex, type, adultFlag, idCard, disabledFlag));
 			return requestSuccess();
 		} catch (Exception e) {
@@ -775,8 +800,21 @@ public class CaseService extends BaseService {
 	
 	public static void main(String[] args) {
 		CaseService caseService = new CaseService();
-		ResultDTO resultDTO = caseService.addPolice("张三661", "2", "667778");
+		ResultDTO resultDTO = caseService.addPolice("警员1", "1", "123456");
 		System.out.println(resultDTO);
+		ResultDTO resultDTO2 = caseService.addNote(1, "笔录1", "2018-10-10 17:00:00", "2018-10-10 18:00:00", "备注", "办公室",
+				"案件1.doc", "123456,234567");
+		System.out.println(resultDTO2);
+		ResultDTO resultDTO3 = caseService.addNote(1, "笔录2", "2018-10-10 17:00:00", "2018-10-10 18:00:00", "备注",
+				"办公室1", "案件2.doc", "123457,234568");
+		System.out.println(resultDTO3);
+		ResultDTO resultDTO4 = caseService.addProcedure(1, "法律手续1", DateUtil.getTime(), "备注1");
+		System.out.println(resultDTO4);
+		ResultDTO resultDTO5 = caseService.delCase(1);
+		System.out.println(resultDTO5);
+		ResultDTO resultDTO6 = caseService.addAskedPerson(1, "被询问人1", "0", CommonConstant.ASKED_PERSON_TYPE_1, "0",
+				"123456789012345", "1");
+		System.out.println(resultDTO6);
 	}
 
 }
