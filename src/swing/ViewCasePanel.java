@@ -235,7 +235,7 @@ public class ViewCasePanel extends JPanel {
             
         };
         CaseService caseService = new CaseService();
-        List<Procedure> procedureList = caseService.selectProcedureByCaseId(caseId);
+        List<Procedure> procedureList = caseService.selectProceduresByCaseId(caseId);
         for (Procedure procedure : procedureList) {
             String id = String.valueOf(procedure.getId());
             String name = procedure.getName();

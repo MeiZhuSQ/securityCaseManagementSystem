@@ -77,7 +77,7 @@ public class CaseDAO {
 	
 	public LegalCase selectByName(String name) throws Exception {
 		String sql = "select * from legal_case where name = ?";
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, name);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
