@@ -47,7 +47,7 @@ public class PolicePanel extends JPanel {
                 if (frameSize.width > screenSize.width)
                     frameSize.width = screenSize.width;       
                 policeDialog.setLocation((screenSize.width-frameSize.width)/2,(screenSize.height-frameSize.height) / 2);
-                //MainFrame.frame.setEnabled(false);
+                MainFrame.frame.setEnabled(false);
                 policeDialog.setVisible(true);
             }
         });
@@ -72,12 +72,17 @@ public class PolicePanel extends JPanel {
         btnNewButton_1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MainFrame.alert("111");
-            }
-        });
-        btnNewButton_1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                MainFrame.alert("222");
+                PoliceDialog policeDialog = new PoliceDialog();
+                policeDialog.setSize(new Dimension(500, 400));
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                Dimension frameSize = policeDialog.getSize();
+                if (frameSize.height > screenSize.height)
+                    frameSize.height = screenSize.height;       
+                if (frameSize.width > screenSize.width)
+                    frameSize.width = screenSize.width;       
+                policeDialog.setLocation((screenSize.width-frameSize.width)/2,(screenSize.height-frameSize.height) / 2);
+                //MainFrame.frame.setEnabled(false);
+                policeDialog.setVisible(true);
             }
         });
         btnNewButton_1.setBounds(253, 348, 113, 27);

@@ -63,7 +63,7 @@ public class PoliceDialog extends JDialog{
                     return;
                 }
                 MainFrame.alert("保存成功");
-                //MainFrame.frame.setEnabled(true);
+                MainFrame.frame.setEnabled(true);
                 PolicePanel.getInstance().updateTable();
                 PoliceDialog.this.setVisible(false);
             }
