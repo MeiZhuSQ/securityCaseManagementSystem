@@ -82,7 +82,7 @@ public class MainFrame extends BaseFrame {
 
     private void initialize() {
         this.setTitle("案件管理系统");
-        this.setBounds(100, 100, 1024, 600);
+        this.setBounds(100, 100, 1024, 700);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(Color.white);
         this.setLocationRelativeTo(null);

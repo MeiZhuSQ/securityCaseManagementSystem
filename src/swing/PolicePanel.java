@@ -10,6 +10,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 
+import constant.CommonConstant;
+import dto.ResultDTO;
 import service.CaseService;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -85,6 +87,16 @@ public class PolicePanel extends JPanel {
         JButton btnNewButton_2 = new JButton("删除");
         btnNewButton_2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                int i = policeTable.getSelectedRow();
+                int policeId = Integer.parseInt(policeTableModel.getValueAt(i, 0) + "");
+                CaseService caseService = new CaseService();
+                ResultDTO resultDTO = caseService.delPolice(policeId);
+                if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                    MainFrame.alert(resultDTO.getMessage());
+                    return;
+                }
+                MainFrame.alert("删除成功");
+                instance.updateTable();
             }
         });
         btnNewButton_2.setBounds(380, 348, 113, 27);
@@ -126,7 +138,7 @@ public class PolicePanel extends JPanel {
 
     public void updateTable() {
         policeTableModel.list = new CaseService().listPolice();
-        policeTableModel.fireTableDataChanged();
+        //或 policeTableModel.fireTableDataChanged();
         policeTable.updateUI();
     }
 
