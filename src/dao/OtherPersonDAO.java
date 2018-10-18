@@ -132,7 +132,7 @@ public class OtherPersonDAO {
 	public OtherPerson selectByIdCard(String idCard){
 		String sql = "select * from other_person where id_card = ?";
 		OtherPerson otherPerson = null;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, idCard);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
