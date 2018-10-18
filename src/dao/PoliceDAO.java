@@ -37,7 +37,7 @@ public class PoliceDAO {
 			ps.setString(1, police.getName());
 			ps.setString(2, police.getSex());
 			ps.setString(3, police.getPoliceNumber());
-			ps.setInt(3, police.getId());
+			ps.setInt(4, police.getId());
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

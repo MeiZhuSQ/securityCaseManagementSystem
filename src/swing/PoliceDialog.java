@@ -15,13 +15,24 @@ import javax.swing.table.DefaultTableModel;
 
 import constant.CommonConstant;
 import dto.ResultDTO;
+import entity.Police;
 import service.CaseService;
 
 public class PoliceDialog extends JDialog{
     
     private static final long serialVersionUID = 4805081264547840359L;
-    private JTextField policeNameField;
-    private JTextField policeCodeField;
+    public JTextField policeNameField;
+    public JComboBox<String> policeSexField;
+    public JTextField policeCodeField;
+    private int policeId = 0;
+    private static PoliceDialog instance;
+    
+    public static PoliceDialog getInstance () {
+        if (instance == null) {
+            instance = new PoliceDialog();
+        }
+        return instance;
+    }
     
     public PoliceDialog() {
         getContentPane().setLayout(null);
@@ -39,8 +50,8 @@ public class PoliceDialog extends JDialog{
         lblNewLabel_1.setBounds(28, 88, 72, 18);
         getContentPane().add(lblNewLabel_1);
         
-        JComboBox policeSexField = new JComboBox();
-        policeSexField.setModel(new DefaultComboBoxModel(new String[] {"男", "女"}));
+        policeSexField = new JComboBox<String>();
+        policeSexField.setModel(new DefaultComboBoxModel<String>(new String[] {"男", "女"}));
         policeSexField.setBounds(126, 85, 162, 24);
         getContentPane().add(policeSexField);
         
@@ -57,7 +68,19 @@ public class PoliceDialog extends JDialog{
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 CaseService caseService = new CaseService();
-                ResultDTO resultDTO = caseService.addPolice(policeNameField.getText(), String.valueOf(policeSexField.getSelectedIndex()), policeCodeField.getText());
+                ResultDTO resultDTO = new ResultDTO();
+                //新增
+                if (policeId == 0) {
+                    resultDTO = caseService.addPolice(policeNameField.getText(), String.valueOf(policeSexField.getSelectedIndex()), policeCodeField.getText());
+                } else {
+                    //更新
+                    Police police = new Police();
+                    police.setId(policeId);
+                    police.setName(policeNameField.getText());
+                    police.setSex(String.valueOf(policeSexField.getSelectedIndex()));
+                    police.setPoliceNumber(policeCodeField.getText());
+                    resultDTO = caseService.updatePolice(police);
+                }
                 if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                     MainFrame.alert(resultDTO.getMessage());
                     return;
@@ -81,6 +104,14 @@ public class PoliceDialog extends JDialog{
         });
         btnNewButton_1.setBounds(202, 213, 113, 27);
         getContentPane().add(btnNewButton_1);
+    }
+
+    public int getPoliceId() {
+        return policeId;
+    }
+
+    public void setPoliceId(int policeId) {
+        this.policeId = policeId;
     }
     
 }

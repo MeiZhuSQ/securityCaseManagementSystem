@@ -40,7 +40,7 @@ public class PoliceTableModel extends AbstractTableModel {
         if (columnIndex == 1)
             return police.getName();
         if (columnIndex == 2)
-            return police.getSex();
+            return police.getSex().equals("0") ? "男" : "女";
         if (columnIndex == 3)
             return police.getPoliceNumber();
         return null;
