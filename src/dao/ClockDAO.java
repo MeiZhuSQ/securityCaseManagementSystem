@@ -8,13 +8,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.DBUtil;
+import util.JDBCUtil;
 import entity.Clock;
 
 public class ClockDAO {
 	public void add(Clock clock) throws Exception {
 		String sql = "insert into clock (`name`,`time`,remark,type,owner_id) values (?,?,?,?,?)";
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, clock.getName());
 			ps.setString(2, clock.getTime());
 			ps.setString(3, clock.getRemark());
@@ -35,7 +35,7 @@ public class ClockDAO {
 	public int update(Clock clock) {
 		String sql = "update clock set name = ?,time = ? ,remark = ?,type = ?, owner_id = ? where id = ?";
 		int result = 0;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, clock.getName());
 			ps.setString(2, clock.getTime());
 			ps.setString(3, clock.getRemark());
@@ -52,7 +52,7 @@ public class ClockDAO {
 	public int delete(int id) {
 		String sql = "delete from clock where id = ?";
 		int result = 0;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -64,7 +64,7 @@ public class ClockDAO {
 	public List<Clock> list(int start, int count) {
 		String sql = "select * from clock order by time desc limit ?,?";
 		List<Clock> clocks = new ArrayList<>();
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, start);
 			ps.setInt(2, count);
 			ResultSet rs = ps.executeQuery();
@@ -86,7 +86,7 @@ public class ClockDAO {
 	public List<Clock> selectByTypeAndOwnerId(String type, int ownerId) {
 		String sql = "select * from clock where type = ? and owner_id = ?";
 		List<Clock> clocks = new ArrayList<>();
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, type);
 			ps.setInt(2, ownerId);
 			ResultSet rs = ps.executeQuery();
@@ -104,7 +104,7 @@ public class ClockDAO {
 	public Clock selectById(int id) {
 		String sql = "select * from clock where id = ?";
 		Clock clock = new Clock();
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -119,7 +119,7 @@ public class ClockDAO {
 
 	public int getTotal() {
 		String sql = "select count(*) from clock";
-		try (Connection c = DBUtil.getConnection(); Statement s = c.createStatement()) {
+		try (Connection c = JDBCUtil.getConnection(); Statement s = c.createStatement()) {
 			ResultSet rs = s.executeQuery(sql);
 			if (rs.next()) {
 				return rs.getInt(1);

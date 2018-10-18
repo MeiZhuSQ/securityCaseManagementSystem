@@ -8,13 +8,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.DBUtil;
+import util.JDBCUtil;
 import entity.OtherPerson;
 
 public class OtherPersonDAO {
 	public void add(OtherPerson otherPerson) throws Exception {
 		String sql = "insert into other_person (`name`,`sex`,type,id_card,note_id) values (?,?,?,?,?)";
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, otherPerson.getName());
 			ps.setString(2, otherPerson.getSex());
 			ps.setString(3, otherPerson.getType());
@@ -35,7 +35,7 @@ public class OtherPersonDAO {
 	public int update(OtherPerson otherPerson) {
 		String sql = "update other_person set name = ?,sex = ? ,type = ?,id_card = ? ,note_id = ? where id = ?";
 		int result = 0;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, otherPerson.getName());
 			ps.setString(2, otherPerson.getSex());
 			ps.setString(3, otherPerson.getType());
@@ -52,7 +52,7 @@ public class OtherPersonDAO {
 	public int delete(int id) {
 		String sql = "delete from other_person where id = ?";
 		int result = 0;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -64,7 +64,7 @@ public class OtherPersonDAO {
 	public List<OtherPerson> list(int start, int count) {
 		String sql = "select * from other_person order by id desc limit ?,?";
 		List<OtherPerson> otherPersons = new ArrayList<>();
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, start);
 			ps.setInt(2, count);
 			ResultSet rs = ps.executeQuery();
@@ -86,7 +86,7 @@ public class OtherPersonDAO {
 	public List<OtherPerson> selectByNoteId(int noteId) {
 		String sql = "select * from other_person where note_id = ?";
 		List<OtherPerson> otherPersons = new ArrayList<>();
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, noteId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -102,7 +102,7 @@ public class OtherPersonDAO {
 
 	public int getTotal() {
 		String sql = "select count(*) from otherPerson";
-		try (Connection c = DBUtil.getConnection(); Statement s = c.createStatement()) {
+		try (Connection c = JDBCUtil.getConnection(); Statement s = c.createStatement()) {
 			ResultSet rs = s.executeQuery(sql);
 			if (rs.next()) {
 				return rs.getInt(1);
@@ -116,7 +116,7 @@ public class OtherPersonDAO {
 	public OtherPerson selectById(int id) {
 		String sql = "select * from other_person where id = ?";
 		OtherPerson otherPerson = null;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -132,7 +132,7 @@ public class OtherPersonDAO {
 	public OtherPerson selectByIdCard(String idCard){
 		String sql = "select * from other_person where id_card = ?";
 		OtherPerson otherPerson = null;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, idCard);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {

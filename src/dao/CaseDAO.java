@@ -8,13 +8,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.DBUtil;
+import util.JDBCUtil;
 import entity.LegalCase;
 
 public class CaseDAO {
 	public void add(LegalCase legalCase) throws Exception {
 		String sql = "insert into legal_case (`name`,`time`,remark) values (?,?,?)";
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, legalCase.getName());
 			ps.setString(2, legalCase.getTime());
 			ps.setString(3, legalCase.getRemark());
@@ -33,7 +33,7 @@ public class CaseDAO {
 	public int update(LegalCase legalCase) throws Exception {
 		String sql = "update legal_case set name = ?,time = ? ,remark = ? where id = ?";
 		int result = 0;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, legalCase.getName());
 			ps.setString(2, legalCase.getTime());
 			ps.setString(3, legalCase.getRemark());
@@ -49,7 +49,7 @@ public class CaseDAO {
 	public int delete(int id) throws Exception{
 		String sql = "delete from legal_case where id = ?";
 		int result = 0;
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -61,7 +61,7 @@ public class CaseDAO {
 
 	public LegalCase selectById(int id) throws Exception {
 		String sql = "select * from legal_case where id = ?";
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -77,7 +77,7 @@ public class CaseDAO {
 	
 	public LegalCase selectByName(String name) throws Exception {
 		String sql = "select * from legal_case where name = ?";
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, name);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -95,12 +95,12 @@ public class CaseDAO {
 	public List<LegalCase> list(int start, int count){
 		String sql = "select * from legal_case order by time desc limit ?,?";
 		List<LegalCase> legalCases = new ArrayList<>();
-		try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, start);
 			ps.setInt(2, count);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				LegalCase legalCase = new LegalCase(rs.getInt("id"), rs.getString("time"), rs.getString("name"),
+				LegalCase legalCase = new LegalCase(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
 						rs.getString("remark"));
 				legalCases.add(legalCase);
 			}
@@ -116,7 +116,7 @@ public class CaseDAO {
 
 	public int getTotal() {
 		String sql = "select count(*) from legal_case";
-		try (Connection c = DBUtil.getConnection(); Statement s = c.createStatement()) {
+		try (Connection c = JDBCUtil.getConnection(); Statement s = c.createStatement()) {
 			ResultSet rs = s.executeQuery(sql);
 			if (rs.next()) {
 				return rs.getInt(1);
