@@ -43,6 +43,7 @@ public class NotePanel extends JPanel {
     private DatePicker endTime;
     private JTextField placeField;
     private int caseId;
+    private final MulitCombobox mulit;
 
     public NotePanel(int caseId) {
         this.setCaseId(caseId);
@@ -316,7 +317,7 @@ public class NotePanel extends JPanel {
             policeList.add(polices.get(i).getName() + " " + polices.get(i).getPoliceNumber());
         }
         defaultValue = new String[] {};
-        final MulitCombobox mulit = new MulitCombobox(policeList.toArray(new String[policeList.size()]), defaultValue);
+        mulit = new MulitCombobox(policeList.toArray(new String[policeList.size()]), defaultValue);
         policePanel.add(mulit);
         
         mulit.addActionListener(new ActionListener() {
@@ -356,6 +357,7 @@ public class NotePanel extends JPanel {
                 String selectedOtherType = otherTypeListener.selectedOtherType;
                 // 警员
 
+                
                 CaseService caseService = new CaseService();
                 // 保存笔录信息
                 ResultDTO addNoteResult = caseService.addNote(caseId, noteName, startTimeStr, endTimeStr, remark, place,
