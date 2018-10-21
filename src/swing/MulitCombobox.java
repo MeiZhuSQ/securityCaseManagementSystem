@@ -22,14 +22,15 @@ import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicArrowButton;  
   
 /** 
- * hi , this is my first ui component. my ui component "hello world"!! 
- *  
- * @author bugu 
+ * 复合下拉选择框-Combobox
+ * @author LiuPF 
  *  
  */  
 public class MulitCombobox extends JComponent {  
   
-    public Object[] values;  
+	private static final long serialVersionUID = 4750784450052112271L;
+
+	public Object[] values;  
   
     public Object[] defaultValues;  
       

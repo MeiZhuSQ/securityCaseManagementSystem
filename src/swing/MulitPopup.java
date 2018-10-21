@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;  
   
 /** 
- *  复合下拉选择框
+ *  复合下拉选择框-弹出层
  * @author LiuPF 
  * @date 2018-10-21
  */  
