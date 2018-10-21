@@ -43,6 +43,11 @@ import javax.swing.AbstractListModel;
 import javax.swing.event.MenuListener;
 import javax.swing.event.MenuEvent;
 
+/**
+ * 主窗体
+ * @author LiuPF
+ * @date 2018-10-21
+ */
 public class MainFrame extends BaseFrame {
 
     private static final long serialVersionUID = 9154006143553537232L;

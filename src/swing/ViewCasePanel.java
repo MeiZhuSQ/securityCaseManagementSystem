@@ -123,12 +123,12 @@ public class ViewCasePanel extends JPanel {
         });
         panel.add(deleteNoteButton);
 
-        JButton viewNoteButton = new JButton("详情");
+        /*JButton viewNoteButton = new JButton("详情");
         viewNoteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             }
         });
-        panel.add(viewNoteButton);
+        panel.add(viewNoteButton);*/
 
         JScrollPane lawScrollPane = new JScrollPane();
         lawScrollPane.setBounds(0, 298, 1000, 155);
@@ -173,12 +173,12 @@ public class ViewCasePanel extends JPanel {
         });
         panel_1.add(deleteLawButton);
 
-        JButton viewLawButton = new JButton("详情");
+        /*JButton viewLawButton = new JButton("详情");
         viewLawButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             }
         });
-        panel_1.add(viewLawButton);
+        panel_1.add(viewLawButton);*/
 
     }
 

@@ -1,24 +1,21 @@
 package swing;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
-import java.util.Locale;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import org.apache.commons.lang.StringUtils;
-
 import com.eltima.components.ui.DatePicker;
 import service.CaseService;
 import util.DateUtil;
 
+/**
+ * 案件面板
+ * @author LiuPF
+ * @date 2018-10-15
+ */
 public class LegalCasePanel extends JPanel {
     
     private static final long serialVersionUID = 7334759086622449699L;

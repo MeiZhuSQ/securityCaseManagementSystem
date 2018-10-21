@@ -314,7 +314,7 @@ public class NotePanel extends JPanel {
         CaseService caseService = new CaseService();
         List<Police> polices = caseService.listPolice();
         for (int i = 0; i < polices.size(); i++) {
-            policeList.add(polices.get(i).getName() + " " + polices.get(i).getPoliceNumber());
+            policeList.add(polices.get(i).getName() + "_" + polices.get(i).getPoliceNumber());
         }
         defaultValue = new String[] {};
         mulit = new MulitCombobox(policeList.toArray(new String[policeList.size()]), defaultValue);
@@ -356,12 +356,16 @@ public class NotePanel extends JPanel {
                 String otherIdCard = otherIDField.getText();
                 String selectedOtherType = otherTypeListener.selectedOtherType;
                 // 警员
-
-                
+                Object[] objs = mulit.getSelectedValues();
+                StringBuilder sb = new StringBuilder();
+                for (Object obj : objs) {
+                	String code = obj.toString().split("_")[1];
+                    sb.append(code+",");
+                }
                 CaseService caseService = new CaseService();
                 // 保存笔录信息
                 ResultDTO addNoteResult = caseService.addNote(caseId, noteName, startTimeStr, endTimeStr, remark, place,
-                        fileName, "");
+                        fileName, sb.deleteCharAt(sb.length()-1).toString());
                 if (CommonConstant.RESULT_CODE_FAIL.equals(addNoteResult.getCode())) {
                     MainFrame.alert(addNoteResult.getMessage());
                     return;
@@ -371,7 +375,7 @@ public class NotePanel extends JPanel {
                 ResultDTO addAskedPerson = caseService.addAskedPerson(noteId, askedName, String.valueOf(askedSex),
                         selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
                 if (CommonConstant.RESULT_CODE_FAIL.equals(addAskedPerson.getCode())) {
-                    MainFrame.alert(addNoteResult.getMessage());
+                    MainFrame.alert(addAskedPerson.getMessage());
                     return;
                 }
                 // 保存其他人员
@@ -381,9 +385,7 @@ public class NotePanel extends JPanel {
                     MainFrame.alert(addOtherPerson.getMessage());
                     return;
                 }
-                // 保存警员
-                // caseService.addPolice(policeName, String.valueOf(policeSex),
-                // policeCode);
+                MainFrame.alert("保存成功");
             }
         });
         saveButton.setBounds(317, 553, 113, 27);

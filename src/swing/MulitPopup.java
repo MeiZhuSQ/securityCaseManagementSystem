@@ -13,13 +13,15 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;  
   
 /** 
- *  
- * @author bugu 
- *  
+ *  复合下拉选择框
+ * @author LiuPF 
+ * @date 2018-10-21
  */  
 public class MulitPopup extends JPopupMenu {  
   
-    private List<ActionListener> listeners = new ArrayList<ActionListener>();  
+	private static final long serialVersionUID = 1196963302824183741L;
+
+	private List<ActionListener> listeners = new ArrayList<ActionListener>();  
   
     private Object[] values;  
       

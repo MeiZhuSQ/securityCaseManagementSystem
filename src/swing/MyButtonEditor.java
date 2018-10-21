@@ -15,11 +15,13 @@ import javax.swing.table.TableCellEditor;
 
 import util.GUIUtil;
 
+/**
+ * Table按鈕编辑
+ * @author LiuPF
+ * @date 2018-10-21
+ */
 public class MyButtonEditor extends AbstractCellEditor implements TableCellEditor {
 
-    /**
-     * serialVersionUID
-     */
     private static final long serialVersionUID = -6546334664166791132L;
 
     private JPanel panel;
