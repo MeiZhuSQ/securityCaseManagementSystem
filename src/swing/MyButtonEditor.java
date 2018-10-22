@@ -47,21 +47,21 @@ public class MyButtonEditor extends AbstractCellEditor implements TableCellEdito
 
     private void initButton() {
 
-        button = new ImageButton("edit.png");
+        button = new ImageButton("view.png");
         button1 = new ImageButton("edit.png");
-        button2 = new JButton();
+        button2 = new ImageButton("delete.png");
         button.setSize(new Dimension(16, 16));
         button1.setSize(new Dimension(50, 25));
         button2.setSize(new Dimension(50, 25));
-        GUIUtil.setImageIcon(button, "edit.png", null);
-        GUIUtil.setImageIcon(button, "edit.png", null);
-        GUIUtil.setImageIcon(button, "edit.png", null);
+        /*GUIUtil.setImageIcon(button, "edit.png", null);
+        GUIUtil.setImageIcon(button1, "edit.png", null);
+        GUIUtil.setImageIcon(button2, "edit.png", null);*/
         
         button.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 int i = MainFrame.caseTable.getSelectedRow();
-                String caseId = (String) MainFrame.caseTableModel.getValueAt(i, 0);
+                String caseId = MainFrame.getInstance().caseTableModel.getValueAt(i, 0)+"";
                 JPanel viewPanel = new ViewCasePanel(Integer.valueOf(caseId));
                 MainFrame.tabbedPane.addTab("案件详情", viewPanel, null);
                 MainFrame.tabbedPane.setSelectedComponent(viewPanel);

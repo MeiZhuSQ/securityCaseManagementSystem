@@ -53,7 +53,7 @@ public class MainFrame extends BaseFrame {
     private static final long serialVersionUID = 9154006143553537232L;
     public static JFrame frame;
     public static ClosableTabbedPane tabbedPane;
-    public static DefaultTableModel caseTableModel;
+    public CaseTableModel caseTableModel;
     public static JTable caseTable;
     private TableColumn column;
     private JList<Object> clockList;
@@ -65,14 +65,25 @@ public class MainFrame extends BaseFrame {
     private ArrayList<String> btnName = new ArrayList<String>();
     int Location_x = (int) (toolkit.getScreenSize().getWidth() - DEFAULE_WIDTH) / 2;
     int Location_y = (int) (toolkit.getScreenSize().getHeight() - DEFAULE_HEIGH) / 2;
+    
+    private static MainFrame instance;
+    
     static {
         GUIUtil.useLNF();
     }
+    
+    public static MainFrame getInstance() {
+        if(instance == null) {
+            instance = new MainFrame();
+        }
+        return instance;
+    } 
+    
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    frame = new MainFrame();
+                    frame = MainFrame.getInstance();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -100,8 +111,27 @@ public class MainFrame extends BaseFrame {
         
         JScrollPane caseScrollPane = new JScrollPane();
         splitPane.setLeftComponent(caseScrollPane);
+        caseTableModel = new CaseTableModel();
+        caseTable = new JTable(caseTableModel);
+        caseTable.setRowHeight(30);
+        JTableHeader head = caseTable.getTableHeader();
+        head.setPreferredSize(new Dimension(head.getWidth(), 30));
         
-        initMainTable();
+        caseTable.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);// 以下设置表格列宽
+        for (int i = 0; i < 5; i++) {
+            column = caseTable.getColumnModel().getColumn(i);
+            if (i == 0) {
+                column.setPreferredWidth(50);
+            }
+        }
+        btnName.add("详情");
+        btnName.add("修改");
+        btnName.add("删除");
+        TableColumn column = caseTable.getColumnModel().getColumn(4);
+        column.setCellRenderer(new MyButtonRenderer());
+        column.setCellEditor(new MyButtonEditor());
+        
+        //initMainTable();
         caseScrollPane.setViewportView(caseTable);
         
         JScrollPane clockScrollPane = new JScrollPane();
@@ -122,9 +152,18 @@ public class MainFrame extends BaseFrame {
         JMenuItem caseMenuItem = new JMenuItem("新建案件");
         caseMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JPanel legalCasePanel = new LegalCasePanel();
-                tabbedPane.addTab("新建案件", legalCasePanel, null);
-                tabbedPane.setSelectedComponent(legalCasePanel);
+                CaseDialog caseDialog = new CaseDialog();
+                caseDialog.setSize(new Dimension(500, 400));
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                Dimension frameSize = caseDialog.getSize();
+                if (frameSize.height > screenSize.height)
+                    frameSize.height = screenSize.height;
+                if (frameSize.width > screenSize.width)
+                    frameSize.width = screenSize.width;
+                caseDialog.setLocation((screenSize.width - frameSize.width) / 2,
+                        (screenSize.height - frameSize.height) / 2);
+                // MainFrame.frame.setEnabled(false);
+                caseDialog.setVisible(true);
             }
         });
         createMenu.add(caseMenuItem);
@@ -180,7 +219,8 @@ public class MainFrame extends BaseFrame {
         splitPane.setDividerLocation(0.8);
     }
 
-    public void initMainTable() {
+    //弃用DefaultTableModel方式
+    /*public void initMainTable() {
         caseTable = new JTable();
         caseTable.setRowHeight(30);
         caseTableModel = new DefaultTableModel(
@@ -217,20 +257,20 @@ public class MainFrame extends BaseFrame {
         //head.setFont(new Font("楷体", Font.PLAIN, 18));// 设置表格字体
         //table.setRowHeight(18);// 设置表格行宽
 
-        /*caseTable.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);// 以下设置表格列宽
+        caseTable.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);// 以下设置表格列宽
         for (int i = 0; i < 4; i++) {
             column = table.getColumnModel().getColumn(i);
             if (i == 0) {
                 column.setPreferredWidth(50);
             }
-        }*/
+        }
         btnName.add("详情");
         btnName.add("修改");
         btnName.add("删除");
         TableColumn column = caseTable.getColumnModel().getColumn(3);
         column.setCellRenderer(new MyButtonRenderer());
         column.setCellEditor(new MyButtonEditor());
-    }
+    }*/
     
     @SuppressWarnings("unchecked")
     public void initClock() {

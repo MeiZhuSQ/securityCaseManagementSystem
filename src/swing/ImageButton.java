@@ -1,6 +1,7 @@
 package swing;
 
 import java.awt.Cursor;
+import java.awt.Image;
 import java.awt.Insets;
 import java.io.File;
 
@@ -15,6 +16,8 @@ public class ImageButton extends JButton {
 
     public ImageButton(String fileName) {
         ImageIcon icon = new ImageIcon((new File(GUIUtil.imgFolder, fileName)).getAbsolutePath());
+        Image scaledInstance = icon.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+        icon.setImage(scaledInstance);
         setSize(icon.getImage().getWidth(null), icon.getImage().getHeight(null));
         setIcon(icon);
         setMargin(new Insets(0, 0, 0, 0));// 将边框外的上下左右空间设置为0

@@ -81,6 +81,8 @@ public class GUIUtil {
         b.setPreferredSize(new Dimension(30, 30));
         b.setToolTipText(tip);
         b.setHorizontalTextPosition(JButton.CENTER);
+        
+        b.setFocusable(false);
         //b.setText(tip);
     }
 
