@@ -54,7 +54,7 @@ public class MainFrame extends BaseFrame {
     public static JFrame frame;
     public static ClosableTabbedPane tabbedPane;
     public CaseTableModel caseTableModel;
-    public static JTable caseTable;
+    public JTable caseTable;
     private TableColumn column;
     private JList<Object> clockList;
     private DefaultListModel clockModel;
@@ -116,12 +116,19 @@ public class MainFrame extends BaseFrame {
         caseTable.setRowHeight(30);
         JTableHeader head = caseTable.getTableHeader();
         head.setPreferredSize(new Dimension(head.getWidth(), 30));
-        
-        caseTable.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);// 以下设置表格列宽
+        // 以下设置表格列宽
+        caseTable.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         for (int i = 0; i < 5; i++) {
             column = caseTable.getColumnModel().getColumn(i);
             if (i == 0) {
                 column.setPreferredWidth(50);
+                column.setMaxWidth(50);
+                column.setMinWidth(50);
+            }
+            if (i == 4) {
+                column.setPreferredWidth(100);
+                column.setMaxWidth(100);
+                column.setMinWidth(100);
             }
         }
         btnName.add("详情");
@@ -154,14 +161,7 @@ public class MainFrame extends BaseFrame {
             public void actionPerformed(ActionEvent e) {
                 CaseDialog caseDialog = new CaseDialog();
                 caseDialog.setSize(new Dimension(500, 400));
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                Dimension frameSize = caseDialog.getSize();
-                if (frameSize.height > screenSize.height)
-                    frameSize.height = screenSize.height;
-                if (frameSize.width > screenSize.width)
-                    frameSize.width = screenSize.width;
-                caseDialog.setLocation((screenSize.width - frameSize.width) / 2,
-                        (screenSize.height - frameSize.height) / 2);
+                GUIUtil.setCenter(caseDialog);
                 // MainFrame.frame.setEnabled(false);
                 caseDialog.setVisible(true);
             }
@@ -272,6 +272,12 @@ public class MainFrame extends BaseFrame {
         column.setCellEditor(new MyButtonEditor());
     }*/
     
+    public void updateCaseTable() {
+        caseTableModel.list = new CaseService().listCase();
+        //或 policeTableModel.fireTableDataChanged();
+        caseTable.updateUI();
+    }
+    
     @SuppressWarnings("unchecked")
     public void initClock() {
         clockList = new JList<Object>();
@@ -294,5 +300,7 @@ public class MainFrame extends BaseFrame {
         clockList.setSelectionForeground(new Color(40, 101, 156));
         clockList.setFixedCellHeight(25);
     }
+    
+    
 
 }

@@ -159,7 +159,7 @@ public class NotePanel extends JPanel {
         askedAdultLabel.setBounds(24, 102, 90, 21);
         askedPanel.add(askedAdultLabel);
 
-        AskedAdultListener askedAdultListener = new AskedAdultListener();
+        NoteAskedAdultListener askedAdultListener = new NoteAskedAdultListener();
         JRadioButton CnRadioButton = new JRadioButton("成年");
         CnRadioButton.setActionCommand("1");
         CnRadioButton.addActionListener(askedAdultListener);
@@ -176,7 +176,7 @@ public class NotePanel extends JPanel {
         askedAbleLabel.setBounds(326, 106, 95, 17);
         askedPanel.add(askedAbleLabel);
 
-        AskedAbleListener askedAbleListener = new AskedAbleListener();
+        NoteAskedAbleListener askedAbleListener = new NoteAskedAbleListener();
         JRadioButton JqRadioButton = new JRadioButton("健全");
         JqRadioButton.setActionCommand("1");
         JqRadioButton.addActionListener(askedAbleListener);
@@ -189,7 +189,7 @@ public class NotePanel extends JPanel {
         FjqRadioButton.setBounds(483, 102, 121, 23);
         askedPanel.add(FjqRadioButton);
 
-        AskedTypeListener askedTypeListener = new AskedTypeListener();
+        NoteAskedTypeListener askedTypeListener = new NoteAskedTypeListener();
         JRadioButton BhrRadioButton = new JRadioButton("被害人");
         BhrRadioButton.setActionCommand("1");
         BhrRadioButton.addActionListener(askedTypeListener);

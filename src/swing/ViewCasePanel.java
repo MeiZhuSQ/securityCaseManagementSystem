@@ -37,7 +37,7 @@ public class ViewCasePanel extends JPanel {
 
     public ViewCasePanel(int caseId) {
         // 更新选中的caseId
-        int i = MainFrame.caseTable.getSelectedRow();
+        int i = MainFrame.getInstance().caseTable.getSelectedRow();
         this.caseId = Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + "");
         CaseService caseService = new CaseService();
         LegalCase legalCase = caseService.selectCaseById(caseId);

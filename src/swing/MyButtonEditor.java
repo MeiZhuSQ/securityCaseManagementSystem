@@ -3,6 +3,7 @@ package swing;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -13,6 +14,9 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
+import constant.CommonConstant;
+import dto.ResultDTO;
+import service.CaseService;
 import util.GUIUtil;
 
 /**
@@ -60,7 +64,7 @@ public class MyButtonEditor extends AbstractCellEditor implements TableCellEdito
         button.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                int i = MainFrame.caseTable.getSelectedRow();
+                int i = MainFrame.getInstance().caseTable.getSelectedRow();
                 String caseId = MainFrame.getInstance().caseTableModel.getValueAt(i, 0)+"";
                 JPanel viewPanel = new ViewCasePanel(Integer.valueOf(caseId));
                 MainFrame.tabbedPane.addTab("案件详情", viewPanel, null);
@@ -71,14 +75,29 @@ public class MyButtonEditor extends AbstractCellEditor implements TableCellEdito
         button1.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-
+                CaseDialog caseDialog = new CaseDialog();
+                caseDialog.setSize(new Dimension(500, 400));
+                GUIUtil.setCenter(caseDialog);
+                // MainFrame.frame.setEnabled(false);
+                caseDialog.setVisible(true);
+                int i = MainFrame.getInstance().caseTable.getSelectedRow();
+                caseDialog.setCaseId(Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + ""));
                 fireEditingStopped();
             }
         });
         button2.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                
+                int i = MainFrame.getInstance().caseTable.getSelectedRow();
+                String caseId = MainFrame.getInstance().caseTableModel.getValueAt(i, 0)+"";
+                CaseService caseService = new CaseService();
+                ResultDTO resultDTO = caseService.delCase(Integer.valueOf(caseId));
+                if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                    MainFrame.alert(resultDTO.getMessage());
+                    return;
+                }
+                MainFrame.alert("删除成功");
+                MainFrame.getInstance().updateCaseTable();
                 fireEditingStopped();
             }
         });
@@ -95,9 +114,9 @@ public class MyButtonEditor extends AbstractCellEditor implements TableCellEdito
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 
         btnName = (ArrayList<String>) value;
-        GUIUtil.setImageIcon(button, "edit.png", "修改案件");
-        GUIUtil.setImageIcon(button1, "edit.png", "修改案件");
-        GUIUtil.setImageIcon(button2, "edit.png", "修改案件");
+        button = new ImageButton("view.png");
+        button1 = new ImageButton("edit.png");
+        button2 = new ImageButton("delete.png");
         //button.setText(value == null ? "" : btnName.get(0));
         //button1.setText(value == null ? "" : btnName.get(1));
         //button2.setText(value == null ? "" : btnName.get(2));

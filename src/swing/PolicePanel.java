@@ -13,6 +13,8 @@ import javax.swing.table.JTableHeader;
 import constant.CommonConstant;
 import dto.ResultDTO;
 import service.CaseService;
+import util.GUIUtil;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -42,14 +44,7 @@ public class PolicePanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 PoliceDialog policeDialog = PoliceDialog.getInstance();
                 policeDialog.setSize(new Dimension(500, 400));
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                Dimension frameSize = policeDialog.getSize();
-                if (frameSize.height > screenSize.height)
-                    frameSize.height = screenSize.height;
-                if (frameSize.width > screenSize.width)
-                    frameSize.width = screenSize.width;
-                policeDialog.setLocation((screenSize.width - frameSize.width) / 2,
-                        (screenSize.height - frameSize.height) / 2);
+                GUIUtil.setCenter(policeDialog);
                 // MainFrame.frame.setEnabled(false);
                 policeDialog.setVisible(true);
             }
@@ -63,14 +58,7 @@ public class PolicePanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 PoliceDialog policeDialog = PoliceDialog.getInstance();
                 policeDialog.setSize(new Dimension(500, 400));
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                Dimension frameSize = policeDialog.getSize();
-                if (frameSize.height > screenSize.height)
-                    frameSize.height = screenSize.height;
-                if (frameSize.width > screenSize.width)
-                    frameSize.width = screenSize.width;
-                policeDialog.setLocation((screenSize.width - frameSize.width) / 2,
-                        (screenSize.height - frameSize.height) / 2);
+                GUIUtil.setCenter(policeDialog);
                 int i = policeTable.getSelectedRow();
                 policeDialog.setPoliceId(Integer.parseInt(policeTableModel.getValueAt(i, 0) + ""));
                 policeDialog.policeNameField.setText(policeTableModel.getValueAt(i, 1) + "");

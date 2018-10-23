@@ -16,7 +16,7 @@ public class ImageButton extends JButton {
 
     public ImageButton(String fileName) {
         ImageIcon icon = new ImageIcon((new File(GUIUtil.imgFolder, fileName)).getAbsolutePath());
-        Image scaledInstance = icon.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+        Image scaledInstance = icon.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT);
         icon.setImage(scaledInstance);
         setSize(icon.getImage().getWidth(null), icon.getImage().getHeight(null));
         setIcon(icon);

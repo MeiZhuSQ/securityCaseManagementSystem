@@ -8,12 +8,11 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.eltima.components.ui.DatePicker;
 
 import constant.CommonConstant;
 import dto.ResultDTO;
+import entity.LegalCase;
 import service.CaseService;
 import util.DateUtil;
 
@@ -29,6 +28,7 @@ public class CaseDialog extends JDialog {
     private DatePicker datePickerField;
     private static CaseDialog instance;
     private JTextField remarkField;
+    private int caseId = 0;
     
     public static CaseDialog getInstance () {
         if (instance == null) {
@@ -55,15 +55,24 @@ public class CaseDialog extends JDialog {
                 String date = datePickerField.getText();
                 String remark = remarkField.getText();
                 CaseService caseService = new CaseService();
-                try {
-                    ResultDTO addCase = caseService.addCase(caseName, date, remark);
-                    if (CommonConstant.RESULT_CODE_FAIL.equals(addCase.getCode())) {
-                        MainFrame.alert(addCase.getMessage());
-                    }
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                    MainFrame.alert("保存失败");
+                ResultDTO resultDTO = new ResultDTO();
+                //新增
+                if (caseId == 0) {
+                    resultDTO = caseService.addCase(caseName, date, remark);
+                } else {
+                    //更新
+                    LegalCase legalCase = new LegalCase();
+                    legalCase.setId(caseId);
+                    legalCase.setName(caseName);
+                    legalCase.setTime(date);
+                    legalCase.setRemark(remark);
+                    resultDTO = caseService.updateCase(legalCase);
                 }
+                if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                    MainFrame.alert(resultDTO.getMessage());
+                }
+                MainFrame.alert("保存成功");
+                MainFrame.getInstance().updateCaseTable();
             }
         });
         saveButton.setBounds(90, 254, 113, 27);
@@ -91,4 +100,13 @@ public class CaseDialog extends JDialog {
         getContentPane().add(cancelButton);
 
     }
+
+    public int getCaseId() {
+        return caseId;
+    }
+
+    public void setCaseId(int caseId) {
+        this.caseId = caseId;
+    }
+    
 }

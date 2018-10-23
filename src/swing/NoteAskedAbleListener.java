@@ -3,11 +3,11 @@ package swing;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AskedTypeListener implements ActionListener {
-    public static String selectedAskedType;
+public class NoteAskedAbleListener implements ActionListener {
+    public static String selectedAbled; 
     @Override
     public void actionPerformed(ActionEvent e) {
-        selectedAskedType = e.getActionCommand();
+        selectedAbled = e.getActionCommand();
     }
 
 }

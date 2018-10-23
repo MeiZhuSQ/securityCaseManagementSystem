@@ -53,6 +53,9 @@ public class MyButtonRenderer implements TableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
             int row, int column) {
         btnName = (ArrayList<String>) value;
+        button = new ImageButton("view.png");
+        button1 = new ImageButton("edit.png");
+        button2 = new ImageButton("delete.png");
         /*GUIUtil.setImageIcon(button, "edit.png", "修改案件");
         GUIUtil.setImageIcon(button1, "edit.png", "修改案件");
         GUIUtil.setImageIcon(button2, "edit.png", "修改案件");*/
