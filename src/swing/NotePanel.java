@@ -134,16 +134,13 @@ public class NotePanel extends JPanel {
         lblNewLabel.setBounds(24, 99, 30, 18);
         notePanel.add(lblNewLabel);
         
-        JPanel multiPanel = new JPanel();
-        multiPanel.setBounds(99, 92, 72, 30);
-        notePanel.add(multiPanel);
-        
         mulit = new MulitCombobox(policeList.toArray(new String[policeList.size()]), defaultValue);
+        mulit.setBounds(99, 92, 70, 30);
         mulit.arrowButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             }
         });
-        multiPanel.add(mulit);
+        notePanel.add(mulit);
         
         JButton saveButton = new JButton("保存");
         saveButton.setBounds(311, 201, 113, 27);
