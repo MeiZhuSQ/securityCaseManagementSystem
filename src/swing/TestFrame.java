@@ -19,13 +19,13 @@ public class TestFrame extends JFrame {
     }  
     Object[] value;
     Object[] defaultValue;
-    private void init() {  
-          
-        this.setLayout(new FlowLayout());  
+    private void init() {
          value = new String[]{ "1" , "2" ,"3" ,"4","5" };  
          defaultValue = new String[]{ "1"  ,"4","5" };  
         final MulitCombobox mulit = new MulitCombobox(value, defaultValue);  
+        mulit.setBounds(34, 5, 71, 28);
         final JTextField text = new JTextField(20);  
+        text.setBounds(110, 7, 166, 24);
         mulit.addActionListener(new ActionListener() {  
               
             @Override  
@@ -40,11 +40,13 @@ public class TestFrame extends JFrame {
                 text.setText(builder.toString());  
             }  
         });  
-        this.add(mulit );  
+        getContentPane().setLayout(null);
+        getContentPane().add(mulit );  
           
-        this.add(text);  
+        getContentPane().add(text);  
         JButton ok = new JButton("按钮");
-        this.add(ok);
+        ok.setBounds(281, 5, 63, 27);
+        getContentPane().add(ok);
         ok.addActionListener(new ActionListener() {
 
 			@Override
@@ -56,7 +58,8 @@ public class TestFrame extends JFrame {
 			}
 		});
         JButton ok1 = new JButton("xx");
-        this.add(ok1);
+        ok1.setBounds(349, 5, 49, 27);
+        getContentPane().add(ok1);
         ok1.addActionListener(new ActionListener() {
 
 			@Override

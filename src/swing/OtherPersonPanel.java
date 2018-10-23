@@ -18,14 +18,14 @@ import util.GUIUtil;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class PolicePanel extends JPanel {
+public class OtherPersonPanel extends JPanel {
 
     private static final long serialVersionUID = -6102284463671287341L;
-    private static PolicePanel instance = null;
+    private static OtherPersonPanel instance = null;
     private JTable policeTable;
     public PoliceTableModel policeTableModel;
 
-    public PolicePanel() {
+    public OtherPersonPanel() {
         setLayout(null);
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(0, 0, 662, 334);
@@ -93,9 +93,9 @@ public class PolicePanel extends JPanel {
         add(btnNewButton_2);
     }
 
-    public static PolicePanel getInstance() {
+    public static OtherPersonPanel getInstance() {
         if (instance == null) {
-            instance = new PolicePanel();
+            instance = new OtherPersonPanel();
         }
         return instance;
     }

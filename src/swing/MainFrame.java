@@ -97,7 +97,7 @@ public class MainFrame extends BaseFrame {
     }
 
     private void initialize() {
-        this.setTitle("案件管理系统");
+        this.setTitle("案件管理系统 V1.0");
         this.setBounds(100, 100, 1024, 700);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(Color.white);
@@ -159,7 +159,7 @@ public class MainFrame extends BaseFrame {
         JMenuItem caseMenuItem = new JMenuItem("新建案件");
         caseMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                CaseDialog caseDialog = new CaseDialog();
+                CaseDialog caseDialog = CaseDialog.getInstance();
                 caseDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(caseDialog);
                 // MainFrame.frame.setEnabled(false);

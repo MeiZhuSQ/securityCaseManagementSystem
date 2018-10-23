@@ -73,6 +73,7 @@ public class MulitCombobox extends JComponent {
         popup =new  MulitPopup(values,defaultValues);  
         popup.addActionListener(new PopupAction());  
         editor = new JTextField();  
+        editor.setSize(new Dimension(60, 30));
         editor.setBackground(Color.decode("#EEEEEE"));  
         editor.setEditable(false);  
         editor.setBorder(null);  

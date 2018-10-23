@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import javax.swing.AbstractCellEditor;
@@ -17,6 +18,7 @@ import javax.swing.table.TableCellEditor;
 import constant.CommonConstant;
 import dto.ResultDTO;
 import service.CaseService;
+import util.DateUtil;
 import util.GUIUtil;
 
 /**
@@ -75,29 +77,39 @@ public class MyButtonEditor extends AbstractCellEditor implements TableCellEdito
         button1.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                CaseDialog caseDialog = new CaseDialog();
+                CaseDialog caseDialog = CaseDialog.getInstance();
                 caseDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(caseDialog);
                 // MainFrame.frame.setEnabled(false);
                 caseDialog.setVisible(true);
                 int i = MainFrame.getInstance().caseTable.getSelectedRow();
                 caseDialog.setCaseId(Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + ""));
+                caseDialog.caseNameField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 1) + "");
+                try {
+                    caseDialog.datePickerField = DateUtil.setDatePicker(MainFrame.getInstance().caseTableModel.getValueAt(i, 2) + "");
+                    caseDialog.datePickerField.updateUI();
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+                caseDialog.remarkField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 3) + "");
                 fireEditingStopped();
             }
         });
         button2.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                int i = MainFrame.getInstance().caseTable.getSelectedRow();
-                String caseId = MainFrame.getInstance().caseTableModel.getValueAt(i, 0)+"";
-                CaseService caseService = new CaseService();
-                ResultDTO resultDTO = caseService.delCase(Integer.valueOf(caseId));
-                if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
-                    MainFrame.alert(resultDTO.getMessage());
-                    return;
+                if (MainFrame.prompt("确定删除该案件吗？")){
+                    int i = MainFrame.getInstance().caseTable.getSelectedRow();
+                    String caseId = MainFrame.getInstance().caseTableModel.getValueAt(i, 0)+"";
+                    CaseService caseService = new CaseService();
+                    ResultDTO resultDTO = caseService.delCase(Integer.valueOf(caseId));
+                    if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                        MainFrame.alert(resultDTO.getMessage());
+                        return;
+                    }
+                    MainFrame.alert("删除成功");
+                    MainFrame.getInstance().updateCaseTable();
                 }
-                MainFrame.alert("删除成功");
-                MainFrame.getInstance().updateCaseTable();
                 fireEditingStopped();
             }
         });

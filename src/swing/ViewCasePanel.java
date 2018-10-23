@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+
+import entity.AskedPerson;
 import entity.LegalCase;
 import entity.Note;
 import entity.Procedure;
@@ -102,7 +104,7 @@ public class ViewCasePanel extends JPanel {
         JButton createNoteButton = new JButton("新建");
         createNoteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                JPanel notePanel = new NotePanel(caseId);
+                NotePanel notePanel = new NotePanel(caseId);
                 MainFrame.tabbedPane.addTab("新建笔录", notePanel, null);
                 MainFrame.tabbedPane.setSelectedComponent(notePanel);
             }
@@ -112,6 +114,18 @@ public class ViewCasePanel extends JPanel {
         JButton editNoteButton = new JButton("修改");
         editNoteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                NotePanel notePanel = new NotePanel(caseId);
+                int i = noteTable.getSelectedRow();
+                int noteId = Integer.parseInt(noteTableModel.getValueAt(i, 0) + "");
+                notePanel.setNoteId(noteId);
+                //给note赋值
+                Note note = new CaseService().selectNoteById(noteId);
+                notePanel.getNoteNameField().setText(note.getName());
+                notePanel.getPlaceField().setText(note.getPlace());
+                notePanel.getFileNameField().setText(note.getFileName());
+                notePanel.getRemarkTextArea().setText(note.getRemark());
+                MainFrame.tabbedPane.addTab("修改笔录", notePanel, null);
+                MainFrame.tabbedPane.setSelectedComponent(notePanel);
             }
         });
         panel.add(editNoteButton);

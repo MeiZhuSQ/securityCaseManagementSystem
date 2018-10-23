@@ -24,10 +24,10 @@ import util.DateUtil;
 public class CaseDialog extends JDialog {
     
     private static final long serialVersionUID = 7334759086622449699L;
-    private JTextField caseNameField;
-    private DatePicker datePickerField;
+    public JTextField caseNameField;
+    public DatePicker datePickerField;
     private static CaseDialog instance;
-    private JTextField remarkField;
+    public JTextField remarkField;
     private int caseId = 0;
     
     public static CaseDialog getInstance () {
@@ -72,6 +72,7 @@ public class CaseDialog extends JDialog {
                     MainFrame.alert(resultDTO.getMessage());
                 }
                 MainFrame.alert("保存成功");
+                getInstance().setVisible(false);
                 MainFrame.getInstance().updateCaseTable();
             }
         });
@@ -96,6 +97,12 @@ public class CaseDialog extends JDialog {
         remarkField.setColumns(10);
         
         JButton cancelButton = new JButton("取消");
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.frame.setEnabled(true);
+                getInstance().setVisible(false);
+            }
+        });
         cancelButton.setBounds(248, 254, 113, 27);
         getContentPane().add(cancelButton);
 
