@@ -2,34 +2,31 @@ package swing;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
-
-import entity.AskedPerson;
 import entity.LegalCase;
 import entity.Note;
-import entity.Procedure;
+import entity.Police;
 import service.CaseService;
-import util.GUIUtil;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class ViewCasePanel extends JPanel {
 
     private static final long serialVersionUID = 7334759086622449699L;
-    private JTable noteTable;
-    private NoteTableModel noteTableModel;
+    public static JTable noteTable;
+    public static NoteTableModel noteTableModel;
     private JTextField caseTimeField;
     private JTextField caseRemarkField;
     private JTable procedureTable;
@@ -117,13 +114,20 @@ public class ViewCasePanel extends JPanel {
                 NotePanel notePanel = new NotePanel(caseId);
                 int i = noteTable.getSelectedRow();
                 int noteId = Integer.parseInt(noteTableModel.getValueAt(i, 0) + "");
-                notePanel.setNoteId(noteId);
+                //askedPersonTableModel赋值
+                notePanel.askedPersonTableModel.setList(noteId);
+                //otherPersonTableModel赋值
+                notePanel.otherPersonTableModel.setList(noteId);
+                //传入noteId，防止新增时选中了行
+                NotePanel.noteId = noteId;
                 //给note赋值
                 Note note = new CaseService().selectNoteById(noteId);
                 notePanel.getNoteNameField().setText(note.getName());
                 notePanel.getPlaceField().setText(note.getPlace());
                 notePanel.getFileNameField().setText(note.getFileName());
                 notePanel.getRemarkTextArea().setText(note.getRemark());
+                String[] value = note.getPoliceList().split(",");
+                notePanel.mulit.MulitCombobox_all(value, new Object[] {});
                 MainFrame.tabbedPane.addTab("修改笔录", notePanel, null);
                 MainFrame.tabbedPane.setSelectedComponent(notePanel);
             }

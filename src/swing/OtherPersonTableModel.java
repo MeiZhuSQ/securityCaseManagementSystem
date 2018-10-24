@@ -2,19 +2,18 @@ package swing;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.table.AbstractTableModel;
-import entity.Note;
+import entity.OtherPerson;
 import service.CaseService;
 
 public class OtherPersonTableModel extends AbstractTableModel {
 
-    private static final long serialVersionUID = 5172529856464610326L;
-    private String[] columnNames = new String[] { "序号", "笔录名称", "开始时间", "结束时间", "地点", "文件名", "警员", "备注" };
-    public List<Note> list = new ArrayList<>();
+    private static final long serialVersionUID = 1378854762463879797L;
+    private String[] columnNames = new String[] { "序号", "姓名", "性别", "身份证号", "其他人类型"};
+    public List<OtherPerson> list = new ArrayList<>();
 
-    public void setList(int caseId) {
-        list = new CaseService().selectNoteByCaseId(caseId);
+    public void setList(int noteId) {
+        list = new CaseService().selectOtherPersonByNoteId(noteId);
     }
 
     @Override
@@ -39,23 +38,17 @@ public class OtherPersonTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Note note = list.get(rowIndex);
+        OtherPerson otherPerson = list.get(rowIndex);
         if (columnIndex == 0)
-            return note.getId();
+            return otherPerson.getId();
         if (columnIndex == 1)
-            return note.getName();
+            return otherPerson.getName();
         if (columnIndex == 2)
-            return note.getStartTime();
+            return otherPerson.getSex().equals("0") ? "男" : "女";
         if (columnIndex == 3)
-            return note.getEndTime();
+            return otherPerson.getIdCard();
         if (columnIndex == 4)
-            return note.getPlace();
-        if (columnIndex == 5)
-            return note.getFileName();
-        if (columnIndex == 6)
-            return note.getPoliceList();
-        if (columnIndex == 7)
-            return note.getRemark();
+            return otherPerson.getType();
         return null;
     }
 

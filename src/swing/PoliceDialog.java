@@ -27,7 +27,7 @@ public class PoliceDialog extends JDialog{
     private int policeId = 0;
     private static PoliceDialog instance;
     
-    public static PoliceDialog getInstance () {
+    public static PoliceDialog getInstance() {
         if (instance == null) {
             instance = new PoliceDialog();
         }

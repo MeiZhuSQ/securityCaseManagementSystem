@@ -2,19 +2,19 @@ package swing;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -26,11 +26,11 @@ import com.eltima.components.ui.DatePicker;
 
 import constant.CommonConstant;
 import dto.ResultDTO;
+import entity.Note;
 import entity.Police;
 import service.CaseService;
 import util.DateUtil;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import util.GUIUtil;
 
 public class NotePanel extends JPanel {
 
@@ -41,21 +41,28 @@ public class NotePanel extends JPanel {
     private JTextField placeField;
     private JTextArea remarkTextArea;
     private int caseId;
-    private final MulitCombobox mulit;
-    private int noteId;
+    public final MulitCombobox mulit;
+    public static int noteId;
     private int procedureId;
     private JTextField fileNameField;
     public NoteAskedTypeListener askedTypeListener;
     private JTable askedPersonTable;
     private JTable otherPersonTable;
-    private AskedPersonTableModel askedPersonTableModel;
-    private OtherPersonTableModel otherPersonTableModel;
+    public AskedPersonTableModel askedPersonTableModel;
+    public OtherPersonTableModel otherPersonTableModel;
     
-    public NotePanel(int caseId) {
-        this.setCaseId(caseId);
+    private static NotePanel instance;
+    
+    public static NotePanel getInstance() {
+        if (instance == null) {
+            instance = new NotePanel();
+        }
+        return instance;
+    }
+    public NotePanel() {
         setLayout(null);
         JPanel notePanel = new JPanel();
-        notePanel.setBounds(14, 13, 807, 241);
+        notePanel.setBounds(14, 13, 972, 194);
         add(notePanel);
         Border noteTitleBorder, noteLineBorder;
         noteLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
@@ -74,21 +81,21 @@ public class NotePanel extends JPanel {
         noteNameField.setColumns(10);
 
         JLabel startTimeLabel = new JLabel("开始时间");
-        startTimeLabel.setBounds(24, 68, 72, 18);
+        startTimeLabel.setBounds(24, 77, 72, 18);
         notePanel.add(startTimeLabel);
 
         startTime = DateUtil.getDatePicker();
         JPanel startTimePanel = new JPanel();
-        startTimePanel.setBounds(99, 55, 177, 30);
+        startTimePanel.setBounds(99, 64, 177, 30);
         startTimePanel.add(startTime);
         notePanel.add(startTimePanel);
 
         JLabel endTimelabel = new JLabel("结束时间");
-        endTimelabel.setBounds(303, 65, 72, 18);
+        endTimelabel.setBounds(303, 74, 72, 18);
         notePanel.add(endTimelabel);
 
         JPanel endTimePanel = new JPanel();
-        endTimePanel.setBounds(374, 55, 177, 34);
+        endTimePanel.setBounds(374, 64, 177, 34);
         endTime = DateUtil.getDatePicker();
         endTimePanel.add(endTime);
         notePanel.add(endTimePanel);
@@ -103,21 +110,21 @@ public class NotePanel extends JPanel {
         placeField.setColumns(10);
 
         JLabel remarkLabel = new JLabel("备注");
-        remarkLabel.setBounds(25, 133, 61, 18);
+        remarkLabel.setBounds(24, 110, 61, 18);
         notePanel.add(remarkLabel);
 
         remarkTextArea = new JTextArea();
         remarkTextArea.setBorder(new LineBorder(Color.LIGHT_GRAY));
-        remarkTextArea.setBounds(100, 131, 462, 63);
+        remarkTextArea.setBounds(99, 108, 675, 63);
         notePanel.add(remarkTextArea);
         
         JLabel fileNameLabel = new JLabel("文件名");
-        fileNameLabel.setBounds(559, 35, 72, 18);
+        fileNameLabel.setBounds(575, 32, 72, 18);
         notePanel.add(fileNameLabel);
         
         fileNameField = new JTextField();
         fileNameField.setColumns(10);
-        fileNameField.setBounds(637, 32, 137, 24);
+        fileNameField.setBounds(637, 29, 177, 24);
         notePanel.add(fileNameField);
         
         //自定义组件 处理民警多选框  
@@ -127,15 +134,15 @@ public class NotePanel extends JPanel {
         CaseService caseService = new CaseService();
         List<Police> polices = caseService.listPolice();
         for (int i = 0; i < polices.size(); i++) {
-            policeList.add(polices.get(i).getName() + "_" + polices.get(i).getPoliceNumber());
+            policeList.add(/*polices.get(i).getId() + "_" + */polices.get(i).getPoliceNumber());
         }
         defaultValue = new String[] {"请选择"};
         JLabel lblNewLabel = new JLabel("民警");
-        lblNewLabel.setBounds(24, 99, 30, 18);
+        lblNewLabel.setBounds(590, 72, 30, 18);
         notePanel.add(lblNewLabel);
         
         mulit = new MulitCombobox(policeList.toArray(new String[policeList.size()]), defaultValue);
-        mulit.setBounds(99, 92, 70, 30);
+        mulit.setBounds(637, 65, 177, 28);
         mulit.arrowButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             }
@@ -143,7 +150,7 @@ public class NotePanel extends JPanel {
         notePanel.add(mulit);
         
         JButton saveButton = new JButton("保存");
-        saveButton.setBounds(311, 201, 113, 27);
+        saveButton.setBounds(818, 144, 113, 27);
         notePanel.add(saveButton);
         
         saveButton.addActionListener(new ActionListener() {
@@ -154,35 +161,29 @@ public class NotePanel extends JPanel {
                 String endTimeStr = endTime.getText();
                 String fileName = fileNameField.getText();
                 String remark = remarkTextArea.getText();
-                // 被询问人
-                String askedName = "";/*askedNameField.getText();*/
-                Integer askedSex = 0;/*askedSexComboBox.getSelectedIndex();*/
-                String idCard = "";/*askedIdCardField.getText();*/
-                /*String selectedAskedType = askedTypeListener.selectedAskedType;
-                String selectedAskedAudlt = askedAdultListener.selectedAskedAudlt;
-                String selectedAbled = askedAbleListener.selectedAbled;
-                // 其他人
-                String otherName = "";otherNameField.getText();
-                Integer otherSex = 0;otherSexComboBox.getSelectedIndex();
-                String otherIdCard = "";otherIDField.getText();
-                String selectedOtherType = otherTypeListener.selectedOtherType;*/
                 // 警员
                 Object[] objs = mulit.getSelectedValues();
                 StringBuilder sb = new StringBuilder();
                 for (Object obj : objs) {
-                	String code = obj.toString().split("_")[1];
-                    sb.append(code+",");
+                	String policeId = obj.toString()/*.split("_")[0]*/;
+                    sb.append(policeId+",");
                 }
                 CaseService caseService = new CaseService();
-                // 保存笔录信息
-                ResultDTO addNoteResult = caseService.addNote(caseId, noteName, startTimeStr, endTimeStr, remark, place,
-                        fileName, sb.deleteCharAt(sb.length()-1).toString());
-                if (CommonConstant.RESULT_CODE_FAIL.equals(addNoteResult.getCode())) {
-                    MainFrame.alert(addNoteResult.getMessage());
+                ResultDTO resultDTO = new ResultDTO();
+                if (noteId == 0) {
+                    // 新增笔录信息
+                    resultDTO = caseService.addNote(caseId, noteName, startTimeStr, endTimeStr, remark, place,
+                            fileName, sb.deleteCharAt(sb.length()-1).toString());
+                } else {
+                    Note note = new Note(noteId, caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, sb.deleteCharAt(sb.length()-1).toString());
+                    resultDTO = caseService.updateNote(note);
+                }
+                if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                    MainFrame.alert(resultDTO.getMessage());
                     return;
                 }
-                // 保存被询问人
-                int noteId = Integer.parseInt(String.valueOf(addNoteResult.getData()));
+                /*// 保存被询问人
+                noteId = Integer.parseInt(String.valueOf(addNoteResult.getData()));
                 ResultDTO addAskedPerson = caseService.addAskedPerson(noteId, askedName, String.valueOf(askedSex),
                         null, null, idCard, null);
                 if (CommonConstant.RESULT_CODE_FAIL.equals(addAskedPerson.getCode())) {
@@ -192,10 +193,12 @@ public class NotePanel extends JPanel {
                 // 保存其他人员
                 ResultDTO addOtherPerson = caseService.addOtherPerson(noteId, null, String.valueOf(null),
                         null, null);
+                ;
+                
                 if (CommonConstant.RESULT_CODE_FAIL.equals(addOtherPerson.getCode())) {
                     MainFrame.alert(addOtherPerson.getMessage());
                     return;
-                }
+                }*/
                 MainFrame.alert("保存成功");
             }
         });
@@ -215,32 +218,87 @@ public class NotePanel extends JPanel {
         });
 
         JScrollPane askedPanel = new JScrollPane();
-        askedPanel.setLocation(14, 267);
-        askedPanel.setSize(807, 124);
+        askedPanel.setLocation(14, 220);
+        askedPanel.setSize(972, 124);
         add(askedPanel);
         
         askedPersonTableModel = new AskedPersonTableModel();
-        askedPersonTableModel.setList(2);
+        askedPersonTableModel.setList(noteId);
         askedPersonTable = new JTable(askedPersonTableModel);
         askedPersonTable.setRowHeight(30);
         JTableHeader head = askedPersonTable.getTableHeader();
         head.setPreferredSize(new Dimension(head.getWidth(), 30));
         askedPanel.setViewportView(askedPersonTable);
         
-        NoteAskedAdultListener askedAdultListener = new NoteAskedAdultListener();
-
-        NoteAskedAbleListener askedAbleListener = new NoteAskedAbleListener();
-
         askedTypeListener = new NoteAskedTypeListener();
 
-        ButtonGroup askedAdultTypeGroup = new ButtonGroup();
-
-        ButtonGroup askedAbleTypeGroup = new ButtonGroup();
-
-        ButtonGroup askedTypeGroup = new ButtonGroup();
+        JButton askedAddButton = new JButton("新增");
+        askedAddButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                AskedPersonDialog askedPersonDialog = AskedPersonDialog.getInstance();
+                askedPersonDialog.setSize(new Dimension(500, 400));
+                GUIUtil.setCenter(askedPersonDialog);
+                MainFrame.frame.setEnabled(false);
+                askedPersonDialog.setVisible(true);
+            }
+        });
+        askedAddButton.setBounds(263, 357, 113, 27);
+        add(askedAddButton);
+        
+        JButton askedEditButton = new JButton("编辑");
+        askedEditButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                AskedPersonDialog askedPersonDialog = AskedPersonDialog.getInstance();
+                askedPersonDialog.setSize(new Dimension(500, 400));
+                GUIUtil.setCenter(askedPersonDialog);
+                int i = askedPersonTable.getSelectedRow();
+                askedPersonDialog.setAskedPersonId(Integer.parseInt(askedPersonTableModel.getValueAt(i, 0) + ""));
+                askedPersonDialog.nameField.setText(askedPersonTableModel.getValueAt(i, 1) + "");
+                String sex = askedPersonTableModel.getValueAt(i, 2) + "";
+                askedPersonDialog.sexComboBox.setSelectedIndex(sex.equals("男") ? 0 : 1);
+                askedPersonDialog.idCardField.setText(askedPersonTableModel.getValueAt(i, 3) + "");
+                //回显radioButton
+                Enumeration<AbstractButton> radioBtns = askedPersonDialog.askedTypeGroup.getElements();  
+                while (radioBtns.hasMoreElements()) {  
+                    AbstractButton btn = radioBtns.nextElement();  
+                    if(btn.getActionCommand().equals(askedPersonTableModel.getValueAt(i, 4) + "")){  
+                        btn.setSelected(true);;
+                        break;  
+                    }  
+                } 
+                Enumeration<AbstractButton> adultRadioBtns = askedPersonDialog.askedAdultTypeGroup.getElements();  
+                while (adultRadioBtns.hasMoreElements()) {  
+                    AbstractButton btn = adultRadioBtns.nextElement();  
+                    if(btn.getActionCommand().equals(askedPersonTableModel.getValueAt(i, 5) + "")){  
+                        btn.setSelected(true);;
+                        break;  
+                    }  
+                } 
+                Enumeration<AbstractButton> ableRadioBtns = askedPersonDialog.askedAbleTypeGroup.getElements();  
+                while (ableRadioBtns.hasMoreElements()) {  
+                    AbstractButton btn = ableRadioBtns.nextElement();  
+                    if(btn.getActionCommand().equals(askedPersonTableModel.getValueAt(i, 6) + "")){  
+                        btn.setSelected(true);;
+                        break;  
+                    }  
+                } 
+                MainFrame.frame.setEnabled(false);
+                askedPersonDialog.setVisible(true);
+            }
+        });
+        askedEditButton.setBounds(387, 357, 113, 27);
+        add(askedEditButton);
+        
+        JButton askedDeleteButton = new JButton("删除");
+        askedDeleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        askedDeleteButton.setBounds(514, 357, 113, 27);
+        add(askedDeleteButton);
 
         JScrollPane otherPanel = new JScrollPane();
-        otherPanel.setBounds(14, 456, 807, 124);
+        otherPanel.setBounds(14, 403, 972, 124);
         add(otherPanel);
         
         otherPersonTableModel = new OtherPersonTableModel();
@@ -250,23 +308,36 @@ public class NotePanel extends JPanel {
         head.setPreferredSize(new Dimension(otherPersonTable.getTableHeader().getWidth(), 30));
         otherPanel.setViewportView(otherPersonTable);
 
-        OtherTypeListener otherTypeListener = new OtherTypeListener();
-
-        ButtonGroup otherTypeGroup = new ButtonGroup();
+        JButton otherAddButton = new JButton("新增");
+        otherAddButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        otherAddButton.setBounds(263, 540, 113, 27);
+        add(otherAddButton);
         
-        JButton btnNewButton = new JButton("New button");
-        btnNewButton.setBounds(193, 404, 113, 27);
-        add(btnNewButton);
+        JButton otherEditButton = new JButton("编辑");
+        otherEditButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        otherEditButton.setBounds(387, 540, 113, 27);
+        add(otherEditButton);
         
-        JButton btnNewButton_1 = new JButton("New button");
-        btnNewButton_1.setBounds(317, 404, 113, 27);
-        add(btnNewButton_1);
-        
-        JButton button = new JButton("New button");
-        button.setBounds(444, 404, 113, 27);
-        add(button);
+        JButton otherDeleteButton = new JButton("删除");
+        otherDeleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        otherDeleteButton.setBounds(514, 540, 113, 27);
+        add(otherDeleteButton);
     }
 
+    public void updateAskedTable() {
+        askedPersonTableModel.setList(noteId);
+        askedPersonTable.updateUI();
+    }
+    
     public int getCaseId() {
         return caseId;
     }
@@ -305,14 +376,6 @@ public class NotePanel extends JPanel {
 
     public void setPlaceField(JTextField placeField) {
         this.placeField = placeField;
-    }
-
-    public int getNoteId() {
-        return noteId;
-    }
-
-    public void setNoteId(int noteId) {
-        this.noteId = noteId;
     }
 
     public int getProcedureId() {

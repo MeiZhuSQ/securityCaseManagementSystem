@@ -69,7 +69,7 @@ public class MulitCombobox extends JComponent {
     private void initComponent() {  
     	
     	this.repaint();
-        this.setLayout(new FlowLayout()); 
+        this.setLayout(new FlowLayout(FlowLayout.RIGHT)); 
         popup =new  MulitPopup(values,defaultValues);  
         popup.addActionListener(new PopupAction());  
         editor = new JTextField();  
