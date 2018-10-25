@@ -236,9 +236,14 @@ public class NotePanel extends JPanel {
         askedAddButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 AskedPersonDialog askedPersonDialog = AskedPersonDialog.getInstance();
+                askedPersonDialog.nameField.setText("");
+                askedPersonDialog.sexComboBox.setSelectedIndex(0);
+                askedPersonDialog.idCardField.setText("");
+                askedPersonDialog.askedTypeGroup.getElements().nextElement().setSelected(true);
+                askedPersonDialog.askedAdultTypeGroup.getElements().nextElement().setSelected(true);
+                askedPersonDialog.askedAbleTypeGroup.getElements().nextElement().setSelected(true);
                 askedPersonDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(askedPersonDialog);
-                MainFrame.frame.setEnabled(false);
                 askedPersonDialog.setVisible(true);
             }
         });
@@ -282,7 +287,6 @@ public class NotePanel extends JPanel {
                         break;  
                     }  
                 } 
-                MainFrame.frame.setEnabled(false);
                 askedPersonDialog.setVisible(true);
             }
         });
@@ -292,6 +296,18 @@ public class NotePanel extends JPanel {
         JButton askedDeleteButton = new JButton("删除");
         askedDeleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (MainFrame.prompt("确定删除该被询问人吗？")){
+                    int i = askedPersonTable.getSelectedRow();
+                    int policeId = Integer.parseInt(askedPersonTableModel.getValueAt(i, 0) + "");
+                    CaseService caseService = new CaseService();
+                    ResultDTO resultDTO = caseService.delOtherPerson(policeId);
+                    if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                        MainFrame.alert(resultDTO.getMessage());
+                        return;
+                    }
+                    MainFrame.alert("删除成功");
+                }
+                instance.updateAskedTable();
             }
         });
         askedDeleteButton.setBounds(514, 357, 113, 27);
@@ -311,6 +327,10 @@ public class NotePanel extends JPanel {
         JButton otherAddButton = new JButton("新增");
         otherAddButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                OtherPersonDialog otherPersonDialog = OtherPersonDialog.getInstance();
+                otherPersonDialog.setSize(new Dimension(500, 400));
+                GUIUtil.setCenter(otherPersonDialog);
+                otherPersonDialog.setVisible(true);
             }
         });
         otherAddButton.setBounds(263, 540, 113, 27);
@@ -319,6 +339,41 @@ public class NotePanel extends JPanel {
         JButton otherEditButton = new JButton("编辑");
         otherEditButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                AskedPersonDialog askedPersonDialog = AskedPersonDialog.getInstance();
+                askedPersonDialog.setSize(new Dimension(500, 400));
+                GUIUtil.setCenter(askedPersonDialog);
+                int i = askedPersonTable.getSelectedRow();
+                askedPersonDialog.setAskedPersonId(Integer.parseInt(askedPersonTableModel.getValueAt(i, 0) + ""));
+                askedPersonDialog.nameField.setText(askedPersonTableModel.getValueAt(i, 1) + "");
+                String sex = askedPersonTableModel.getValueAt(i, 2) + "";
+                askedPersonDialog.sexComboBox.setSelectedIndex(sex.equals("男") ? 0 : 1);
+                askedPersonDialog.idCardField.setText(askedPersonTableModel.getValueAt(i, 3) + "");
+                //回显radioButton
+                Enumeration<AbstractButton> radioBtns = askedPersonDialog.askedTypeGroup.getElements();  
+                while (radioBtns.hasMoreElements()) {  
+                    AbstractButton btn = radioBtns.nextElement();  
+                    if(btn.getActionCommand().equals(askedPersonTableModel.getValueAt(i, 4) + "")){  
+                        btn.setSelected(true);;
+                        break;  
+                    }  
+                } 
+                Enumeration<AbstractButton> adultRadioBtns = askedPersonDialog.askedAdultTypeGroup.getElements();  
+                while (adultRadioBtns.hasMoreElements()) {  
+                    AbstractButton btn = adultRadioBtns.nextElement();  
+                    if(btn.getActionCommand().equals(askedPersonTableModel.getValueAt(i, 5) + "")){  
+                        btn.setSelected(true);;
+                        break;  
+                    }  
+                } 
+                Enumeration<AbstractButton> ableRadioBtns = askedPersonDialog.askedAbleTypeGroup.getElements();  
+                while (ableRadioBtns.hasMoreElements()) {  
+                    AbstractButton btn = ableRadioBtns.nextElement();  
+                    if(btn.getActionCommand().equals(askedPersonTableModel.getValueAt(i, 6) + "")){  
+                        btn.setSelected(true);;
+                        break;  
+                    }  
+                } 
+                askedPersonDialog.setVisible(true);
             }
         });
         otherEditButton.setBounds(387, 540, 113, 27);

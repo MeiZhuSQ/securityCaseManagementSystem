@@ -45,7 +45,6 @@ public class PolicePanel extends JPanel {
                 PoliceDialog policeDialog = PoliceDialog.getInstance();
                 policeDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(policeDialog);
-                MainFrame.frame.setEnabled(false);
                 policeDialog.setVisible(true);
             }
         });
@@ -65,7 +64,6 @@ public class PolicePanel extends JPanel {
                 String sex = policeTableModel.getValueAt(i, 2) + "";
                 policeDialog.policeSexField.setSelectedIndex(sex.equals("男") ? 0 : 1);
                 policeDialog.policeCodeField.setText(policeTableModel.getValueAt(i, 3) + "");
-                MainFrame.frame.setEnabled(false);
                 policeDialog.setVisible(true);
             }
         });

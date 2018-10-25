@@ -15,6 +15,9 @@ import service.CaseService;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
+
+import org.apache.commons.lang.StringUtils;
+
 import javax.swing.JButton;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
@@ -101,7 +104,24 @@ public class ViewCasePanel extends JPanel {
         JButton createNoteButton = new JButton("新建");
         createNoteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                NotePanel notePanel = new NotePanel(caseId);
+                //NotePanel notePanel = new NotePanel(caseId);
+                NotePanel notePanel = NotePanel.getInstance();
+                notePanel.setCaseId(caseId);
+                
+                notePanel.getNoteNameField().setText("");;
+                notePanel.getPlaceField().setText("");
+                notePanel.getFileNameField().setText("");
+                notePanel.getRemarkTextArea().setText("");
+                List<String> policeList = new ArrayList<>();
+                //Object[] defaultValue = new Object[] {};
+                CaseService caseService = new CaseService();
+                List<Police> polices = caseService.listPolice();
+                for (Police police : polices) {
+                    policeList.add(/*polices.get(i).getId() + "_" + */police.getPoliceNumber());
+
+                }
+                Object[] defaultValue = new String[] {"请选择"};
+                notePanel.mulit.MulitCombobox_all(policeList.toArray(new String[policeList.size()]), defaultValue);
                 MainFrame.tabbedPane.addTab("新建笔录", notePanel, null);
                 MainFrame.tabbedPane.setSelectedComponent(notePanel);
             }
@@ -111,7 +131,9 @@ public class ViewCasePanel extends JPanel {
         JButton editNoteButton = new JButton("修改");
         editNoteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                NotePanel notePanel = new NotePanel(caseId);
+                //NotePanel notePanel = new NotePanel(caseId);
+                NotePanel notePanel = NotePanel.getInstance();
+                notePanel.setCaseId(caseId);
                 int i = noteTable.getSelectedRow();
                 int noteId = Integer.parseInt(noteTableModel.getValueAt(i, 0) + "");
                 //askedPersonTableModel赋值
@@ -126,8 +148,17 @@ public class ViewCasePanel extends JPanel {
                 notePanel.getPlaceField().setText(note.getPlace());
                 notePanel.getFileNameField().setText(note.getFileName());
                 notePanel.getRemarkTextArea().setText(note.getRemark());
-                String[] value = note.getPoliceList().split(",");
-                notePanel.mulit.MulitCombobox_all(value, new Object[] {});
+                
+                List<String> policeList = new ArrayList<>();
+                //Object[] defaultValue = new Object[] {};
+                CaseService caseService = new CaseService();
+                List<Police> polices = caseService.listPolice();
+                for (Police police : polices) {
+                    policeList.add(/*polices.get(i).getId() + "_" + */police.getPoliceNumber());
+
+                }
+                String[] defaultValue = note.getPoliceList().split(",");
+                notePanel.mulit.MulitCombobox_all(policeList.toArray(new String[policeList.size()]), defaultValue);
                 MainFrame.tabbedPane.addTab("修改笔录", notePanel, null);
                 MainFrame.tabbedPane.setSelectedComponent(notePanel);
             }

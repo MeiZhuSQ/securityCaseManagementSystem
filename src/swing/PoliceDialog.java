@@ -35,6 +35,7 @@ public class PoliceDialog extends JDialog{
     }
     
     public PoliceDialog() {
+        setModal(true);
         getContentPane().setLayout(null);
         
         JLabel lblNewLabel = new JLabel("姓名");
@@ -74,8 +75,7 @@ public class PoliceDialog extends JDialog{
                     resultDTO = caseService.addPolice(policeNameField.getText(), String.valueOf(policeSexField.getSelectedIndex()), policeCodeField.getText());
                 } else {
                     //更新
-                    Police police = new Police();
-                    police.setId(policeId);
+                    Police police = caseService.selectPoliceById(policeId);
                     police.setName(policeNameField.getText());
                     police.setSex(String.valueOf(policeSexField.getSelectedIndex()));
                     police.setPoliceNumber(policeCodeField.getText());
@@ -86,7 +86,6 @@ public class PoliceDialog extends JDialog{
                     return;
                 }
                 MainFrame.alert("保存成功");
-                MainFrame.frame.setEnabled(true);
                 PolicePanel.getInstance().updateTable();
                 PoliceDialog.this.setVisible(false);
             }
@@ -98,7 +97,6 @@ public class PoliceDialog extends JDialog{
         btnNewButton_1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MainFrame.frame.setEnabled(true);
                 PoliceDialog.this.setVisible(false);
             }
         });

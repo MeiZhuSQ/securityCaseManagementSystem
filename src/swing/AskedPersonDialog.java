@@ -31,9 +31,9 @@ public class AskedPersonDialog extends JDialog {
     public ButtonGroup askedAdultTypeGroup;
     public ButtonGroup askedAbleTypeGroup;
     public ButtonGroup askedTypeGroup;
-    public NoteAskedTypeListener askedTypeListener = new NoteAskedTypeListener();
+    /*public NoteAskedTypeListener askedTypeListener = new NoteAskedTypeListener();
     public NoteAskedAdultListener askedAdultListener = new NoteAskedAdultListener();
-    public NoteAskedAbleListener askedAbleListener = new NoteAskedAbleListener();
+    public NoteAskedAbleListener askedAbleListener = new NoteAskedAbleListener();*/
     
     public static AskedPersonDialog getInstance() {
         if (instance == null) {
@@ -43,12 +43,8 @@ public class AskedPersonDialog extends JDialog {
     }
     
     public AskedPersonDialog() {
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                MainFrame.frame.setEnabled(true);
-            }
-        });
+        //设置模态
+        setModal(true);
         getContentPane().setLayout(null);
         
         JLabel label = new JLabel("姓名：");
@@ -97,14 +93,14 @@ public class AskedPersonDialog extends JDialog {
         getContentPane().add(label_4);
         
         JRadioButton radioButton = new JRadioButton("成年");
-        radioButton.addActionListener(askedAdultListener);
+        //radioButton.addActionListener(askedAdultListener);
         askedAdultTypeGroup.add(radioButton);
         radioButton.setActionCommand("1");
         radioButton.setBounds(167, 195, 66, 23);
         getContentPane().add(radioButton);
         
         JRadioButton radioButton_1 = new JRadioButton("未成年");
-        radioButton_1.addActionListener(askedAdultListener);
+        //radioButton_1.addActionListener(askedAdultListener);
         askedAdultTypeGroup.add(radioButton_1);
         radioButton_1.setActionCommand("2");
         radioButton_1.setBounds(244, 195, 90, 23);
@@ -115,34 +111,35 @@ public class AskedPersonDialog extends JDialog {
         getContentPane().add(label_5);
         
         JRadioButton radioButton_2 = new JRadioButton("健全");
-        radioButton_2.addActionListener(askedAbleListener);
+        //radioButton_2.addActionListener(askedAbleListener);
         askedAbleTypeGroup.add(radioButton_2);
         radioButton_2.setActionCommand("1");
         radioButton_2.setBounds(167, 250, 90, 23);
         getContentPane().add(radioButton_2);
         
         JRadioButton radioButton_3 = new JRadioButton("非健全");
-        radioButton_3.addActionListener(askedAbleListener);
+        //radioButton_3.addActionListener(askedAbleListener);
+        radioButton_3.setActionCommand("2");
         askedAbleTypeGroup.add(radioButton_3);
         radioButton_3.setBounds(259, 250, 121, 23);
         getContentPane().add(radioButton_3);
         
         JRadioButton radioButton_4 = new JRadioButton("被害人");
-        radioButton_4.addActionListener(askedTypeListener);
+        //radioButton_4.addActionListener(askedTypeListener);
         radioButton_4.setActionCommand("1");
         radioButton_4.setBounds(167, 149, 83, 23);
         askedTypeGroup.add(radioButton_4);
         getContentPane().add(radioButton_4);
         
         JRadioButton radioButton_5 = new JRadioButton("嫌疑人");
-        radioButton_5.addActionListener(askedTypeListener);
+        //radioButton_5.addActionListener(askedTypeListener);
         askedTypeGroup.add(radioButton_5);
         radioButton_5.setActionCommand("2");
         radioButton_5.setBounds(272, 149, 83, 23);
         getContentPane().add(radioButton_5);
         
         JRadioButton radioButton_6 = new JRadioButton("证人");
-        radioButton_6.addActionListener(askedTypeListener);
+        //radioButton_6.addActionListener(askedTypeListener);
         askedTypeGroup.add(radioButton_6);
         radioButton_6.setActionCommand("3");
         radioButton_6.setBounds(361, 149, 77, 23);
@@ -156,9 +153,10 @@ public class AskedPersonDialog extends JDialog {
                 String askedName = nameField.getText();
                 Integer askedSex = sexComboBox.getSelectedIndex();
                 String idCard = idCardField.getText();
-                String selectedAskedType = askedTypeListener.selectedAskedType;
-                String selectedAskedAudlt = askedAdultListener.selectedAskedAudlt;
-                String selectedAbled = askedAbleListener.selectedAbled;
+                
+                String selectedAskedType = askedTypeGroup.getSelection().getActionCommand();;
+                String selectedAskedAudlt = askedAdultTypeGroup.getSelection().getActionCommand();
+                String selectedAbled = askedAbleTypeGroup.getSelection().getActionCommand();
                 /*// 其他人
                 String otherName = "";otherNameField.getText();
                 Integer otherSex = 0;otherSexComboBox.getSelectedIndex();
@@ -169,7 +167,7 @@ public class AskedPersonDialog extends JDialog {
                     resultDTO = caseService.addAskedPerson(NotePanel.noteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
                 } else {
                     //更新
-                    AskedPerson askedPerson = new AskedPerson();
+                    AskedPerson askedPerson = caseService.selectAskedPersonById(askedPersonId);
                     askedPerson.setId(askedPersonId);
                     askedPerson.setName(askedName);
                     askedPerson.setSex(String.valueOf(askedSex));
@@ -184,8 +182,7 @@ public class AskedPersonDialog extends JDialog {
                     return;
                 }
                 MainFrame.alert("保存成功");
-                MainFrame.frame.setEnabled(true);
-                //new NotePanel(caseId).updateTable();
+                NotePanel.getInstance().updateAskedTable();
                 getInstance().setVisible(false);
             }
         });
@@ -195,6 +192,7 @@ public class AskedPersonDialog extends JDialog {
         JButton button_1 = new JButton("取消");
         button_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                getInstance().setVisible(false);
             }
         });
         button_1.setBounds(267, 316, 113, 27);

@@ -94,6 +94,22 @@ public class PoliceDAO {
 		}
 		return police;
 	}
+	
+	public Police selectById(int id) {
+	    String sql = "select * from police where id = ?";
+	    Police police = null;
+	    try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+	        ps.setInt(1, id);
+	        ResultSet rs = ps.executeQuery();
+	        while (rs.next()) {
+	            police = new Police(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
+	                    rs.getString("police_number"));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return police;
+	}
 
 	public List<Police> selectForNote(String policeList) {
 		String[] policeNumbers = policeList.split(",");

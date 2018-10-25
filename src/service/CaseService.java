@@ -501,6 +501,16 @@ public class CaseService extends BaseService {
 	public Police selectPoliceByPoliceNumber(String policeNumber) {
 		return policeDAO.selectByPoliceNumber(policeNumber);
 	}
+	
+	/**
+	 * 根据ID查询警员
+	 * 
+	 * @param policeNumber
+	 * @return
+	 */
+	public Police selectPoliceById(int id) {
+	    return policeDAO.selectById(id);
+	}
 
 	/**
 	 * 删除警员
