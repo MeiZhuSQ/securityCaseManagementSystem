@@ -370,7 +370,7 @@ public class NotePanel extends JPanel {
         JButton otherDeleteButton = new JButton("删除");
         otherDeleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (MainFrame.prompt("确定删除该被询问人吗？")){
+                if (MainFrame.prompt("确定删除该其他类型人员吗？")){
                     int i = otherPersonTable.getSelectedRow();
                     int otherId = Integer.parseInt(otherPersonTableModel.getValueAt(i, 0) + "");
                     CaseService caseService = new CaseService();
@@ -381,7 +381,7 @@ public class NotePanel extends JPanel {
                     }
                     MainFrame.alert("删除成功");
                 }
-                instance.updateAskedTable();
+                instance.updateOtherTable();
             }
         });
         otherDeleteButton.setBounds(514, 540, 113, 27);

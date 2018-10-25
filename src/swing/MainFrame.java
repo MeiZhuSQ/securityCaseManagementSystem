@@ -42,6 +42,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.AbstractListModel;
 import javax.swing.event.MenuListener;
 import javax.swing.event.MenuEvent;
+import javax.swing.SwingConstants;
 
 /**
  * 主窗体
@@ -56,7 +57,7 @@ public class MainFrame extends BaseFrame {
     public CaseTableModel caseTableModel;
     public JTable caseTable;
     private TableColumn column;
-    private JList<Object> clockList;
+    private JList<String> clockList;
     private DefaultListModel clockModel;
     
     Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -153,8 +154,6 @@ public class MainFrame extends BaseFrame {
 
         JMenu createMenu = new JMenu("新建");
         menuBar.add(createMenu);
-        JMenu saveMenu = new JMenu("保存");
-        menuBar.add(saveMenu);
 
         JMenuItem caseMenuItem = new JMenuItem("新建案件");
         caseMenuItem.addActionListener(new ActionListener() {
@@ -214,6 +213,14 @@ public class MainFrame extends BaseFrame {
             }
         });
         menuBar.add(existMenu);
+        
+        JLabel lblNewLabel = new JLabel("                                                          "
+        		+ "                                                               ");
+        lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        menuBar.add(lblNewLabel);
+        
+        JLabel lblNewLabel_1 = new JLabel("如有问题，请联系管理员！");
+        menuBar.add(lblNewLabel_1);
         this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
         this.setVisible(true);
         splitPane.setDividerLocation(0.8);
@@ -278,20 +285,12 @@ public class MainFrame extends BaseFrame {
         caseTable.updateUI();
     }
     
-    @SuppressWarnings("unchecked")
+    public ClockListModel<String> clockListModel;
+    
     public void initClock() {
-        clockList = new JList<Object>();
-        clockModel = new DefaultListModel<>();
-        clockList.setModel(new AbstractListModel() {
-            String[] values = new String[] {"早上干活了 2018-09-20 ", "起来嗨 2018-09-30"};
-            public int getSize() {
-                return values.length;
-            }
-            public Object getElementAt(int index) {
-                //values = new String[] {"3", "4"};
-                return values[index];
-            }
-        });
+        clockListModel = new ClockListModel<>();
+        clockListModel.setValue();
+        clockList = new JList<String>(clockListModel);
         clockList.setOpaque(false);
         clockList.setBorder(null);
         JLabel label = (JLabel) clockList.getCellRenderer();

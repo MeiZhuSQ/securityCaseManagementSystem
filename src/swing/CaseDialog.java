@@ -38,6 +38,7 @@ public class CaseDialog extends JDialog {
     }
     
     public CaseDialog() {
+    	setModal(true);
         getContentPane().setLayout(null);
         
         JLabel caseName = new JLabel("案件名称");
