@@ -298,9 +298,9 @@ public class NotePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (MainFrame.prompt("确定删除该被询问人吗？")){
                     int i = askedPersonTable.getSelectedRow();
-                    int policeId = Integer.parseInt(askedPersonTableModel.getValueAt(i, 0) + "");
+                    int askedId = Integer.parseInt(askedPersonTableModel.getValueAt(i, 0) + "");
                     CaseService caseService = new CaseService();
-                    ResultDTO resultDTO = caseService.delOtherPerson(policeId);
+                    ResultDTO resultDTO = caseService.delAskedPerson(askedId);
                     if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                         MainFrame.alert(resultDTO.getMessage());
                         return;
@@ -328,6 +328,10 @@ public class NotePanel extends JPanel {
         otherAddButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 OtherPersonDialog otherPersonDialog = OtherPersonDialog.getInstance();
+                otherPersonDialog.nameField.setText("");
+                otherPersonDialog.sexComboBox.setSelectedIndex(0);
+                otherPersonDialog.idCardField.setText("");
+                otherPersonDialog.otherTypeGroup.getElements().nextElement().setSelected(true);
                 otherPersonDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(otherPersonDialog);
                 otherPersonDialog.setVisible(true);
@@ -339,41 +343,25 @@ public class NotePanel extends JPanel {
         JButton otherEditButton = new JButton("编辑");
         otherEditButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                AskedPersonDialog askedPersonDialog = AskedPersonDialog.getInstance();
-                askedPersonDialog.setSize(new Dimension(500, 400));
-                GUIUtil.setCenter(askedPersonDialog);
-                int i = askedPersonTable.getSelectedRow();
-                askedPersonDialog.setAskedPersonId(Integer.parseInt(askedPersonTableModel.getValueAt(i, 0) + ""));
-                askedPersonDialog.nameField.setText(askedPersonTableModel.getValueAt(i, 1) + "");
-                String sex = askedPersonTableModel.getValueAt(i, 2) + "";
-                askedPersonDialog.sexComboBox.setSelectedIndex(sex.equals("男") ? 0 : 1);
-                askedPersonDialog.idCardField.setText(askedPersonTableModel.getValueAt(i, 3) + "");
+                OtherPersonDialog otherPersonDialog = OtherPersonDialog.getInstance();
+                otherPersonDialog.setSize(new Dimension(500, 400));
+                GUIUtil.setCenter(otherPersonDialog);
+                int i = otherPersonTable.getSelectedRow();
+                otherPersonDialog.setOtherPersonId(Integer.parseInt(otherPersonTableModel.getValueAt(i, 0) + ""));
+                otherPersonDialog.nameField.setText(otherPersonTableModel.getValueAt(i, 1) + "");
+                String sex = otherPersonTableModel.getValueAt(i, 2) + "";
+                otherPersonDialog.sexComboBox.setSelectedIndex(sex.equals("男") ? 0 : 1);
+                otherPersonDialog.idCardField.setText(otherPersonTableModel.getValueAt(i, 3) + "");
                 //回显radioButton
-                Enumeration<AbstractButton> radioBtns = askedPersonDialog.askedTypeGroup.getElements();  
+                Enumeration<AbstractButton> radioBtns = otherPersonDialog.otherTypeGroup.getElements();  
                 while (radioBtns.hasMoreElements()) {  
                     AbstractButton btn = radioBtns.nextElement();  
-                    if(btn.getActionCommand().equals(askedPersonTableModel.getValueAt(i, 4) + "")){  
+                    if(btn.getActionCommand().equals(otherPersonTableModel.getValueAt(i, 4) + "")){  
                         btn.setSelected(true);;
                         break;  
                     }  
                 } 
-                Enumeration<AbstractButton> adultRadioBtns = askedPersonDialog.askedAdultTypeGroup.getElements();  
-                while (adultRadioBtns.hasMoreElements()) {  
-                    AbstractButton btn = adultRadioBtns.nextElement();  
-                    if(btn.getActionCommand().equals(askedPersonTableModel.getValueAt(i, 5) + "")){  
-                        btn.setSelected(true);;
-                        break;  
-                    }  
-                } 
-                Enumeration<AbstractButton> ableRadioBtns = askedPersonDialog.askedAbleTypeGroup.getElements();  
-                while (ableRadioBtns.hasMoreElements()) {  
-                    AbstractButton btn = ableRadioBtns.nextElement();  
-                    if(btn.getActionCommand().equals(askedPersonTableModel.getValueAt(i, 6) + "")){  
-                        btn.setSelected(true);;
-                        break;  
-                    }  
-                } 
-                askedPersonDialog.setVisible(true);
+                otherPersonDialog.setVisible(true);
             }
         });
         otherEditButton.setBounds(387, 540, 113, 27);
@@ -382,6 +370,18 @@ public class NotePanel extends JPanel {
         JButton otherDeleteButton = new JButton("删除");
         otherDeleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (MainFrame.prompt("确定删除该被询问人吗？")){
+                    int i = otherPersonTable.getSelectedRow();
+                    int otherId = Integer.parseInt(otherPersonTableModel.getValueAt(i, 0) + "");
+                    CaseService caseService = new CaseService();
+                    ResultDTO resultDTO = caseService.delOtherPerson(otherId);
+                    if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                        MainFrame.alert(resultDTO.getMessage());
+                        return;
+                    }
+                    MainFrame.alert("删除成功");
+                }
+                instance.updateAskedTable();
             }
         });
         otherDeleteButton.setBounds(514, 540, 113, 27);
@@ -391,6 +391,11 @@ public class NotePanel extends JPanel {
     public void updateAskedTable() {
         askedPersonTableModel.setList(noteId);
         askedPersonTable.updateUI();
+    }
+    
+    public void updateOtherTable() {
+        otherPersonTableModel.setList(noteId);
+        otherPersonTable.updateUI();
     }
     
     public int getCaseId() {
