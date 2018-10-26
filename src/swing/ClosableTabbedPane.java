@@ -14,7 +14,7 @@ import java.awt.Graphics;
 
 /** 
 *自定义带关闭按钮的TabbedPane 
-* @author  XiaoQuan 
+* @author  LiuPF 
 */  
 public class ClosableTabbedPane extends JTabbedPane implements MouseListener {  
 

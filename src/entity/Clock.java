@@ -8,7 +8,6 @@ public class Clock {
 	private String type;//1笔录2法律手续
 	private int ownerId;
 
-
 	public Clock(int id,String name, String time, String remark, String type, int ownerId) {
 		this.setId(id);
 		this.setName(name);
@@ -80,8 +79,9 @@ public class Clock {
 
 	@Override
 	public String toString() {
-	    return "<html>"+id+". <font color='red'>"+time+"</font><br>"
-	            +name+"</html>";
+	    
+	    return "<html><font color='red'>"+time+"</font><div style='margin-left:10px;'>"
+	            +name+"</div></html>";
 	}
 	
 }

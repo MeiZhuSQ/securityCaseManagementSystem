@@ -168,6 +168,21 @@ public class MainFrame extends BaseFrame {
         
         clockScrollPane.setViewportView(clockList);
         
+        JButton clockAddButton = new ImageButton("edit.png");
+        clockAddButton.setSize(new Dimension(16, 16));
+        clockAddButton.setBounds(25, 544, 20, 27);
+        panel.add(clockAddButton);
+        
+        JButton clockEditButton = new ImageButton("edit.png");
+        clockEditButton.setSize(new Dimension(16, 16));
+        clockEditButton.setBounds(70, 544, 20, 27);
+        panel.add(clockEditButton);
+        
+        JButton clockDeleteButton = new ImageButton("delete.png");
+        clockDeleteButton.setSize(new Dimension(16, 16));
+        clockDeleteButton.setBounds(104, 544, 20, 27);
+        panel.add(clockDeleteButton);
+        
         JMenuBar menuBar = new JMenuBar();
         this.setJMenuBar(menuBar);
 
@@ -303,11 +318,4 @@ public class MainFrame extends BaseFrame {
         //或 policeTableModel.fireTableDataChanged();
         caseTable.updateUI();
     }
-    
-    public void initClock() {
-        
-    }
-    
-    
-
 }
