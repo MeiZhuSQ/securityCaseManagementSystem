@@ -78,4 +78,10 @@ public class Clock {
 		this.ownerId = ownerId;
 	}
 
+	@Override
+	public String toString() {
+	    return "<html>"+id+". <font color='red'>"+time+"</font><br>"
+	            +name+"</html>";
+	}
+	
 }

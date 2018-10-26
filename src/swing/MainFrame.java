@@ -12,6 +12,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import entity.Clock;
 import entity.LegalCase;
 import service.CaseService;
 import util.GUIUtil;
@@ -59,6 +60,7 @@ public class MainFrame extends BaseFrame {
     private TableColumn column;
     private JList<String> clockList;
     private DefaultListModel clockModel;
+    public DefaultListModel clockListModel;
     
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     private int DEFAULE_WIDTH = 1000;
@@ -142,10 +144,27 @@ public class MainFrame extends BaseFrame {
         //initMainTable();
         caseScrollPane.setViewportView(caseTable);
         
-        JScrollPane clockScrollPane = new JScrollPane();
-        splitPane.setRightComponent(clockScrollPane);
+        JPanel panel = new JPanel();
+        splitPane.setRightComponent(panel);
+        panel.setLayout(null);
         
-        initClock();
+        JScrollPane clockScrollPane = new JScrollPane();
+        clockScrollPane.setBounds(0, 0, 544, 531);
+        panel.add(clockScrollPane);
+        
+        clockListModel = new DefaultListModel();
+        List<Clock> clocks = new CaseService().getClocks();
+        for (Clock clock : clocks) {
+            clockListModel.addElement(clock);
+        }
+        clockList = new JList(clockListModel);
+        clockList.setOpaque(false);
+        clockList.setBorder(null);
+        JLabel label = (JLabel) clockList.getCellRenderer();
+        label.setOpaque(false);
+        clockList.setForeground(Color.darkGray);
+        clockList.setSelectionForeground(new Color(40, 101, 156));
+        clockList.setFixedCellHeight(40);
         
         clockScrollPane.setViewportView(clockList);
         
@@ -214,8 +233,7 @@ public class MainFrame extends BaseFrame {
         });
         menuBar.add(existMenu);
         
-        JLabel lblNewLabel = new JLabel("                                                          "
-        		+ "                                                               ");
+        JLabel lblNewLabel = new JLabel("                 ");
         lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         menuBar.add(lblNewLabel);
         
@@ -224,6 +242,7 @@ public class MainFrame extends BaseFrame {
         this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
         this.setVisible(true);
         splitPane.setDividerLocation(0.8);
+        
     }
 
     //弃用DefaultTableModel方式
@@ -285,19 +304,8 @@ public class MainFrame extends BaseFrame {
         caseTable.updateUI();
     }
     
-    public ClockListModel<String> clockListModel;
-    
     public void initClock() {
-        clockListModel = new ClockListModel<>();
-        clockListModel.setValue();
-        clockList = new JList<String>(clockListModel);
-        clockList.setOpaque(false);
-        clockList.setBorder(null);
-        JLabel label = (JLabel) clockList.getCellRenderer();
-        label.setOpaque(false);
-        clockList.setForeground(Color.darkGray);
-        clockList.setSelectionForeground(new Color(40, 101, 156));
-        clockList.setFixedCellHeight(25);
+        
     }
     
     
