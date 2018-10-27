@@ -71,6 +71,7 @@ public class CaseDialog extends JDialog {
                 }
                 if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                     MainFrame.alert(resultDTO.getMessage());
+                    return;
                 }
                 MainFrame.alert("保存成功");
                 getInstance().setVisible(false);

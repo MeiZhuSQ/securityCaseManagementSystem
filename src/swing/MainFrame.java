@@ -15,6 +15,7 @@ import javax.swing.table.TableColumn;
 import entity.Clock;
 import entity.LegalCase;
 import service.CaseService;
+import util.DateUtil;
 import util.GUIUtil;
 
 import javax.swing.JPanel;
@@ -29,6 +30,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -44,6 +46,8 @@ import javax.swing.AbstractListModel;
 import javax.swing.event.MenuListener;
 import javax.swing.event.MenuEvent;
 import javax.swing.SwingConstants;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * 主窗体
@@ -58,7 +62,7 @@ public class MainFrame extends BaseFrame {
     public CaseTableModel caseTableModel;
     public JTable caseTable;
     private TableColumn column;
-    private JList<String> clockList;
+    public JList<Clock> clockList;
     private DefaultListModel clockModel;
     public DefaultListModel clockListModel;
     
@@ -168,19 +172,46 @@ public class MainFrame extends BaseFrame {
         
         clockScrollPane.setViewportView(clockList);
         
-        JButton clockAddButton = new ImageButton("edit.png");
-        clockAddButton.setSize(new Dimension(16, 16));
-        clockAddButton.setBounds(25, 544, 20, 27);
+        JButton clockAddButton = new ImageButton("clock_add.png");
+        clockAddButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		ClockDialog clockDialog = ClockDialog.getInstance();
+            	clockDialog.setSize(new Dimension(500, 400));
+                GUIUtil.setCenter(clockDialog);
+                clockDialog.setVisible(true);
+        	}
+        });
+        clockAddButton.setBounds(25, 544, 30, 30);
         panel.add(clockAddButton);
         
-        JButton clockEditButton = new ImageButton("edit.png");
-        clockEditButton.setSize(new Dimension(16, 16));
-        clockEditButton.setBounds(70, 544, 20, 27);
+        JButton clockEditButton = new ImageButton("clock_edit.png");
+        clockEditButton.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent arg0) {
+        		MainFrame.alert("11");
+        	}
+        });
+        clockEditButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ClockDialog clockDialog = ClockDialog.getInstance();
+        		clockDialog.setSize(new Dimension(500, 400));
+                GUIUtil.setCenter(clockDialog);
+                Clock selectedValue = clockList.getSelectedValue();
+                clockDialog.setClockId(selectedValue.getId());
+                clockDialog.clockNameField.setText(selectedValue.getName());
+                clockDialog.remarkField.setText(selectedValue.getRemark());
+                clockDialog.setVisible(true);
+        	}
+        });
+        clockEditButton.setBounds(70, 544, 30, 30);
         panel.add(clockEditButton);
         
-        JButton clockDeleteButton = new ImageButton("delete.png");
-        clockDeleteButton.setSize(new Dimension(16, 16));
-        clockDeleteButton.setBounds(104, 544, 20, 27);
+        JButton clockDeleteButton = new ImageButton("clock_delete.png");
+        clockDeleteButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        clockDeleteButton.setBounds(115, 544, 30, 30);
         panel.add(clockDeleteButton);
         
         JMenuBar menuBar = new JMenuBar();
@@ -195,7 +226,6 @@ public class MainFrame extends BaseFrame {
                 CaseDialog caseDialog = CaseDialog.getInstance();
                 caseDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(caseDialog);
-                // MainFrame.frame.setEnabled(false);
                 caseDialog.setVisible(true);
             }
         });
@@ -204,9 +234,10 @@ public class MainFrame extends BaseFrame {
         JMenuItem lawsMenuItem = new JMenuItem("新建闹钟");
         lawsMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JPanel createPanel = new JPanel();
-                tabbedPane.addTab("新建闹钟", createPanel, null);
-                tabbedPane.setSelectedComponent(createPanel);
+            	ClockDialog clockDialog = ClockDialog.getInstance();
+            	clockDialog.setSize(new Dimension(500, 400));
+                GUIUtil.setCenter(clockDialog);
+                clockDialog.setVisible(true);
             }
         });
         createMenu.add(lawsMenuItem);

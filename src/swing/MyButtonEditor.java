@@ -80,8 +80,6 @@ public class MyButtonEditor extends AbstractCellEditor implements TableCellEdito
                 CaseDialog caseDialog = CaseDialog.getInstance();
                 caseDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(caseDialog);
-                // MainFrame.frame.setEnabled(false);
-                caseDialog.setVisible(true);
                 int i = MainFrame.getInstance().caseTable.getSelectedRow();
                 caseDialog.setCaseId(Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + ""));
                 caseDialog.caseNameField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 1) + "");
@@ -92,6 +90,8 @@ public class MyButtonEditor extends AbstractCellEditor implements TableCellEdito
                     e1.printStackTrace();
                 }
                 caseDialog.remarkField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 3) + "");
+                //注意：必须放在最后，否则无效
+                caseDialog.setVisible(true);
                 fireEditingStopped();
             }
         });

@@ -2,11 +2,14 @@ package swing;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import com.eltima.components.ui.DatePicker;
 
@@ -71,10 +74,15 @@ public class ClockDialog extends JDialog {
                 }
                 if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                     MainFrame.alert(resultDTO.getMessage());
+                    return;
                 }
                 MainFrame.alert("保存成功");
                 getInstance().setVisible(false);
-                MainFrame.getInstance().updateCaseTable();
+                MainFrame.getInstance().clockListModel.removeAllElements();
+                List<Clock> clocks = new CaseService().getClocks();
+                for (Clock clock : clocks) {
+                	MainFrame.getInstance().clockListModel.addElement(clock);
+                }
             }
         });
         saveButton.setBounds(90, 254, 113, 27);
@@ -109,12 +117,12 @@ public class ClockDialog extends JDialog {
 
     }
 
-    public int getCaseId() {
-        return clockId;
-    }
+	public int getClockId() {
+		return clockId;
+	}
 
-    public void setCaseId(int caseId) {
-        this.clockId = caseId;
-    }
-    
+	public void setClockId(int clockId) {
+		this.clockId = clockId;
+	}
+
 }

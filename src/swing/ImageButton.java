@@ -27,6 +27,7 @@ public class ImageButton extends JButton {
         setText(null);// 除去按钮的默认名称
         //setFocusPainted(false);// 除去焦点的框
         setContentAreaFilled(false);// 除去默认的背景填充
+        //setToolTipText("1111");
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 }
