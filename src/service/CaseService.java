@@ -786,7 +786,7 @@ public class CaseService extends BaseService {
 	 * @param id
 	 * @return
 	 */
-	private ResultDTO delClock(int id) {
+	public ResultDTO delClock(int id) {
 		if (1 == clockDAO.delete(id)) {
 			return requestSuccess();
 		} else {

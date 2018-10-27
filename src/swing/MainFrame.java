@@ -1,53 +1,48 @@
 package swing;
 
-import java.awt.EventQueue;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-
-import entity.Clock;
-import entity.LegalCase;
-import service.CaseService;
-import util.DateUtil;
-import util.GUIUtil;
-
-import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-
-import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.EventQueue;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import javax.swing.JTable;
-import javax.swing.JSplitPane;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.DefaultListModel;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.AbstractCellEditor;
-import javax.swing.AbstractListModel;
-import javax.swing.event.MenuListener;
-import javax.swing.event.MenuEvent;
-import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+
+import constant.CommonConstant;
+import dto.ResultDTO;
+import entity.Clock;
+import service.CaseService;
+import util.GUIUtil;
 
 /**
  * 主窗体
@@ -177,6 +172,8 @@ public class MainFrame extends BaseFrame {
         	public void actionPerformed(ActionEvent arg0) {
         		ClockDialog clockDialog = ClockDialog.getInstance();
             	clockDialog.setSize(new Dimension(500, 400));
+                clockDialog.clockNameField.setText("");
+                clockDialog.remarkField.setText("");
                 GUIUtil.setCenter(clockDialog);
                 clockDialog.setVisible(true);
         	}
@@ -185,12 +182,6 @@ public class MainFrame extends BaseFrame {
         panel.add(clockAddButton);
         
         JButton clockEditButton = new ImageButton("clock_edit.png");
-        clockEditButton.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseClicked(MouseEvent arg0) {
-        		MainFrame.alert("11");
-        	}
-        });
         clockEditButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		ClockDialog clockDialog = ClockDialog.getInstance();
@@ -209,6 +200,21 @@ public class MainFrame extends BaseFrame {
         JButton clockDeleteButton = new ImageButton("clock_delete.png");
         clockDeleteButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		if (MainFrame.prompt("确定删除该闹钟吗？")){
+        			Clock selectedValue = clockList.getSelectedValue();
+                    CaseService caseService = new CaseService();
+                    ResultDTO resultDTO = caseService.delClock(selectedValue.getId());
+                    if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                        MainFrame.alert(resultDTO.getMessage());
+                        return;
+                    }
+                    MainFrame.alert("删除成功");
+                    clockListModel.removeAllElements();
+                    List<Clock> clocks = new CaseService().getClocks();
+                    for (Clock clock : clocks) {
+                    	clockListModel.addElement(clock);
+                    }
+                }
         	}
         });
         clockDeleteButton.setBounds(115, 544, 30, 30);
@@ -218,6 +224,7 @@ public class MainFrame extends BaseFrame {
         this.setJMenuBar(menuBar);
 
         JMenu createMenu = new JMenu("新建");
+        createMenu.setPreferredSize(new Dimension(40, 20));
         menuBar.add(createMenu);
 
         JMenuItem caseMenuItem = new JMenuItem("新建案件");
@@ -225,6 +232,8 @@ public class MainFrame extends BaseFrame {
             public void actionPerformed(ActionEvent e) {
                 CaseDialog caseDialog = CaseDialog.getInstance();
                 caseDialog.setSize(new Dimension(500, 400));
+                caseDialog.caseNameField.setText("");
+                caseDialog.remarkField.setText("");
                 GUIUtil.setCenter(caseDialog);
                 caseDialog.setVisible(true);
             }
@@ -243,52 +252,71 @@ public class MainFrame extends BaseFrame {
         createMenu.add(lawsMenuItem);
         
         JMenu policeMenu = new JMenu("警员维护");
-        policeMenu.addMenuListener(new MenuListener() {
-            public void menuSelected(MenuEvent e) {
-                //注意：对（一个）单例容器对象进行操作 liupf 2018-10-17 19:00
+        policeMenu.setPreferredSize(new Dimension(60, 20));
+        policeMenu.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent arg0) {
+        		//注意：对（一个）单例容器对象进行操作 liupf 2018-10-17 19:00
                 JPanel policePanel = PolicePanel.getInstance();
                 tabbedPane.addTab("警员维护", policePanel, null);
                 tabbedPane.setSelectedComponent(policePanel);
-            }
-
-            @Override
-            public void menuDeselected(MenuEvent e) {
-                
-            }
-
-            @Override
-            public void menuCanceled(MenuEvent e) {
-                
-            }
+        	}
         });
         menuBar.add(policeMenu);
         
         JMenu existMenu = new JMenu("退出");
-        existMenu.addMenuListener(new MenuListener() {
-            public void menuSelected(MenuEvent e) {
-                System.exit(0);
-            }
-
-            @Override
-            public void menuDeselected(MenuEvent e) {
-            }
-
-            @Override
-            public void menuCanceled(MenuEvent e) {
-            }
+        existMenu.setPreferredSize(new Dimension(40, 20));
+        existMenu.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		System.exit(0);
+        	}
         });
         menuBar.add(existMenu);
         
-        JLabel lblNewLabel = new JLabel("                 ");
-        lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        menuBar.add(lblNewLabel);
-        
-        JLabel lblNewLabel_1 = new JLabel("如有问题，请联系管理员！");
-        menuBar.add(lblNewLabel_1);
+        /*JLabel lblNewLabel_1 = new JLabel("如有问题，请联系管理员！");
+        lblNewLabel_1.setPreferredSize(new Dimension(500, 20));
+        menuBar.add(lblNewLabel_1);*/
         this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
         this.setVisible(true);
         splitPane.setDividerLocation(0.8);
-        
+        //定时提醒
+        Timer timer=new Timer();
+	    timer.schedule(new TimerTask(){
+	        @Override
+	        public void run() {
+	            /*List<Clock> clockList = new CaseService().getClocks();
+	            for (Clock clock : clockList) {
+					if (clock.getTime().equals(DateUtil.getTime())) {
+						
+					}
+				}*/
+	        	JFrame f = new JFrame("test");
+	        	f.setUndecorated(true);
+	        	JLabel jLabel = new JLabel();
+	        	jLabel.setText("ceshi");
+	        	f.add(jLabel);
+	        	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+				Rectangle bounds = new Rectangle(screenSize);
+				Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(f.getGraphicsConfiguration());
+				bounds.x += insets.left;
+				bounds.y += insets.top;
+				bounds.width -= insets.left + insets.right;
+				bounds.height -= insets.top + insets.bottom;
+				f.setBounds(bounds);
+	        	f.setVisible(true);
+	        	File file = new File("resources/audio/1073.wav");
+
+				try {
+					AudioInputStream audioIn = AudioSystem.getAudioInputStream(file);
+					Clip clip = AudioSystem.getClip();
+					clip.open(audioIn);
+					clip.start();
+				} catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
+					e.printStackTrace();
+				}
+	        }
+	    },0,200000);
     }
 
     //弃用DefaultTableModel方式
