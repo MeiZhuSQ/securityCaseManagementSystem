@@ -191,7 +191,7 @@ public class ViewCasePanel extends JPanel {
         procedureTableModel = new ProcedureTableModel();
         // 定义法律程序Model 动态给Model赋值
         procedureTableModel.setList(caseId);
-        procedureTable = new JTable(noteTableModel);
+        procedureTable = new JTable(procedureTableModel);
         procedureTable.setRowHeight(30);
         head.setPreferredSize(new Dimension(procedureTable.getTableHeader().getWidth(), 30));
         lawScrollPane.setViewportView(procedureTable);

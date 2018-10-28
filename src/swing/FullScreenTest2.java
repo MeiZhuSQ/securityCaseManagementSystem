@@ -14,6 +14,7 @@ public class FullScreenTest2 {
 	public static void main(String[] args) {
 		final JFrame f = new JFrame("FullScreenTest");
 		final JButton btn = new JButton("FullScreen");
+		f.setSize(400, 300);
 		f.add(btn);
 		f.setVisible(true);
 		btn.addActionListener(new ActionListener() {

@@ -42,6 +42,7 @@ import constant.CommonConstant;
 import dto.ResultDTO;
 import entity.Clock;
 import service.CaseService;
+import util.DateUtil;
 import util.GUIUtil;
 
 /**
@@ -60,6 +61,7 @@ public class MainFrame extends BaseFrame {
     public JList<Clock> clockList;
     private DefaultListModel clockModel;
     public DefaultListModel clockListModel;
+    public JFrame f;
     
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     private int DEFAULE_WIDTH = 1000;
@@ -281,21 +283,23 @@ public class MainFrame extends BaseFrame {
         this.setVisible(true);
         splitPane.setDividerLocation(0.8);
         //定时提醒
+        f = new JFrame("闹钟提示");
+        setLayout(new BorderLayout());
         Timer timer=new Timer();
 	    timer.schedule(new TimerTask(){
 	        @Override
 	        public void run() {
-	            /*List<Clock> clockList = new CaseService().getClocks();
+	            List<Clock> clockList = new CaseService().getClocks();
 	            for (Clock clock : clockList) {
 					if (clock.getTime().equals(DateUtil.getTime())) {
 						
 					}
-				}*/
-	        	JFrame f = new JFrame("test");
+				}
 	        	f.setUndecorated(true);
-	        	JLabel jLabel = new JLabel();
-	        	jLabel.setText("ceshi");
-	        	f.add(jLabel);
+	        	JButton j = new JButton();
+	        	j.setSize(new Dimension(100, 100));
+	        	j.setText("8888888");
+	        	f.add(j, BorderLayout.CENTER);
 	        	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				Rectangle bounds = new Rectangle(screenSize);
 				Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(f.getGraphicsConfiguration());
@@ -316,7 +320,7 @@ public class MainFrame extends BaseFrame {
 					e.printStackTrace();
 				}
 	        }
-	    },0,200000);
+	    },0,1000);
     }
 
     //弃用DefaultTableModel方式

@@ -123,6 +123,14 @@ public class DateUtil {
 
     /**
      * 
+     * @return 当前时间(不带秒)
+     */
+    public static String getMinuteTime() {
+        return DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm");
+    }
+    
+    /**
+     * 
      * @return 当前时间
      */
     public static String getTime() {
