@@ -292,32 +292,31 @@ public class MainFrame extends BaseFrame {
 	            List<Clock> clockList = new CaseService().getClocks();
 	            for (Clock clock : clockList) {
 					if (clock.getTime().equals(DateUtil.getTime())) {
-						
-					}
-				}
-	        	f.setUndecorated(true);
-	        	JButton j = new JButton();
-	        	j.setSize(new Dimension(100, 100));
-	        	j.setText("8888888");
-	        	f.add(j, BorderLayout.CENTER);
-	        	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-				Rectangle bounds = new Rectangle(screenSize);
-				Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(f.getGraphicsConfiguration());
-				bounds.x += insets.left;
-				bounds.y += insets.top;
-				bounds.width -= insets.left + insets.right;
-				bounds.height -= insets.top + insets.bottom;
-				f.setBounds(bounds);
-	        	f.setVisible(true);
-	        	File file = new File("resources/audio/1073.wav");
+						f.setUndecorated(true);
+			        	JButton j = new JButton();
+			        	j.setSize(new Dimension(100, 100));
+			        	j.setText("8888888");
+			        	f.add(j, BorderLayout.CENTER);
+			        	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+						Rectangle bounds = new Rectangle(screenSize);
+						Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(f.getGraphicsConfiguration());
+						bounds.x += insets.left;
+						bounds.y += insets.top;
+						bounds.width -= insets.left + insets.right;
+						bounds.height -= insets.top + insets.bottom;
+						f.setBounds(bounds);
+			        	f.setVisible(true);
+			        	File file = new File("resources/audio/1073.wav");
 
-				try {
-					AudioInputStream audioIn = AudioSystem.getAudioInputStream(file);
-					Clip clip = AudioSystem.getClip();
-					clip.open(audioIn);
-					clip.start();
-				} catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
-					e.printStackTrace();
+						try {
+							AudioInputStream audioIn = AudioSystem.getAudioInputStream(file);
+							Clip clip = AudioSystem.getClip();
+							clip.open(audioIn);
+							clip.start();
+						} catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
+							e.printStackTrace();
+						}
+					}
 				}
 	        }
 	    },0,1000);

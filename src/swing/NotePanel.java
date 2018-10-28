@@ -200,6 +200,7 @@ public class NotePanel extends JPanel {
                     return;
                 }*/
                 MainFrame.alert("保存成功");
+                ViewCasePanel.getInstance().updateNoteTable();
             }
         });
         

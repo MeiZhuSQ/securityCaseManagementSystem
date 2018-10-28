@@ -62,8 +62,7 @@ public class CaseDialog extends JDialog {
                     resultDTO = caseService.addCase(caseName, date, remark);
                 } else {
                     //更新
-                    LegalCase legalCase = new LegalCase();
-                    legalCase.setId(caseId);
+                    LegalCase legalCase = caseService.selectCaseById(caseId);
                     legalCase.setName(caseName);
                     legalCase.setTime(date);
                     legalCase.setRemark(remark);

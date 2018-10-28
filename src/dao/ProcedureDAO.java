@@ -95,7 +95,7 @@ public class ProcedureDAO {
             ps.setInt(1, caseId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Procedure Procedure = new Procedure(rs.getInt("id"),rs.getString("name"),rs.getString("time"),
+                Procedure Procedure = new Procedure(rs.getInt("id"),caseId, rs.getString("name"),rs.getString("time"),
                 		rs.getString("remark"));
                 Procedures.add(Procedure);
             }

@@ -12,15 +12,22 @@ import entity.LegalCase;
 import entity.Note;
 import entity.Police;
 import service.CaseService;
+import util.DateUtil;
+import util.GUIUtil;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 
 import org.apache.commons.lang.StringUtils;
 
+import constant.CommonConstant;
+import dto.ResultDTO;
+
 import javax.swing.JButton;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -36,8 +43,17 @@ public class ViewCasePanel extends JPanel {
     private ProcedureTableModel procedureTableModel;
     // 记录案子ID
     private int caseId;
-
-    public ViewCasePanel(int caseId) {
+    
+    private static ViewCasePanel instance;
+    
+    public static ViewCasePanel getInstance() {
+        if (instance == null) {
+            instance = new ViewCasePanel();
+        }
+        return instance;
+    }
+    
+    public ViewCasePanel() {
         // 更新选中的caseId
         int i = MainFrame.getInstance().caseTable.getSelectedRow();
         this.caseId = Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + "");
@@ -53,7 +69,7 @@ public class ViewCasePanel extends JPanel {
 
         Border caseTitleBorder, caseLineBorder;
         caseLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
-        caseTitleBorder = BorderFactory.createTitledBorder(caseLineBorder, legalCase.getName() + "案件详情",
+        caseTitleBorder = BorderFactory.createTitledBorder(caseLineBorder, "案件详情",
                 TitledBorder.LEFT, TitledBorder.CENTER);
         casePanel.setBorder(caseTitleBorder);
 
@@ -107,7 +123,11 @@ public class ViewCasePanel extends JPanel {
                 //NotePanel notePanel = new NotePanel(caseId);
                 NotePanel notePanel = NotePanel.getInstance();
                 notePanel.setCaseId(caseId);
-                
+                //重置noteId
+                NotePanel.noteId = 0;
+                //给两表格置空
+                notePanel.askedPersonTableModel.setList(0);
+                notePanel.otherPersonTableModel.setList(0);
                 notePanel.getNoteNameField().setText("");;
                 notePanel.getPlaceField().setText("");
                 notePanel.getFileNameField().setText("");
@@ -168,6 +188,22 @@ public class ViewCasePanel extends JPanel {
         JButton deleteNoteButton = new JButton("删除");
         deleteNoteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	if (noteTable.getSelectedRow() <= 0) {
+	           		 MainFrame.alert("请选择一行！");
+	           		 return;
+            	}
+            	if (MainFrame.prompt("确定删除该笔录吗？")){
+                    int i = noteTable.getSelectedRow();
+                    String noteId = noteTableModel.getValueAt(i, 0)+"";
+                    CaseService caseService = new CaseService();
+                    ResultDTO resultDTO = caseService.delNote(Integer.valueOf(noteId));
+                    if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                        MainFrame.alert(resultDTO.getMessage());
+                        return;
+                    }
+                    MainFrame.alert("删除成功");
+                    updateNoteTable();
+                }
             }
         });
         panel.add(deleteNoteButton);
@@ -204,6 +240,12 @@ public class ViewCasePanel extends JPanel {
         JButton createLawButton = new JButton("新建");
         createLawButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	ProcedureDialog procedureDialog = ProcedureDialog.getInstance();
+            	procedureDialog.setSize(new Dimension(500, 400));
+            	procedureDialog.procedureNameField.setText("");
+            	procedureDialog.remarkField.setText("");
+                GUIUtil.setCenter(procedureDialog);
+                procedureDialog.setVisible(true);
             }
         });
         panel_1.add(createLawButton);
@@ -211,6 +253,15 @@ public class ViewCasePanel extends JPanel {
         JButton editLawButton = new JButton("修改");
         editLawButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	ProcedureDialog procedureDialog = ProcedureDialog.getInstance();
+            	procedureDialog.setSize(new Dimension(500, 400));
+                GUIUtil.setCenter(procedureDialog);
+                int i = procedureTable.getSelectedRow();
+                procedureDialog.setCaseId(caseId);
+                procedureDialog.setProcedureId(Integer.parseInt(procedureTable.getValueAt(i, 0) + ""));
+                procedureDialog.procedureNameField.setText(procedureTable.getValueAt(i, 1) + "");
+                procedureDialog.remarkField.setText(procedureTableModel.getValueAt(i, 3) + "");
+                procedureDialog.setVisible(true);
             }
         });
         panel_1.add(editLawButton);
@@ -218,6 +269,22 @@ public class ViewCasePanel extends JPanel {
         JButton deleteLawButton = new JButton("删除");
         deleteLawButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	if (procedureTable.getSelectedRow() <= 0) {
+            		 MainFrame.alert("请选择一行！");
+            		 return;
+            	}
+            	if (MainFrame.prompt("确定删除该法律手续吗？")){
+                    int i = procedureTable.getSelectedRow();
+                    String procedureId = procedureTableModel.getValueAt(i, 0)+"";
+                    CaseService caseService = new CaseService();
+                    ResultDTO resultDTO = caseService.delProcedure(Integer.valueOf(procedureId));
+                    if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                        MainFrame.alert(resultDTO.getMessage());
+                        return;
+                    }
+                    MainFrame.alert("删除成功");
+                    updateProcedureTable();
+                }
             }
         });
         panel_1.add(deleteLawButton);
@@ -289,5 +356,13 @@ public class ViewCasePanel extends JPanel {
         procedureTableModel.setList(caseId);
         procedureTable.updateUI();
     }
+
+	public int getCaseId() {
+		return caseId;
+	}
+
+	public void setCaseId(int caseId) {
+		this.caseId = caseId;
+	}
 
 }

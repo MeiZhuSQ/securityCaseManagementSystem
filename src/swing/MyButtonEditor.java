@@ -68,7 +68,8 @@ public class MyButtonEditor extends AbstractCellEditor implements TableCellEdito
             public void actionPerformed(ActionEvent e) {
                 int i = MainFrame.getInstance().caseTable.getSelectedRow();
                 String caseId = MainFrame.getInstance().caseTableModel.getValueAt(i, 0)+"";
-                JPanel viewPanel = new ViewCasePanel(Integer.valueOf(caseId));
+                ViewCasePanel viewPanel = ViewCasePanel.getInstance();
+                viewPanel.setCaseId(Integer.parseInt(caseId));
                 MainFrame.tabbedPane.addTab("案件详情", viewPanel, null);
                 MainFrame.tabbedPane.setSelectedComponent(viewPanel);
                 fireEditingStopped();
@@ -98,6 +99,10 @@ public class MyButtonEditor extends AbstractCellEditor implements TableCellEdito
         button2.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
+            	if (MainFrame.getInstance().caseTable.getSelectedRow() <= 0) {
+	           		 MainFrame.alert("请选择一行！");
+	           		 return;
+            	}
                 if (MainFrame.prompt("确定删除该案件吗？")){
                     int i = MainFrame.getInstance().caseTable.getSelectedRow();
                     String caseId = MainFrame.getInstance().caseTableModel.getValueAt(i, 0)+"";

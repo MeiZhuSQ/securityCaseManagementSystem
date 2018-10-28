@@ -13,6 +13,7 @@ import com.eltima.components.ui.DatePicker;
 import constant.CommonConstant;
 import dto.ResultDTO;
 import entity.LegalCase;
+import entity.Procedure;
 import service.CaseService;
 import util.DateUtil;
 
@@ -24,11 +25,12 @@ import util.DateUtil;
 public class ProcedureDialog extends JDialog {
     
     private static final long serialVersionUID = 7334759086622449699L;
-    public JTextField caseNameField;
+    public JTextField procedureNameField;
     public DatePicker datePickerField;
     private static ProcedureDialog instance;
     public JTextField remarkField;
     private int caseId = 0;
+    private int procedureId = 0;
     
     public static ProcedureDialog getInstance () {
         if (instance == null) {
@@ -45,29 +47,28 @@ public class ProcedureDialog extends JDialog {
         caseName.setBounds(81, 49, 72, 18);
         getContentPane().add(caseName);
         
-        caseNameField = new JTextField();
-        caseNameField.setBounds(167, 46, 208, 24);
-        getContentPane().add(caseNameField);
-        caseNameField.setColumns(10);
+        procedureNameField = new JTextField();
+        procedureNameField.setBounds(167, 46, 208, 24);
+        getContentPane().add(procedureNameField);
+        procedureNameField.setColumns(10);
         JButton saveButton = new JButton("保存");
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String caseName = caseNameField.getText();
+                String caseName = procedureNameField.getText();
                 String date = datePickerField.getText();
                 String remark = remarkField.getText();
                 CaseService caseService = new CaseService();
                 ResultDTO resultDTO = new ResultDTO();
                 //新增
-                if (caseId == 0) {
-                    resultDTO = caseService.addCase(caseName, date, remark);
+                if (procedureId == 0) {
+                    resultDTO = caseService.addProcedure(caseId, caseName, date, remark);
                 } else {
                     //更新
-                    LegalCase legalCase = new LegalCase();
-                    legalCase.setId(caseId);
-                    legalCase.setName(caseName);
-                    legalCase.setTime(date);
-                    legalCase.setRemark(remark);
-                    resultDTO = caseService.updateCase(legalCase);
+                	Procedure procedure = caseService.selectProceduresById(procedureId);
+                	procedure.setName(caseName);
+                	procedure.setTime(date);
+                	procedure.setRemark(remark);
+                    resultDTO = caseService.updateProcedure(procedure);
                 }
                 if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                     MainFrame.alert(resultDTO.getMessage());
@@ -117,5 +118,13 @@ public class ProcedureDialog extends JDialog {
     public void setCaseId(int caseId) {
         this.caseId = caseId;
     }
+
+	public int getProcedureId() {
+		return procedureId;
+	}
+
+	public void setProcedureId(int procedureId) {
+		this.procedureId = procedureId;
+	}
     
 }
