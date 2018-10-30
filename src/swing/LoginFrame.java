@@ -48,7 +48,7 @@ public class LoginFrame extends JFrame {
         jl.setFont(new Font("微软雅黑", Font.BOLD, 20));
         jl.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         final JButton jb1 = new JButton("登录");
-        jb1.setBounds(67, 15, 57, 23);
+        jb1.setBounds(67, 15, 70, 23);
         jb1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 LoginFrame.frame.dispose();
@@ -60,7 +60,7 @@ public class LoginFrame extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         	}
         });
-        jb2.setBounds(185, 15, 57, 23);
+        jb2.setBounds(185, 15, 70, 23);
         jb2.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent event) {
                 System.exit(0);
