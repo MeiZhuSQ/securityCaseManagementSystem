@@ -3,14 +3,18 @@ package swing;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import entity.Police;
+import entity.Procedure;
 import service.CaseService;
 
-public class PoliceTableModel extends AbstractTableModel {
+public class ProcedureTableModel extends AbstractTableModel {
 
-    private static final long serialVersionUID = -1425685789812673396L;
-    private String[] columnNames = new String[] { "序号", "姓名", "性别", "警号" };
-    public List<Police> list = new CaseService().listPolice();
+    private static final long serialVersionUID = -3679080890919115191L;
+    private String[] columnNames = new String[] { "序号", "法律程序名称", "时间", "备注"};
+    public List<Procedure> list = new ArrayList<>();
+
+    public void setList(int caseId) {
+        list = new CaseService().selectProceduresByCaseId(caseId);
+    }
 
     @Override
     public int getRowCount() {
@@ -34,15 +38,15 @@ public class PoliceTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Police police = list.get(rowIndex);
+        Procedure procedure = list.get(rowIndex);
         if (columnIndex == 0)
-            return police.getId();
+            return procedure.getId();
         if (columnIndex == 1)
-            return police.getName();
+            return procedure.getName();
         if (columnIndex == 2)
-            return police.getSex().equals("0") ? "男" : "女";
+            return procedure.getTime();
         if (columnIndex == 3)
-            return police.getPoliceNumber();
+            return procedure.getRemark();
         return null;
     }
 

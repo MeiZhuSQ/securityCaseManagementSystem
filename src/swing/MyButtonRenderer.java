@@ -36,12 +36,12 @@ public class MyButtonRenderer implements TableCellRenderer {
 
     private void initButton() {
 
-        button = new ImageButton("edit.png");
+        button = new ImageButton("view.png");
         button1 = new ImageButton("edit.png");
-        button2 = new JButton();
-        button.setSize(new Dimension(16, 16));
+        button2 = new ImageButton("delete.png");
+        /*button.setSize(new Dimension(16, 16));
         button1.setSize(new Dimension(50, 25));
-        button2.setSize(new Dimension(50, 25));
+        button2.setSize(new Dimension(50, 25));*/
     }
 
     private void initPanel() {
@@ -53,9 +53,12 @@ public class MyButtonRenderer implements TableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
             int row, int column) {
         btnName = (ArrayList<String>) value;
-        GUIUtil.setImageIcon(button, "edit.png", "修改案件");
+        button = new ImageButton("view.png");
+        button1 = new ImageButton("edit.png");
+        button2 = new ImageButton("delete.png");
+        /*GUIUtil.setImageIcon(button, "edit.png", "修改案件");
         GUIUtil.setImageIcon(button1, "edit.png", "修改案件");
-        GUIUtil.setImageIcon(button2, "edit.png", "修改案件");
+        GUIUtil.setImageIcon(button2, "edit.png", "修改案件");*/
 //        button.setText(value == null ? "" : btnName.get(0));
 //        button1.setText(value == null ? "" : btnName.get(1));
 //        button2.setText(value == null ? "" : btnName.get(2));

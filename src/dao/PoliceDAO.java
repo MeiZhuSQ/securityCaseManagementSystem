@@ -37,7 +37,7 @@ public class PoliceDAO {
 			ps.setString(1, police.getName());
 			ps.setString(2, police.getSex());
 			ps.setString(3, police.getPoliceNumber());
-			ps.setInt(3, police.getId());
+			ps.setInt(4, police.getId());
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -93,6 +93,22 @@ public class PoliceDAO {
 			e.printStackTrace();
 		}
 		return police;
+	}
+	
+	public Police selectById(int id) {
+	    String sql = "select * from police where id = ?";
+	    Police police = null;
+	    try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+	        ps.setInt(1, id);
+	        ResultSet rs = ps.executeQuery();
+	        while (rs.next()) {
+	            police = new Police(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
+	                    rs.getString("police_number"));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return police;
 	}
 
 	public List<Police> selectForNote(String policeList) {

@@ -3,14 +3,18 @@ package swing;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import entity.Police;
+import entity.OtherPerson;
 import service.CaseService;
 
-public class PoliceTableModel extends AbstractTableModel {
+public class OtherPersonTableModel extends AbstractTableModel {
 
-    private static final long serialVersionUID = -1425685789812673396L;
-    private String[] columnNames = new String[] { "序号", "姓名", "性别", "警号" };
-    public List<Police> list = new CaseService().listPolice();
+    private static final long serialVersionUID = 1378854762463879797L;
+    private String[] columnNames = new String[] { "序号", "姓名", "性别", "身份证号", "其他人类型"};
+    public List<OtherPerson> list = new ArrayList<>();
+
+    public void setList(int noteId) {
+        list = new CaseService().selectOtherPersonByNoteId(noteId);
+    }
 
     @Override
     public int getRowCount() {
@@ -34,15 +38,17 @@ public class PoliceTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Police police = list.get(rowIndex);
+        OtherPerson otherPerson = list.get(rowIndex);
         if (columnIndex == 0)
-            return police.getId();
+            return otherPerson.getId();
         if (columnIndex == 1)
-            return police.getName();
+            return otherPerson.getName();
         if (columnIndex == 2)
-            return police.getSex().equals("0") ? "男" : "女";
+            return otherPerson.getSex().equals("0") ? "男" : "女";
         if (columnIndex == 3)
-            return police.getPoliceNumber();
+            return otherPerson.getIdCard();
+        if (columnIndex == 4)
+            return otherPerson.getType();
         return null;
     }
 
