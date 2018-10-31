@@ -51,21 +51,22 @@ public class LoginFrame extends JFrame {
         jb1.setBounds(67, 15, 70, 23);
         jb1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                LoginFrame.frame.dispose();
+                StartRun.frame.dispose();
                 new MainFrame().setVisible(true);
             }
         });
         JButton jb2 = new JButton("退出");
         jb2.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        	    System.exit(0);
         	}
         });
         jb2.setBounds(185, 15, 70, 23);
-        jb2.addMouseListener(new MouseAdapter() {
+        /*jb2.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent event) {
-                System.exit(0);
+                //System.exit(0);
             }
-        });
+        });*/
         JPanel jp_south = new JPanel();
         jp_south.setBounds(22, 180, 289, 64);
         panel.add(jp_south);

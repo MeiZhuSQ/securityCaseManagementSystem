@@ -233,7 +233,7 @@ public class ViewCasePanel extends JPanel {
         head.setPreferredSize(new Dimension(procedureTable.getTableHeader().getWidth(), 30));
         lawScrollPane.setViewportView(procedureTable);
 
-        JPanel panel_1 = new JPanel();
+        /*JPanel panel_1 = new JPanel();
         panel_1.setBounds(0, 453, 1000, 40);
         add(panel_1);
         panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -288,7 +288,7 @@ public class ViewCasePanel extends JPanel {
                 }
             }
         });
-        panel_1.add(deleteLawButton);
+        panel_1.add(deleteLawButton);*/
 
         /*JButton viewLawButton = new JButton("详情");
         viewLawButton.addActionListener(new ActionListener() {
