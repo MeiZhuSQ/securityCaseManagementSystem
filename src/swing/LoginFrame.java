@@ -27,7 +27,7 @@ public class LoginFrame extends JFrame {
 
     public static LoginFrame frame;
 
-    private LoginFrame() {
+    public LoginFrame() {
         this.setType(Type.UTILITY);
         this.setAlwaysOnTop(true);
         this.setAutoRequestFocus(false);

@@ -83,19 +83,6 @@ public class MainFrame extends BaseFrame {
         return instance;
     } 
     
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    frame = MainFrame.getInstance();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
     public MainFrame() {
         initialize();
     }
