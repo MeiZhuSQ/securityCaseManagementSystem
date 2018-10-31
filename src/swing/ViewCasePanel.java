@@ -55,10 +55,10 @@ public class ViewCasePanel extends JPanel {
     
     public ViewCasePanel() {
         // 更新选中的caseId
-        int i = MainFrame.getInstance().caseTable.getSelectedRow();
-        this.caseId = Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + "");
-        CaseService caseService = new CaseService();
-        LegalCase legalCase = caseService.selectCaseById(caseId);
+        //int i = MainFrame.getInstance().caseTable.getSelectedRow();
+        //this.caseId = Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + "");
+        //CaseService caseService = new CaseService();
+        //LegalCase legalCase = caseService.selectCaseById(caseId);
 
         setLayout(null);
 
@@ -81,13 +81,13 @@ public class ViewCasePanel extends JPanel {
         caseRemarkLabel.setBounds(227, 20, 84, 18);
         casePanel.add(caseRemarkLabel);
 
-        caseTimeField = new JTextField(legalCase.getTime());
+        caseTimeField = new JTextField();
         caseTimeField.setEditable(false);
         caseTimeField.setBounds(90, 17, 120, 24);
         casePanel.add(caseTimeField);
         caseTimeField.setColumns(10);
 
-        caseRemarkField = new JTextField(legalCase.getRemark());
+        caseRemarkField = new JTextField();
         caseRemarkField.setEditable(false);
         caseRemarkField.setBounds(299, 17, 120, 24);
         casePanel.add(caseRemarkField);
