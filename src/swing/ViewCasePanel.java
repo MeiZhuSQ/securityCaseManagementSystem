@@ -217,7 +217,8 @@ public class ViewCasePanel extends JPanel {
 
         JScrollPane lawScrollPane = new JScrollPane();
         lawScrollPane.setBounds(0, 298, 1000, 155);
-        add(lawScrollPane);
+        //2018-10-29 确认综合笔录、法律手续、闹钟为一个综合列表
+        //add(lawScrollPane);
         Border lawTitleBorder, lawLineBorder;
         lawLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
         lawTitleBorder = BorderFactory.createTitledBorder(lawLineBorder, "关联法律程序", TitledBorder.LEFT,
