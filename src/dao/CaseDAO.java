@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import util.JDBCUtil;
+import vo.CaseItemVO;
 import entity.LegalCase;
 
 public class CaseDAO {
@@ -125,6 +126,31 @@ public class CaseDAO {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+
+	public List<CaseItemVO> getCaseItems(int caseId) {
+		String sql = "SELECT id,name,start_time as time,remark ,'1' as type FROM note where case_id = ?"
+				+ "UNION "
+				+ "SELECT id,name,time,remark ,'2' as type FROM procedure where case_id = ?"
+				+ "UNION "
+				+ "SELECT id,name,time,remark ,'3' as type FROM clock where case_id = ?"
+				+ "ORDER BY time desc";
+		List<CaseItemVO> caseItems = new ArrayList<>();
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setInt(1, caseId);
+			ps.setInt(2, caseId);
+			ps.setInt(3, caseId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				CaseItemVO caseItemVO = new CaseItemVO(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
+						rs.getString("remark"),rs.getString("type"));
+				caseItems.add(caseItemVO);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return caseItems;
+		
 	}
 
 

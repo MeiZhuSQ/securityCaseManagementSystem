@@ -1,30 +1,32 @@
 package entity;
 
+
 public class Police extends Person {
-	private String policeNumber;// 警号
+	private int noteId;// 笔录id
 
 	public Police() {
 
 	}
 
-	public Police(String name, String sex, String policeNumber) {
+	public Police(String name, String sex, int noteId) {
 		this.setName(name);
 		this.setSex(sex);
-		this.setPoliceNumber(policeNumber);
+		this.setNoteId(noteId);
 	}
 
-	public Police(int id, String name, String sex, String policeNumber) {
+	public Police(int id, String name, String sex, int noteId) {
 		this.setId(id);
 		this.setName(name);
 		this.setSex(sex);
-		this.setPoliceNumber(policeNumber);
+		this.setNoteId(noteId);
 	}
 
-	public String getPoliceNumber() {
-		return policeNumber;
+
+	public int getNoteId() {
+		return noteId;
 	}
 
-	public void setPoliceNumber(String policeNumber) {
-		this.policeNumber = policeNumber;
+	public void setNoteId(int noteId) {
+		this.noteId = noteId;
 	}
 }

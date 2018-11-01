@@ -5,25 +5,27 @@ public class Clock {
 	private String name;
 	private String time;
 	private String remark;
-	private String type;//1笔录2法律手续
+	private String type;// 1笔录2法律手续
 	private int ownerId;
+	private int caseId;
 
-
-	public Clock(int id,String name, String time, String remark, String type, int ownerId) {
+	public Clock(int id, String name, String time, String remark, String type, int ownerId, int caseId) {
 		this.setId(id);
 		this.setName(name);
 		this.setTime(time);
-		this.setRemark(remark);;
+		this.setRemark(remark);
 		this.setType(type);
 		this.setOwnerId(ownerId);
+		this.setCaseId(caseId);
 	}
 
-	public Clock(String name, String time, String remark, String type, int ownerId) {
+	public Clock(String name, String time, String remark, String type, int ownerId, int caseId) {
 		this.setName(name);
 		this.setTime(time);
-		this.setRemark(remark);;
+		this.setRemark(remark);
 		this.setType(type);
 		this.setOwnerId(ownerId);
+		this.setCaseId(caseId);
 	}
 
 	public Clock() {
@@ -76,6 +78,14 @@ public class Clock {
 
 	public void setOwnerId(int ownerId) {
 		this.ownerId = ownerId;
+	}
+
+	public int getCaseId() {
+		return caseId;
+	}
+
+	public void setCaseId(int caseId) {
+		this.caseId = caseId;
 	}
 
 }
