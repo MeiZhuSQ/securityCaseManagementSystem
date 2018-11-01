@@ -18,6 +18,7 @@ import util.GUIUtil;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -35,12 +36,13 @@ import java.awt.event.ActionEvent;
 public class ViewCasePanel extends JPanel {
 
     private static final long serialVersionUID = 7334759086622449699L;
-    public static JTable noteTable;
-    public static NoteTableModel noteTableModel;
+    public  JTable caseDetailTable;
+    public  CaseDetailTableModel caseDetailTableModel;
     private JTextField caseTimeField;
     private JTextField caseRemarkField;
     private JTable procedureTable;
     private ProcedureTableModel procedureTableModel;
+    private ArrayList<String> btnName = new ArrayList<String>();
     // 记录案子ID
     private int caseId;
     
@@ -105,7 +107,7 @@ public class ViewCasePanel extends JPanel {
         casePanel.add(label);
 
         JScrollPane noteScrollPane = new JScrollPane();
-        noteScrollPane.setBounds(0, 90, 1000, 341);
+        noteScrollPane.setBounds(0, 90, 1000, 398);
         add(noteScrollPane);
 
         Border noteTitleBorder, noteLineBorder;
@@ -115,17 +117,21 @@ public class ViewCasePanel extends JPanel {
         noteScrollPane.setBorder(noteTitleBorder);
 
         // createNoteTable();
-        noteTableModel = new NoteTableModel();
-        // 定义笔录Model，动态给Model赋值
-        noteTableModel.setList(caseId);
-        noteTable = new JTable(noteTableModel);
-        noteTable.setRowHeight(30);
-        JTableHeader head = noteTable.getTableHeader();
+        caseDetailTableModel = new CaseDetailTableModel();
+        caseDetailTable = new JTable(caseDetailTableModel);
+        caseDetailTable.setRowHeight(30);
+        JTableHeader head = caseDetailTable.getTableHeader();
         head.setPreferredSize(new Dimension(head.getWidth(), 30));
-        noteScrollPane.setViewportView(noteTable);
+        
+        btnName.add("修改");
+        btnName.add("删除");
+        TableColumn column = caseDetailTable.getColumnModel().getColumn(5);
+        column.setCellRenderer(new CaseDetailButtonRenderer());
+        column.setCellEditor(new CaseDetailButtonEditor());
+        noteScrollPane.setViewportView(caseDetailTable);
 
         JPanel panel = new JPanel();
-        panel.setBounds(0, 444, 1000, 36);
+        panel.setBounds(0, 501, 1000, 36);
         add(panel);
 
         JButton createNoteButton = new JButton("新建笔录");
@@ -159,14 +165,14 @@ public class ViewCasePanel extends JPanel {
         });
         panel.add(createNoteButton);
 
-        JButton editNoteButton = new JButton("新建法律手续");
-        editNoteButton.addActionListener(new ActionListener() {
+        JButton createProcedureButton = new JButton("新建法律手续");
+        createProcedureButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //NotePanel notePanel = new NotePanel(caseId);
                 NotePanel notePanel = NotePanel.getInstance();
                 notePanel.setCaseId(caseId);
-                int i = noteTable.getSelectedRow();
-                int noteId = Integer.parseInt(noteTableModel.getValueAt(i, 0) + "");
+                int i = caseDetailTable.getSelectedRow();
+                int noteId = Integer.parseInt(caseDetailTableModel.getValueAt(i, 0) + "");
                 //askedPersonTableModel赋值
                 notePanel.askedPersonTableModel.setList(noteId);
                 //otherPersonTableModel赋值
@@ -194,18 +200,18 @@ public class ViewCasePanel extends JPanel {
                 MainFrame.tabbedPane.setSelectedComponent(notePanel);
             }
         });
-        panel.add(editNoteButton);
+        panel.add(createProcedureButton);
 
-        JButton deleteNoteButton = new JButton("新建闹钟");
-        deleteNoteButton.addActionListener(new ActionListener() {
+        JButton createClockButton = new JButton("新建闹钟");
+        createClockButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	if (noteTable.getSelectedRow() <= 0) {
+            	if (caseDetailTable.getSelectedRow() <= 0) {
 	           		 MainFrame.alert("请选择一行！");
 	           		 return;
             	}
             	if (MainFrame.prompt("确定删除该笔录吗？")){
-                    int i = noteTable.getSelectedRow();
-                    String noteId = noteTableModel.getValueAt(i, 0)+"";
+                    int i = caseDetailTable.getSelectedRow();
+                    String noteId = caseDetailTableModel.getValueAt(i, 0)+"";
                     CaseService caseService = new CaseService();
                     ResultDTO resultDTO = caseService.delNote(Integer.valueOf(noteId));
                     if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
@@ -217,7 +223,7 @@ public class ViewCasePanel extends JPanel {
                 }
             }
         });
-        panel.add(deleteNoteButton);
+        panel.add(createClockButton);
 
         /*JButton viewNoteButton = new JButton("详情");
         viewNoteButton.addActionListener(new ActionListener() {
@@ -360,8 +366,8 @@ public class ViewCasePanel extends JPanel {
      * }
      */
     public void updateNoteTable() {
-        noteTableModel.setList(caseId);
-        noteTable.updateUI();
+        caseDetailTableModel.setList(caseId);
+        caseDetailTable.updateUI();
     }
 
     public void updateProcedureTable() {

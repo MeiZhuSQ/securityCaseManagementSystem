@@ -11,6 +11,7 @@ import util.DateUtil;
 import dao.AskedPersonDAO;
 import dao.CaseDAO;
 import dao.ClockDAO;
+import dao.LegalCaseDetailDAO;
 import dao.NoteDAO;
 import dao.OtherPersonDAO;
 import dao.PoliceDAO;
@@ -19,6 +20,7 @@ import dto.ResultDTO;
 import entity.AskedPerson;
 import entity.Clock;
 import entity.LegalCase;
+import entity.LegalCaseDetail;
 import entity.Note;
 import entity.OtherPerson;
 import entity.Police;
@@ -33,6 +35,7 @@ public class CaseService extends BaseService {
 	private OtherPersonDAO otherPersonDAO = new OtherPersonDAO();
 	private AskedPersonDAO askedPersonDAO = new AskedPersonDAO();
 	private ClockDAO clockDAO = new ClockDAO();
+	private LegalCaseDetailDAO legalCaseDetailDAO = new LegalCaseDetailDAO();
 
 	/**
 	 * 新增案件
@@ -806,6 +809,15 @@ public class CaseService extends BaseService {
 		} else {
 			return requestFail();
 		}
+	}
+	
+	/**
+	 * 获取笔录/手续/闹钟综合列表
+	 * @return
+	 */
+	public List<LegalCaseDetail> getLegalCaseDetailList(int caseId) {
+	    List<LegalCaseDetail> list = legalCaseDetailDAO.selectByCaseId(caseId);
+	    return list;
 	}
 	
 	public static void main(String[] args) {
