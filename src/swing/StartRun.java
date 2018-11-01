@@ -1,25 +1,20 @@
 package swing;
 
-import java.lang.reflect.InvocationTargetException;
-import javax.swing.SwingUtilities;
+import util.Loading;
 
 public class StartRun {
     public static LoginFrame frame;
-    
+
     public static void main(String[] args) {
+        Loading loading = Loading.getLoading();
+        loading.open();
         try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                public void run() {
-                    try {
-                        frame = new LoginFrame();
-                        frame.setVisible(true);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } catch (InvocationTargetException | InterruptedException e) {
+            frame = new LoginFrame();
+            frame.setVisible(true);
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            loading.close();
         }
     }
 }

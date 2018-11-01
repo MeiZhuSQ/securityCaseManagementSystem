@@ -45,6 +45,7 @@ public class ViewCasePanel extends JPanel {
     private int caseId;
     
     private static ViewCasePanel instance;
+    private JTextField textField;
     
     public static ViewCasePanel getInstance() {
         if (instance == null) {
@@ -73,33 +74,43 @@ public class ViewCasePanel extends JPanel {
                 TitledBorder.LEFT, TitledBorder.CENTER);
         casePanel.setBorder(caseTitleBorder);
 
-        JLabel caseTimeLabel = new JLabel("案件时间：");
-        caseTimeLabel.setBounds(19, 20, 84, 18);
+        JLabel caseTimeLabel = new JLabel("案件时间");
+        caseTimeLabel.setBounds(327, 29, 84, 18);
         casePanel.add(caseTimeLabel);
 
-        JLabel caseRemarkLabel = new JLabel("案件备注：");
-        caseRemarkLabel.setBounds(227, 20, 84, 18);
+        JLabel caseRemarkLabel = new JLabel("案件备注");
+        caseRemarkLabel.setBounds(547, 29, 84, 18);
         casePanel.add(caseRemarkLabel);
 
         caseTimeField = new JTextField();
         caseTimeField.setEditable(false);
-        caseTimeField.setBounds(90, 17, 120, 24);
+        caseTimeField.setBounds(398, 26, 135, 24);
         casePanel.add(caseTimeField);
         caseTimeField.setColumns(10);
 
         caseRemarkField = new JTextField();
         caseRemarkField.setEditable(false);
-        caseRemarkField.setBounds(299, 17, 120, 24);
+        caseRemarkField.setBounds(619, 26, 182, 24);
         casePanel.add(caseRemarkField);
         caseRemarkField.setColumns(10);
+        
+        textField = new JTextField();
+        textField.setEditable(false);
+        textField.setColumns(10);
+        textField.setBounds(107, 26, 176, 24);
+        casePanel.add(textField);
+        
+        JLabel label = new JLabel("案件名称");
+        label.setBounds(35, 29, 84, 18);
+        casePanel.add(label);
 
         JScrollPane noteScrollPane = new JScrollPane();
-        noteScrollPane.setBounds(0, 90, 1000, 168);
+        noteScrollPane.setBounds(0, 90, 1000, 341);
         add(noteScrollPane);
 
         Border noteTitleBorder, noteLineBorder;
         noteLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
-        noteTitleBorder = BorderFactory.createTitledBorder(noteLineBorder, "关联笔录", TitledBorder.LEFT,
+        noteTitleBorder = BorderFactory.createTitledBorder(noteLineBorder, "关联笔录/手续/闹钟", TitledBorder.LEFT,
                 TitledBorder.CENTER);
         noteScrollPane.setBorder(noteTitleBorder);
 
@@ -114,10 +125,10 @@ public class ViewCasePanel extends JPanel {
         noteScrollPane.setViewportView(noteTable);
 
         JPanel panel = new JPanel();
-        panel.setBounds(0, 259, 1000, 36);
+        panel.setBounds(0, 444, 1000, 36);
         add(panel);
 
-        JButton createNoteButton = new JButton("新建");
+        JButton createNoteButton = new JButton("新建笔录");
         createNoteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 //NotePanel notePanel = new NotePanel(caseId);
@@ -148,7 +159,7 @@ public class ViewCasePanel extends JPanel {
         });
         panel.add(createNoteButton);
 
-        JButton editNoteButton = new JButton("修改");
+        JButton editNoteButton = new JButton("新建法律手续");
         editNoteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //NotePanel notePanel = new NotePanel(caseId);
@@ -185,7 +196,7 @@ public class ViewCasePanel extends JPanel {
         });
         panel.add(editNoteButton);
 
-        JButton deleteNoteButton = new JButton("删除");
+        JButton deleteNoteButton = new JButton("新建闹钟");
         deleteNoteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	if (noteTable.getSelectedRow() <= 0) {
@@ -365,5 +376,4 @@ public class ViewCasePanel extends JPanel {
 	public void setCaseId(int caseId) {
 		this.caseId = caseId;
 	}
-
 }
