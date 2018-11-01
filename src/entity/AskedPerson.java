@@ -1,35 +1,35 @@
 package entity;
 
-public class AskedPerson extends Person{
-	private int noteId;
+public class AskedPerson extends Person {
 	private String type;
 	private String idCard;
 	private String adultFlag;
 	private String disabledFlag;
 
-	public AskedPerson(int id, int noteId, String name, String sex, String type, String adultFlag, String idCard,String disabledFlag) {
+	public AskedPerson(int id, String name, String sex, String type, String adultFlag, String idCard,
+			String disabledFlag) {
 		this.setId(id);
-		this.setNoteId(noteId);
 		this.setName(name);
 		this.setSex(sex);
 		this.setType(type);
 		this.setAdultFlag(adultFlag);
 		this.setIdCard(idCard);
-		this.setDisabledFlag(disabledFlag);;
+		this.setDisabledFlag(disabledFlag);
+		;
 	}
 
 	public AskedPerson() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AskedPerson(int noteId, String name, String sex, String type, String adultFlag, String idCard,String disabledFlag) {
-		this.setNoteId(noteId);
+	public AskedPerson(String name, String sex, String type, String adultFlag, String idCard, String disabledFlag) {
 		this.setName(name);
 		this.setSex(sex);
 		this.setType(type);
 		this.setAdultFlag(adultFlag);
 		this.setIdCard(idCard);
-		this.setDisabledFlag(disabledFlag);;
+		this.setDisabledFlag(disabledFlag);
+		;
 	}
 
 	public String getIdCard() {
@@ -40,14 +40,6 @@ public class AskedPerson extends Person{
 		this.idCard = idCard;
 	}
 
-	public int getNoteId() {
-		return noteId;
-	}
-
-	public void setNoteId(int noteId) {
-		this.noteId = noteId;
-	}
-
 	public String getType() {
 		return type;
 	}
@@ -55,7 +47,6 @@ public class AskedPerson extends Person{
 	public void setType(String type) {
 		this.type = type;
 	}
-
 
 	public String getAdultFlag() {
 		return adultFlag;

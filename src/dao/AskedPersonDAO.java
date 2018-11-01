@@ -13,15 +13,14 @@ import entity.AskedPerson;
 
 public class AskedPersonDAO {
 	public void add(AskedPerson askedPerson) throws Exception {
-		String sql = "insert into asked_person (`name`,`sex`,note_id,type,adult_flag,id_card,disabled_flag) values (?,?,?,?,?,?,?)";
+		String sql = "insert into asked_person (`name`,`sex`,type,adult_flag,id_card,disabled_flag) values (?,?,?,?,?,?)";
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, askedPerson.getName());
 			ps.setString(2, askedPerson.getSex());
-			ps.setInt(3, askedPerson.getNoteId());
-			ps.setString(4, askedPerson.getType());
-			ps.setString(5, askedPerson.getAdultFlag());
-			ps.setString(6, askedPerson.getIdCard());
-			ps.setString(7, askedPerson.getDisabledFlag());
+			ps.setString(3, askedPerson.getType());
+			ps.setString(4, askedPerson.getAdultFlag());
+			ps.setString(5, askedPerson.getIdCard());
+			ps.setString(6, askedPerson.getDisabledFlag());
 			ps.execute();
 			ResultSet rs = ps.getGeneratedKeys();
 			if (rs.next()) {
@@ -35,17 +34,16 @@ public class AskedPersonDAO {
 	}
 
 	public int update(AskedPerson askedPerson) {
-		String sql = "update asked_person set name = ?,sex = ? ,note_id = ?,type = ?,adult_flag = ?,id_card = ?,disabled_flag = ? where id = ?";
+		String sql = "update asked_person set name = ?,sex = ? ,type = ?,adult_flag = ?,id_card = ?,disabled_flag = ? where id = ?";
 		int result = 0;
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, askedPerson.getName());
 			ps.setString(2, askedPerson.getSex());
-			ps.setInt(3, askedPerson.getNoteId());
-			ps.setString(4, askedPerson.getType());
-			ps.setString(5, askedPerson.getAdultFlag());
-			ps.setString(6, askedPerson.getIdCard());
-			ps.setString(7, askedPerson.getDisabledFlag());
-			ps.setInt(8, askedPerson.getId());
+			ps.setString(3, askedPerson.getType());
+			ps.setString(4, askedPerson.getAdultFlag());
+			ps.setString(5, askedPerson.getIdCard());
+			ps.setString(6, askedPerson.getDisabledFlag());
+			ps.setInt(7, askedPerson.getId());
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -73,8 +71,8 @@ public class AskedPersonDAO {
 			ps.setInt(2, count);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				AskedPerson askedPerson = new AskedPerson(rs.getInt("id"), rs.getInt("note_id"), rs.getString("name"),
-						rs.getString("sex"), rs.getString("type"), rs.getString("adult_flag"), rs.getString("id_card"),
+				AskedPerson askedPerson = new AskedPerson(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
+						rs.getString("type"), rs.getString("adult_flag"), rs.getString("id_card"),
 						rs.getString("disabled_flag"));
 				askedPersons.add(askedPerson);
 			}
@@ -95,8 +93,8 @@ public class AskedPersonDAO {
 			ps.setInt(1, noteId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				AskedPerson askedPerson = new AskedPerson(rs.getInt("id"), rs.getInt("note_id"), rs.getString("name"),
-						rs.getString("sex"), rs.getString("type"), rs.getString("adult_flag"), rs.getString("id_card"),
+				AskedPerson askedPerson = new AskedPerson(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
+						rs.getString("type"), rs.getString("adult_flag"), rs.getString("id_card"),
 						rs.getString("disabled_flag"));
 				askedPersons.add(askedPerson);
 			}
@@ -113,8 +111,8 @@ public class AskedPersonDAO {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				askedPerson = new AskedPerson(rs.getInt("id"), rs.getInt("note_id"), rs.getString("name"),
-						rs.getString("sex"), rs.getString("type"), rs.getString("adult_flag"), rs.getString("id_card"),
+				askedPerson = new AskedPerson(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
+						rs.getString("type"), rs.getString("adult_flag"), rs.getString("id_card"),
 						rs.getString("disabled_flag"));
 			}
 		} catch (SQLException e) {
@@ -122,7 +120,7 @@ public class AskedPersonDAO {
 		}
 		return askedPerson;
 	}
-	
+
 	public AskedPerson selectByIdCard(String idCard) {
 		String sql = "select * from asked_person where id_card = ?";
 		AskedPerson askedPerson = null;
@@ -130,8 +128,8 @@ public class AskedPersonDAO {
 			ps.setString(1, idCard);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				askedPerson = new AskedPerson(rs.getInt("id"), rs.getInt("note_id"), rs.getString("name"),
-						rs.getString("sex"), rs.getString("type"), rs.getString("adult_flag"), rs.getString("id_card"),
+				askedPerson = new AskedPerson(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
+						rs.getString("type"), rs.getString("adult_flag"), rs.getString("id_card"),
 						rs.getString("disabled_flag"));
 			}
 		} catch (SQLException e) {
@@ -153,5 +151,4 @@ public class AskedPersonDAO {
 		return 0;
 	}
 
-	
 }

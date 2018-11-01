@@ -239,7 +239,7 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public ResultDTO addNote(int caseId, String name, String startTime, String endTime, String remark, String place,
-			String fileName, String policeList) {
+			String fileName, int askedPersonId) {
 
 		if (StringUtils.isBlank(name)) {
 			return requestFail("笔录名称不能为空");
@@ -270,25 +270,22 @@ public class CaseService extends BaseService {
 		if (StringUtils.isBlank(fileName)) {
 			return requestFail("对应文件名不能为空");
 		}
-		if (StringUtils.isBlank(policeList)) {
-			return requestFail("警员列表不能为空");
-		}
 
 		// 校验被询问人
-		Note note = new Note(caseId, name, startTime, endTime, remark, place, fileName, policeList);
+		Note note = new Note(caseId, name, startTime, endTime, remark, place, fileName, askedPersonId);
 		ResultDTO result = checkAskedPerson(note);
 		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 			return result;
 		}
 
 		// 校验警员
-		String[] polices = policeList.split(",");
-		for (String policeNumber : polices) {
-			result = checkNoteByTimeAndPlaceAndPolic(policeNumber, startTime, endTime, place);
-			if (result.getCode().equals(CommonConstant.RESULT_CODE_FAIL)) {
-				return result;
-			}
-		}
+//		String[] polices = policeList.split(",");
+//		for (String policeNumber : polices) {
+//			result = checkNoteByTimeAndPlaceAndPolic(policeNumber, startTime, endTime, place);
+//			if (result.getCode().equals(CommonConstant.RESULT_CODE_FAIL)) {
+//				return result;
+//			}
+//		}
 
 		try {
 			// 返回主键
@@ -314,14 +311,14 @@ public class CaseService extends BaseService {
 		}
 
 		// 校验警员
-		String[] polices = note.getPoliceList().split(",");
-		for (String policeNumber : polices) {
-			result = checkNoteByTimeAndPlaceAndPolic(policeNumber, note.getStartTime(), note.getEndTime(),
-					note.getPlace());
-			if (result.getCode().equals(CommonConstant.RESULT_CODE_FAIL)) {
-				return result;
-			}
-		}
+//		String[] polices = note.getPoliceList().split(",");
+//		for (String policeNumber : polices) {
+//			result = checkNoteByTimeAndPlaceAndPolic(policeNumber, note.getStartTime(), note.getEndTime(),
+//					note.getPlace());
+//			if (result.getCode().equals(CommonConstant.RESULT_CODE_FAIL)) {
+//				return result;
+//			}
+//		}
 
 		if (1 == noteDAO.update(note)) {
 			return requestSuccess();

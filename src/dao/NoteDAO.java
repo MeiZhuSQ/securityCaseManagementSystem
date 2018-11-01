@@ -16,7 +16,7 @@ public class NoteDAO {
 	    ResultSet rs = null;
 	    PreparedStatement sta = null;
 	    Connection con = null;
-		String sql = "insert into note (`case_id`,`name`,`start_time`,`end_time`,remark,place,file_name,police_list) values (?,?,?,?,?,?,?,?)";
+		String sql = "insert into note (`case_id`,`name`,`start_time`,`end_time`,remark,place,file_name,asked_person_id) values (?,?,?,?,?,?,?,?)";
         try {
 		    con = JDBCUtil.getConnection();
 		    PreparedStatement ps = con.prepareStatement(sql);
@@ -27,7 +27,7 @@ public class NoteDAO {
 			ps.setString(5, note.getRemark());
 			ps.setString(6, note.getPlace());
 			ps.setString(7, note.getFileName());
-			ps.setString(8, note.getPoliceList());
+			ps.setInt(8, note.getAskedPersonId());
 			ps.execute();
 			rs = ps.getGeneratedKeys();
 			int id = 0;
@@ -83,7 +83,7 @@ public class NoteDAO {
 			while (rs.next()) {
 				Note note = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
 						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
-						rs.getString("place"), rs.getString("file_name"), rs.getString("police_list"));
+						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_id"));
 				notes.add(note);
 			}
 		} catch (SQLException e) {
@@ -111,7 +111,7 @@ public class NoteDAO {
 
 	public List<Note> selectNoteByTimeAndPlaceAndPolic(String policeNumber, String startTime, String endTime,
 			String place) {
-		String sql = "select * from note WHERE start_time < ? and  end_time > ? and  (place = ? or police_list like ?)";
+		String sql = "select * from note WHERE start_time < ? and  end_time > ? and  (place = ? or asked_person_id like ?)";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, endTime);
@@ -122,7 +122,7 @@ public class NoteDAO {
 			while (rs.next()) {
 				Note note = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
 						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
-						rs.getString("place"), rs.getString("file_name"), rs.getString("police_list"));
+						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_id"));
 				notes.add(note);
 			}
 		} catch (SQLException e) {
@@ -140,7 +140,7 @@ public class NoteDAO {
 			while (rs.next()) {
 				Note note = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
 						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
-						rs.getString("place"), rs.getString("file_name"), rs.getString("police_list"));
+						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_id"));
 				notes.add(note);
 			}
 		} catch (SQLException e) {
@@ -158,7 +158,7 @@ public class NoteDAO {
 			while (rs.next()) {
 				note = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
 						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
-						rs.getString("place"), rs.getString("file_name"), rs.getString("police_list"));
+						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_id"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
