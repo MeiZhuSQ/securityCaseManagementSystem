@@ -509,6 +509,16 @@ public class CaseService extends BaseService {
 	public Police selectPoliceByPoliceNumber(String policeNumber) {
 		return policeDAO.selectByPoliceNumber(policeNumber);
 	}
+	
+	/**
+	 * 根据ID查询警员
+	 * 
+	 * @param policeNumber
+	 * @return
+	 */
+	public Police selectPoliceById(int id) {
+	    return policeDAO.selectById(id);
+	}
 
 	/**
 	 * 删除警员
@@ -784,7 +794,7 @@ public class CaseService extends BaseService {
 	 * @param id
 	 * @return
 	 */
-	private ResultDTO delClock(int id) {
+	public ResultDTO delClock(int id) {
 		if (1 == clockDAO.delete(id)) {
 			return requestSuccess();
 		} else {
@@ -805,7 +815,8 @@ public class CaseService extends BaseService {
 			return requestFail();
 		}
 	}
-
+	
+	
 	public static void main(String[] args) {
 		CaseService caseService = new CaseService();
 		// ResultDTO resultDTO2 = caseService.addNote(1, "笔录1",

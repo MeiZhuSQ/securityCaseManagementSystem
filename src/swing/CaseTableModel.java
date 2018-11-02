@@ -1,16 +1,17 @@
 package swing;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import entity.Police;
+import entity.LegalCase;
 import service.CaseService;
 
-public class PoliceTableModel extends AbstractTableModel {
-
-    private static final long serialVersionUID = -1425685789812673396L;
-    private String[] columnNames = new String[] { "序号", "姓名", "性别", "警号" };
-    public List<Police> list = new CaseService().listPolice();
+public class CaseTableModel extends AbstractTableModel{
+    
+    private static final long serialVersionUID = -9105203202190115194L;
+    
+    private String[] columnNames = new String[] { "序号", "案件名称", "时间", "备注","操作"};
+    
+    public List<LegalCase> list = new CaseService().listCase();
 
     @Override
     public int getRowCount() {
@@ -29,21 +30,24 @@ public class PoliceTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
+        //第5列可编辑
+        if (columnIndex == 4) {
+            return true;
+        }
         return false;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Police police = list.get(rowIndex);
+        LegalCase legalCase = list.get(rowIndex);
         if (columnIndex == 0)
-            return police.getId();
+            return legalCase.getId();
         if (columnIndex == 1)
-            return police.getName();
+            return legalCase.getName();
         if (columnIndex == 2)
-            return police.getSex().equals("0") ? "男" : "女";
+            return legalCase.getTime();
         if (columnIndex == 3)
-            return police.getPoliceNumber();
+            return legalCase.getRemark();
         return null;
     }
-
 }

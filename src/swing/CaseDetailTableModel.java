@@ -3,14 +3,18 @@ package swing;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import entity.Police;
+import entity.LegalCaseDetail;
 import service.CaseService;
 
-public class PoliceTableModel extends AbstractTableModel {
+public class CaseDetailTableModel extends AbstractTableModel {
 
-    private static final long serialVersionUID = -1425685789812673396L;
-    private String[] columnNames = new String[] { "序号", "姓名", "性别", "警号" };
-    public List<Police> list = new CaseService().listPolice();
+    private static final long serialVersionUID = 5172529856464610326L;
+    private String[] columnNames = new String[] { "序号", "名称", "类型", "时间", "备注", "操作" };
+    public List<LegalCaseDetail> list = new ArrayList<>();
+
+    public void setList(int caseId) {
+        list = new CaseService().getLegalCaseDetailList(caseId);
+    }
 
     @Override
     public int getRowCount() {
@@ -34,15 +38,17 @@ public class PoliceTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Police police = list.get(rowIndex);
+        LegalCaseDetail legalCaseDetail = list.get(rowIndex);
         if (columnIndex == 0)
-            return police.getId();
+            return legalCaseDetail.getId();
         if (columnIndex == 1)
-            return police.getName();
+            return legalCaseDetail.getName();
         if (columnIndex == 2)
-            return police.getSex().equals("0") ? "男" : "女";
+            return legalCaseDetail.getType();
         if (columnIndex == 3)
-            return police.getPoliceNumber();
+            return legalCaseDetail.getStartTime();
+        if (columnIndex == 4)
+            return legalCaseDetail.getRemark();
         return null;
     }
 

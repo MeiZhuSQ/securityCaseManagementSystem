@@ -88,4 +88,11 @@ public class Clock {
 		this.caseId = caseId;
 	}
 
+	@Override
+	public String toString() {
+	    
+	    return "<html><font color='red'>"+time+"</font><div style='margin-left:10px;'>"
+	            +name+"</div></html>";
+	}
+	
 }

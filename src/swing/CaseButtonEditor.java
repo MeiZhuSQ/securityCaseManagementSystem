@@ -26,7 +26,7 @@ import util.GUIUtil;
  * @author LiuPF
  * @date 2018-10-21
  */
-public class MyButtonEditor extends AbstractCellEditor implements TableCellEditor {
+public class CaseButtonEditor extends AbstractCellEditor implements TableCellEditor {
 
     private static final long serialVersionUID = -6546334664166791132L;
 
@@ -40,7 +40,7 @@ public class MyButtonEditor extends AbstractCellEditor implements TableCellEdito
 
     private ArrayList<String> btnName;
 
-    public MyButtonEditor() {
+    public CaseButtonEditor() {
 
         initButton();
 
@@ -67,9 +67,11 @@ public class MyButtonEditor extends AbstractCellEditor implements TableCellEdito
 
             public void actionPerformed(ActionEvent e) {
                 int i = MainFrame.getInstance().caseTable.getSelectedRow();
-                String caseId = MainFrame.getInstance().caseTableModel.getValueAt(i, 0)+"";
+                int caseId = Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0).toString());
                 ViewCasePanel viewPanel = ViewCasePanel.getInstance();
-                viewPanel.setCaseId(Integer.parseInt(caseId));
+                viewPanel.setCaseId(caseId);
+                // 定义案件详情下的 综合列表Model，动态给Model赋值
+                viewPanel.caseDetailTableModel.setList(caseId);
                 MainFrame.tabbedPane.addTab("案件详情", viewPanel, null);
                 MainFrame.tabbedPane.setSelectedComponent(viewPanel);
                 fireEditingStopped();

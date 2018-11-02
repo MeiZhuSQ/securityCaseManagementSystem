@@ -13,7 +13,7 @@ import javax.swing.table.TableCellRenderer;
 
 import util.GUIUtil;
 
-public class MyButtonRenderer implements TableCellRenderer {
+public class CaseButtonRenderer implements TableCellRenderer {
     private JPanel panel;
 
     private JButton button;
@@ -24,7 +24,7 @@ public class MyButtonRenderer implements TableCellRenderer {
 
     private ArrayList<String> btnName;
 
-    public MyButtonRenderer() {
+    public CaseButtonRenderer() {
         initButton();
 
         initPanel();
