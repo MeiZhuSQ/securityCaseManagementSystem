@@ -72,14 +72,14 @@ public class PoliceDialog extends JDialog{
                 ResultDTO resultDTO = new ResultDTO();
                 //新增
                 if (policeId == 0) {
-                    resultDTO = caseService.addPolice(policeNameField.getText(), String.valueOf(policeSexField.getSelectedIndex()), policeCodeField.getText());
+                    //resultDTO = caseService.addPolice(policeNameField.getText(), String.valueOf(policeSexField.getSelectedIndex()), policeCodeField.getText());
                 } else {
                     //更新
-                    Police police = caseService.selectPoliceById(policeId);
+                    /*Police police = caseService.selectPoliceById(policeId);
                     police.setName(policeNameField.getText());
                     police.setSex(String.valueOf(policeSexField.getSelectedIndex()));
                     police.setPoliceNumber(policeCodeField.getText());
-                    resultDTO = caseService.updatePolice(police);
+                    resultDTO = caseService.updatePolice(police);*/
                 }
                 if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                     MainFrame.alert(resultDTO.getMessage());

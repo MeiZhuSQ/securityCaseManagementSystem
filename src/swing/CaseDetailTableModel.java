@@ -3,7 +3,6 @@ package swing;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import entity.LegalCaseDetail;
 import service.CaseService;
 
 public class CaseDetailTableModel extends AbstractTableModel {

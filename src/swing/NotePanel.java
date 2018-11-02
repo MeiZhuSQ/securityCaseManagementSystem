@@ -134,7 +134,7 @@ public class NotePanel extends JPanel {
         CaseService caseService = new CaseService();
         List<Police> polices = caseService.listPolice();
         for (int i = 0; i < polices.size(); i++) {
-            policeList.add(/*polices.get(i).getId() + "_" + */polices.get(i).getPoliceNumber());
+            policeList.add(/*polices.get(i).getId() + "_" + */polices.get(i).getName());
         }
         defaultValue = new String[] {"请选择"};
         JLabel lblNewLabel = new JLabel("民警");

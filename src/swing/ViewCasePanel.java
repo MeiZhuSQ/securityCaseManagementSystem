@@ -154,7 +154,7 @@ public class ViewCasePanel extends JPanel {
                 CaseService caseService = new CaseService();
                 List<Police> polices = caseService.listPolice();
                 for (Police police : polices) {
-                    policeList.add(/*polices.get(i).getId() + "_" + */police.getPoliceNumber());
+                    policeList.add(/*polices.get(i).getId() + "_" + */police.getName());
 
                 }
                 Object[] defaultValue = new String[] {"请选择"};
@@ -191,10 +191,10 @@ public class ViewCasePanel extends JPanel {
                 CaseService caseService = new CaseService();
                 List<Police> polices = caseService.listPolice();
                 for (Police police : polices) {
-                    policeList.add(/*polices.get(i).getId() + "_" + */police.getPoliceNumber());
+                    policeList.add(/*polices.get(i).getId() + "_" + */police.getName());
 
                 }
-                String[] defaultValue = note.getPoliceList().split(",");
+                String[] defaultValue = /*note.getPoliceList().split(",")*/null;
                 notePanel.mulit.MulitCombobox_all(policeList.toArray(new String[policeList.size()]), defaultValue);
                 MainFrame.tabbedPane.addTab("修改笔录", notePanel, null);
                 MainFrame.tabbedPane.setSelectedComponent(notePanel);
