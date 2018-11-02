@@ -13,13 +13,14 @@ import entity.Clock;
 
 public class ClockDAO {
 	public void add(Clock clock) throws Exception {
-		String sql = "insert into clock (`name`,`time`,remark,type,owner_id) values (?,?,?,?,?)";
+		String sql = "insert into clock (`name`,`time`,remark,type,owner_id,case_id) values (?,?,?,?,?,?)";
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, clock.getName());
 			ps.setString(2, clock.getTime());
 			ps.setString(3, clock.getRemark());
 			ps.setString(4, clock.getType());
 			ps.setInt(5, clock.getOwnerId());
+			ps.setInt(6, clock.getCaseId());
 			ps.execute();
 			ResultSet rs = ps.getGeneratedKeys();
 			if (rs.next()) {
@@ -33,7 +34,7 @@ public class ClockDAO {
 	}
 
 	public int update(Clock clock) {
-		String sql = "update clock set name = ?,time = ? ,remark = ?,type = ?, owner_id = ? where id = ?";
+		String sql = "update clock set name = ?,time = ? ,remark = ?,type = ?, owner_id = ? ,case_id = ? where id = ?";
 		int result = 0;
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, clock.getName());
@@ -41,7 +42,8 @@ public class ClockDAO {
 			ps.setString(3, clock.getRemark());
 			ps.setString(4, clock.getType());
 			ps.setInt(5, clock.getOwnerId());
-			ps.setInt(6, clock.getId());
+			ps.setInt(6, clock.getCaseId());
+			ps.setInt(7, clock.getId());
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -70,7 +72,7 @@ public class ClockDAO {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				Clock clock = new Clock(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
-						rs.getString("remark"), rs.getString("type"), rs.getInt("owner_id"));
+						rs.getString("remark"), rs.getString("type"), rs.getInt("owner_id"), rs.getInt("case_id"));
 				clocks.add(clock);
 			}
 		} catch (SQLException e) {
@@ -91,8 +93,25 @@ public class ClockDAO {
 			ps.setInt(2, ownerId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				Clock clock = new Clock(rs.getInt("id"), rs.getString("name"), rs.getString("time"), rs.getString("remark"),
-						rs.getString("type"), rs.getInt("owner_id"));
+				Clock clock = new Clock(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
+						rs.getString("remark"), rs.getString("type"), rs.getInt("owner_id"), rs.getInt("case_id"));
+				clocks.add(clock);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return clocks;
+	}
+	
+	public List<Clock> selectBycaseId(int caseId) {
+		String sql = "select * from clock where owner_id = ?";
+		List<Clock> clocks = new ArrayList<>();
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setInt(1, caseId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Clock clock = new Clock(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
+						rs.getString("remark"), rs.getString("type"), rs.getInt("owner_id"), rs.getInt("case_id"));
 				clocks.add(clock);
 			}
 		} catch (SQLException e) {
@@ -109,7 +128,7 @@ public class ClockDAO {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				clock = new Clock(rs.getInt("id"), rs.getString("name"), rs.getString("time"), rs.getString("remark"),
-						rs.getString("type"), rs.getInt("owner_id"));
+						rs.getString("type"), rs.getInt("owner_id"), rs.getInt("case_id"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -129,7 +148,5 @@ public class ClockDAO {
 		}
 		return 0;
 	}
-
-
 
 }

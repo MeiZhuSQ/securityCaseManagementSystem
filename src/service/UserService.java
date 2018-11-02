@@ -63,7 +63,7 @@ public class UserService extends BaseService {
 		return false;
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		UserService UserService = new UserService();
 		User user = new User("123456", "774073");
 		String username = user.getUserName();

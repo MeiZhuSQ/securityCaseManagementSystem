@@ -13,11 +13,11 @@ import entity.Police;
 
 public class PoliceDAO {
 	public void add(Police police) throws Exception {
-		String sql = "insert into police (`name`,`sex`,police_number) values (?,?,?)";
+		String sql = "insert into police (`name`,`sex`,note_id) values (?,?,?)";
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, police.getName());
 			ps.setString(2, police.getSex());
-			ps.setString(3, police.getPoliceNumber());
+			ps.setInt(3, police.getNoteId());
 			ps.execute();
 			ResultSet rs = ps.getGeneratedKeys();
 			if (rs.next()) {
@@ -31,12 +31,12 @@ public class PoliceDAO {
 	}
 
 	public int update(Police police) {
-		String sql = "update police set name = ?,sex = ? ,police_number = ? where id = ?";
+		String sql = "update police set name = ?,sex = ? ,note_id = ? where id = ?";
 		int result = 0;
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, police.getName());
 			ps.setString(2, police.getSex());
-			ps.setString(3, police.getPoliceNumber());
+			ps.setInt(3, police.getNoteId());
 			ps.setInt(4, police.getId());
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -66,7 +66,24 @@ public class PoliceDAO {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				Police police = new Police(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
-						rs.getString("police_number"));
+						rs.getInt("note_id"));
+				polices.add(police);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return polices;
+	}
+	
+	public List<Police> listByNoteId(int noteId) {
+		String sql = "select * from police where note_id = ?";
+		List<Police> polices = new ArrayList<>();
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setInt(1, noteId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Police police = new Police(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
+						rs.getInt("note_id"));
 				polices.add(police);
 			}
 		} catch (SQLException e) {
@@ -80,14 +97,14 @@ public class PoliceDAO {
 	}
 
 	public Police selectByPoliceNumber(String policeNumber) {
-		String sql = "select * from police where police_number = ?";
+		String sql = "select * from police where note_id = ?";
 		Police police = null;
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, policeNumber);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				police = new Police(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
-						rs.getString("police_number"));
+						rs.getInt("note_id"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -103,7 +120,7 @@ public class PoliceDAO {
 	        ResultSet rs = ps.executeQuery();
 	        while (rs.next()) {
 	            police = new Police(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
-	                    rs.getString("police_number"));
+	                    rs.getInt("note_id"));
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -113,7 +130,7 @@ public class PoliceDAO {
 
 	public List<Police> selectForNote(String policeList) {
 		String[] policeNumbers = policeList.split(",");
-		String sql = "select * from police where police_number in (" ;
+		String sql = "select * from police where note_id in (" ;
 		for (String string : policeNumbers) {
 			sql += "'" + string + "'" + ",";
 		}
@@ -124,7 +141,7 @@ public class PoliceDAO {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				Police police = new Police(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
-						rs.getString("police_number"));
+						rs.getInt("note_id"));
 				polices.add(police);
 			}
 		} catch (SQLException e) {

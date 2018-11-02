@@ -9,10 +9,10 @@ public class Note {
 	private String remark;
 	private String place;
 	private String fileName;
-	private String policeList;
+	private String askedPersonIdcard;
 
 	public Note(int caseId, String name, String startTime, String endTime, String remark, String place,
-			String fileName, String policeList) {
+			String fileName, String askedPersonIdcard) {
 		this.setCaseId(caseId);
 		this.setName(name);
 		this.setStartTime(startTime);
@@ -20,11 +20,11 @@ public class Note {
 		this.setRemark(remark);
 		this.setPlace(place);
 		this.setFileName(fileName);
-		this.setPoliceList(policeList);
+		this.setAskedPersonIdcard(askedPersonIdcard);
 	}
 
 	public Note(int id, int caseId, String name, String startTime, String endTime, String remark, String place,
-			String fileName, String policeList) {
+			String fileName, String askedPersonIdcard) {
 		this.setId(id);
 		this.setCaseId(caseId);
 		this.setName(name);
@@ -33,7 +33,7 @@ public class Note {
 		this.setRemark(remark);
 		this.setPlace(place);
 		this.setFileName(fileName);
-		this.setPoliceList(policeList);
+		this.setAskedPersonIdcard(askedPersonIdcard);
 	}
 
 	public int getId() {
@@ -100,11 +100,12 @@ public class Note {
 		this.fileName = fileName;
 	}
 
-	public String getPoliceList() {
-		return policeList;
+
+	public String getAskedPersonIdcard() {
+		return askedPersonIdcard;
 	}
 
-	public void setPoliceList(String policeList) {
-		this.policeList = policeList;
+	public void setAskedPersonIdcard(String askedPersonIdcard) {
+		this.askedPersonIdcard = askedPersonIdcard;
 	}
 }
