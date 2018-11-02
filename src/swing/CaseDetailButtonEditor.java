@@ -45,8 +45,8 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
 
     private void initButton() {
 
-        button = new ImageButton("view.png");
-        button1 = new ImageButton("edit.png");
+        button = new ImageButton("edit.png");
+        button1 = new ImageButton("delete.png");
         button.setSize(new Dimension(16, 16));
         button1.setSize(new Dimension(50, 25));
         /*GUIUtil.setImageIcon(button, "edit.png", null);
@@ -98,9 +98,9 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 
-        btnName = (ArrayList<String>) value;
-        button = new ImageButton("view.png");
-        button1 = new ImageButton("edit.png");
+        //btnName = (ArrayList<String>) value;
+       /* button = new ImageButton("edit.png");
+        button1 = new ImageButton("delete.png");*/
         //button.setText(value == null ? "" : btnName.get(0));
         //button1.setText(value == null ? "" : btnName.get(1));
         //button2.setText(value == null ? "" : btnName.get(2));

@@ -68,8 +68,14 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
             public void actionPerformed(ActionEvent e) {
                 int i = MainFrame.getInstance().caseTable.getSelectedRow();
                 int caseId = Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0).toString());
+                String caseName = MainFrame.getInstance().caseTableModel.getValueAt(i, 1).toString();
+                String caseTime = MainFrame.getInstance().caseTableModel.getValueAt(i, 2).toString();
+                String caseRemark = MainFrame.getInstance().caseTableModel.getValueAt(i, 3).toString();
                 ViewCasePanel viewPanel = ViewCasePanel.getInstance();
                 viewPanel.setCaseId(caseId);
+                viewPanel.caseNameField.setText(caseName);
+                viewPanel.caseTimeField.setText(caseTime);
+                viewPanel.caseRemarkField.setText(caseRemark);
                 // 定义案件详情下的 综合列表Model，动态给Model赋值
                 viewPanel.caseDetailTableModel.setList(caseId);
                 MainFrame.tabbedPane.addTab("案件详情", viewPanel, null);
@@ -132,10 +138,10 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 
-        btnName = (ArrayList<String>) value;
-        button = new ImageButton("view.png");
+        //btnName = (ArrayList<String>) value;显示按钮名字的
+        /*button = new ImageButton("view.png");
         button1 = new ImageButton("edit.png");
-        button2 = new ImageButton("delete.png");
+        button2 = new ImageButton("delete.png");*/
         //button.setText(value == null ? "" : btnName.get(0));
         //button1.setText(value == null ? "" : btnName.get(1));
         //button2.setText(value == null ? "" : btnName.get(2));
