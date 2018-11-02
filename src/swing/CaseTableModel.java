@@ -34,6 +34,9 @@ public class CaseTableModel extends AbstractTableModel{
         if (columnIndex == 4) {
             return true;
         }
+        if (columnIndex == 3) {
+            return true;
+        }
         return false;
     }
 

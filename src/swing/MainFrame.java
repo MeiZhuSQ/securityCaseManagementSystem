@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,7 +90,7 @@ public class MainFrame extends BaseFrame {
 
     private void initialize() {
         this.setTitle("案件管理系统 V1.0");
-        this.setBounds(100, 100, 1024, 700);
+        this.setBounds(100, 100, 1200, 750);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(Color.white);
         this.setLocationRelativeTo(null);
@@ -240,7 +241,7 @@ public class MainFrame extends BaseFrame {
         });
         createMenu.add(lawsMenuItem);
         
-        JMenu policeMenu = new JMenu("警员维护");
+        /*JMenu policeMenu = new JMenu("警员维护");
         policeMenu.setPreferredSize(new Dimension(60, 20));
         policeMenu.addMouseListener(new MouseAdapter() {
         	@Override
@@ -251,15 +252,25 @@ public class MainFrame extends BaseFrame {
                 tabbedPane.setSelectedComponent(policePanel);
         	}
         });
-        menuBar.add(policeMenu);
+        menuBar.add(policeMenu);*/
+        
+        JMenu backupMenu = new JMenu("备份");
+        backupMenu.setPreferredSize(new Dimension(40, 20));
+        backupMenu.addMouseListener(new BackupListener());
+        menuBar.add(backupMenu);
+        
+        JMenu recoverMenu = new JMenu("恢复");
+        recoverMenu.setPreferredSize(new Dimension(40, 20));
+        recoverMenu.addMouseListener(new RecoverListener());
+        menuBar.add(recoverMenu);
         
         JMenu existMenu = new JMenu("退出");
         existMenu.setPreferredSize(new Dimension(40, 20));
         existMenu.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseClicked(MouseEvent e) {
-        		System.exit(0);
-        	}
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.exit(0);
+            }
         });
         menuBar.add(existMenu);
         
