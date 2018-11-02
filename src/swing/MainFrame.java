@@ -83,19 +83,6 @@ public class MainFrame extends BaseFrame {
         return instance;
     } 
     
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    frame = MainFrame.getInstance();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
     public MainFrame() {
         initialize();
     }
@@ -139,8 +126,8 @@ public class MainFrame extends BaseFrame {
         btnName.add("修改");
         btnName.add("删除");
         TableColumn column = caseTable.getColumnModel().getColumn(4);
-        column.setCellRenderer(new MyButtonRenderer());
-        column.setCellEditor(new MyButtonEditor());
+        column.setCellRenderer(new CaseButtonRenderer());
+        column.setCellEditor(new CaseButtonEditor());
         
         //initMainTable();
         caseScrollPane.setViewportView(caseTable);

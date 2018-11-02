@@ -12,22 +12,31 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 
+import constant.CommonConstant;
+import dto.ResultDTO;
+import service.CaseService;
+import service.UserService;
+import java.awt.Color;
+
 /**
  * 登录窗体
  * @author LiuPF
  * @date 2018-09-11
  */
 
-public class LoginFrame extends JFrame {
+public class LoginFrame extends BaseFrame {
     private static final long serialVersionUID = -2717090889684605270L;
-
+    private final JTextField jt_name;
+    private final JPasswordField jt_pass;
+    private JLabel tip;
+    
     static {
         GUIUtil.useLNF();
     }
 
     public static LoginFrame frame;
 
-    private LoginFrame() {
+    public LoginFrame() {
         this.setType(Type.UTILITY);
         this.setAlwaysOnTop(true);
         this.setAutoRequestFocus(false);
@@ -51,21 +60,29 @@ public class LoginFrame extends JFrame {
         jb1.setBounds(67, 15, 70, 23);
         jb1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                LoginFrame.frame.dispose();
-                new MainFrame().setVisible(true);
+                /*String username = jt_name.getText();
+                String password = new String(jt_pass.getPassword());
+                ResultDTO result = new UserService().userLogin(username, password);
+                if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+                    tip.setText(result.getMessage());
+                    return;
+                }*/
+                StartRun.frame.dispose();
+                MainFrame.getInstance().setVisible(true);
             }
         });
         JButton jb2 = new JButton("退出");
         jb2.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        	    System.exit(0);
         	}
         });
         jb2.setBounds(185, 15, 70, 23);
-        jb2.addMouseListener(new MouseAdapter() {
+        /*jb2.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent event) {
-                System.exit(0);
+                //System.exit(0);
             }
-        });
+        });*/
         JPanel jp_south = new JPanel();
         jp_south.setBounds(22, 180, 289, 64);
         panel.add(jp_south);
@@ -83,23 +100,28 @@ public class LoginFrame extends JFrame {
                         jl_pass.setFont(font);
                         
                                 JPanel jp_center_left = new JPanel();
-                                jp_center_left.setBounds(0, 73, 148, 100);
+                                jp_center_left.setBounds(0, 73, 148, 76);
                                 panel.add(jp_center_left);
                                 jp_center_left.setLayout(null);
                                 jp_center_left.add(jl_name);
                                 jp_center_left.add(jl_pass);
                                 
-                                        final JTextField jt_name = new JTextField();
+                                        jt_name = new JTextField();
                                         jt_name.setBounds(0, 0, 134, 26);
-                                        final JPasswordField jt_pass = new JPasswordField();
+                                        jt_pass = new JPasswordField();
                                         jt_pass.setBounds(0, 44, 134, 26);
                                         jt_pass.setEchoChar('*');
                                         JPanel jp_center_right = new JPanel();
-                                        jp_center_right.setBounds(158, 73, 206, 100);
+                                        jp_center_right.setBounds(158, 73, 206, 76);
                                         panel.add(jp_center_right);
                                         jp_center_right.setLayout(null);
                                         jp_center_right.add(jt_name);
                                         jp_center_right.add(jt_pass);
+                                        
+                                        tip = new JLabel();
+                                        tip.setForeground(Color.RED);
+                                        tip.setBounds(83, 151, 206, 27);
+                                        panel.add(tip);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
         this.setSize(370, 280);
@@ -107,7 +129,7 @@ public class LoginFrame extends JFrame {
         this.setLocationRelativeTo(null);
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
@@ -118,5 +140,5 @@ public class LoginFrame extends JFrame {
                 }
             }
         });
-    }
+    }*/
 }
