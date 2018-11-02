@@ -56,16 +56,10 @@ public class ViewCasePanel extends JPanel {
     }
     
     public ViewCasePanel() {
-        // 更新选中的caseId
-        //int i = MainFrame.getInstance().caseTable.getSelectedRow();
-        //this.caseId = Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + "");
-        //CaseService caseService = new CaseService();
-        //LegalCase legalCase = caseService.selectCaseById(caseId);
-
         setLayout(null);
 
         JPanel casePanel = new JPanel();
-        casePanel.setBounds(0, 13, 1000, 77);
+        casePanel.setBounds(15, 15, 1150, 77);
         add(casePanel);
         casePanel.setLayout(null);
 
@@ -106,7 +100,7 @@ public class ViewCasePanel extends JPanel {
         casePanel.add(label);
 
         JScrollPane noteScrollPane = new JScrollPane();
-        noteScrollPane.setBounds(0, 107, 1000, 433);
+        noteScrollPane.setBounds(15, 107, 1150, 475);
         add(noteScrollPane);
 
         Border noteTitleBorder, noteLineBorder;
@@ -139,7 +133,7 @@ public class ViewCasePanel extends JPanel {
         noteScrollPane.setViewportView(caseDetailTable);
 
         JPanel panel = new JPanel();
-        panel.setBounds(0, 553, 1000, 36);
+        panel.setBounds(15, 595, 1150, 36);
         add(panel);
 
         JButton createNoteButton = new JButton("新建笔录");
