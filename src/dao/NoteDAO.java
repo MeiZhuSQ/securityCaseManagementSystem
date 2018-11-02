@@ -13,13 +13,13 @@ import entity.Note;
 
 public class NoteDAO {
 	public int add(Note note) throws Exception {
-	    ResultSet rs = null;
-	    PreparedStatement sta = null;
-	    Connection con = null;
-		String sql = "insert into note (`case_id`,`name`,`start_time`,`end_time`,remark,place,file_name,asked_person_id) values (?,?,?,?,?,?,?,?)";
-        try {
-		    con = JDBCUtil.getConnection();
-		    PreparedStatement ps = con.prepareStatement(sql);
+		ResultSet rs = null;
+		PreparedStatement sta = null;
+		Connection con = null;
+		String sql = "insert into note (`case_id`,`name`,`start_time`,`end_time`,remark,place,file_name,asked_person_idcard) values (?,?,?,?,?,?,?,?)";
+		try {
+			con = JDBCUtil.getConnection();
+			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setInt(1, note.getCaseId());
 			ps.setString(2, note.getName());
 			ps.setString(3, note.getStartTime());
@@ -27,7 +27,7 @@ public class NoteDAO {
 			ps.setString(5, note.getRemark());
 			ps.setString(6, note.getPlace());
 			ps.setString(7, note.getFileName());
-			ps.setInt(8, note.getAskedPersonId());
+			ps.setString(8, note.getAskedPersonIdcard());
 			ps.execute();
 			rs = ps.getGeneratedKeys();
 			int id = 0;
@@ -40,8 +40,8 @@ public class NoteDAO {
 			e.printStackTrace();
 			throw e;
 		} finally {
-            JDBCUtil.free(rs, sta, con);
-        }
+			JDBCUtil.free(rs, sta, con);
+		}
 	}
 
 	public int update(Note note) {
@@ -83,7 +83,7 @@ public class NoteDAO {
 			while (rs.next()) {
 				Note note = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
 						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
-						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_id"));
+						rs.getString("place"), rs.getString("file_name"), rs.getString("asked_person_idcard"));
 				notes.add(note);
 			}
 		} catch (SQLException e) {
@@ -111,7 +111,7 @@ public class NoteDAO {
 
 	public List<Note> selectNoteByTimeAndPlaceAndPolic(String policeNumber, String startTime, String endTime,
 			String place) {
-		String sql = "select * from note WHERE start_time < ? and  end_time > ? and  (place = ? or asked_person_id like ?)";
+		String sql = "select * from note WHERE start_time < ? and  end_time > ? and  (place = ? or asked_person_idcard like ?)";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, endTime);
@@ -122,8 +122,35 @@ public class NoteDAO {
 			while (rs.next()) {
 				Note note = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
 						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
-						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_id"));
+						rs.getString("place"), rs.getString("file_name"), rs.getString("asked_person_idcard"));
 				notes.add(note);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return notes;
+	}
+
+	public List<Note> selectConflictingNotesInSameCase(Note note) {
+		int caseId = note.getCaseId();
+		String askedPersonIdcard = note.getAskedPersonIdcard();
+		String startTime = note.getStartTime();
+		String endTime = note.getEndTime();
+		String place = note.getPlace();
+		String sql = "select * from note WHERE start_time < ? and  end_time > ? and  (place = ? or asked_person_idcard = ?) and case_id = ?";
+		List<Note> notes = new ArrayList<>();
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setString(1, endTime);
+			ps.setString(2, startTime);
+			ps.setString(3, place);
+			ps.setString(4, askedPersonIdcard);
+			ps.setInt(5, caseId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Note conflictingNote = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
+						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
+						rs.getString("place"), rs.getString("file_name"), rs.getString("asked_person_idcardcard"));
+				notes.add(conflictingNote);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -140,7 +167,7 @@ public class NoteDAO {
 			while (rs.next()) {
 				Note note = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
 						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
-						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_id"));
+						rs.getString("place"), rs.getString("file_name"), rs.getString("asked_person_idcard"));
 				notes.add(note);
 			}
 		} catch (SQLException e) {
@@ -158,7 +185,7 @@ public class NoteDAO {
 			while (rs.next()) {
 				note = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
 						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
-						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_id"));
+						rs.getString("place"), rs.getString("file_name"), rs.getString("asked_person_idcard"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

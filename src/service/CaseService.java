@@ -239,7 +239,7 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public ResultDTO addNote(int caseId, String name, String startTime, String endTime, String remark, String place,
-			String fileName, int askedPersonId) {
+			String fileName, String askedPersonIdcard) {
 
 		if (StringUtils.isBlank(name)) {
 			return requestFail("笔录名称不能为空");
@@ -272,7 +272,7 @@ public class CaseService extends BaseService {
 		}
 
 		// 校验被询问人
-		Note note = new Note(caseId, name, startTime, endTime, remark, place, fileName, askedPersonId);
+		Note note = new Note(caseId, name, startTime, endTime, remark, place, fileName, askedPersonIdcard);
 		ResultDTO result = checkAskedPerson(note);
 		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 			return result;
@@ -311,14 +311,15 @@ public class CaseService extends BaseService {
 		}
 
 		// 校验警员
-//		String[] polices = note.getPoliceList().split(",");
-//		for (String policeNumber : polices) {
-//			result = checkNoteByTimeAndPlaceAndPolic(policeNumber, note.getStartTime(), note.getEndTime(),
-//					note.getPlace());
-//			if (result.getCode().equals(CommonConstant.RESULT_CODE_FAIL)) {
-//				return result;
-//			}
-//		}
+		List<Police> polices = policeDAO.listByNoteId(note.getId());
+		String[] policess = {"",""};
+		for (String policeNumber : policess) {
+			result = checkNoteByTimeAndPlaceAndPolic(policeNumber, note.getStartTime(), note.getEndTime(),
+					note.getPlace());
+			if (result.getCode().equals(CommonConstant.RESULT_CODE_FAIL)) {
+				return result;
+			}
+		}
 
 		if (1 == noteDAO.update(note)) {
 			return requestSuccess();
@@ -398,6 +399,12 @@ public class CaseService extends BaseService {
 		}
 		if (!policeSexFlag) {
 			return requestFail("女性未成年人需要女警员在场");
+		}
+		
+		//校验同一案件内所有笔录被询问人是否冲突
+		List<Note> notes = noteDAO.selectConflictingNotesInSameCase(note);
+		if (notes.size() > 0) {
+			return requestFail("被询问人与同案件下其他笔录冲突");
 		}
 
 		return requestSuccess();
