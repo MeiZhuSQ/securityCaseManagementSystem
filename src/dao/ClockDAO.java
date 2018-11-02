@@ -149,4 +149,21 @@ public class ClockDAO {
 		return 0;
 	}
 
+	public List<Clock> selectClocksByCaseId(int caseId) {
+		String sql = "select * from clock where case_id = ? ";
+		List<Clock> clocks = new ArrayList<>();
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setInt(1, caseId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Clock clock = new Clock(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
+						rs.getString("remark"), rs.getString("type"), rs.getInt("owner_id"), rs.getInt("case_id"));
+				clocks.add(clock);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return clocks;
+	}
+
 }
