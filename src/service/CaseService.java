@@ -36,13 +36,27 @@ public class CaseService extends BaseService {
 	private ClockDAO clockDAO = new ClockDAO();
 
 	/**
-	 * 根据案件Id获取案件细则列表
+	 * 校验参数：名称不能为空，不能超过20个字符；时间不能为空；备注不能超过50个字符
 	 * 
-	 * @param caseId
+	 * @param name
+	 * @param time
+	 * @param remark
 	 * @return
 	 */
-	public List<CaseItemVO> getCaseItems(int caseId) {
-		return caseDAO.getCaseItems(caseId);
+	private ResultDTO checkParameters(String name, String time, String remark) {
+		if (StringUtils.isBlank(name)) {
+			return requestFail("案件名称不能为空");
+		}
+		if (name.length() > 20) {
+			return requestFail("案件名称不能超过20个字符");
+		}
+		if (StringUtils.isBlank(time)) {
+			return requestFail("时间不能为空");
+		}
+		if (null != remark && remark.length() > 50) {
+			return requestFail("备注不能超过50个字符");
+		}
+		return requestSuccess();
 	}
 
 	/**
@@ -53,17 +67,9 @@ public class CaseService extends BaseService {
 	 * @throws Exception
 	 */
 	public ResultDTO addCase(String name, String time, String remark) {
-		if (StringUtils.isBlank(name)) {
-			return requestFail("案件名称不能为空");
-		}
-		if (name.length() > 20) {
-			return requestFail("案件名称不能超过20个字符");
-		}
-		if (StringUtils.isBlank(time)) {
-			return requestFail("时间不能为空");
-		}
-		if (remark.length() > 50) {
-			return requestFail("备注不能超过50个字符");
+		ResultDTO result = checkParameters(name, time, remark);
+		if (result.getCode().equals(CommonConstant.RESULT_CODE_FAIL)) {
+			return result;
 		}
 		try {
 			LegalCase legalCase = caseDAO.selectByName(name);
@@ -100,6 +106,10 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public ResultDTO updateCase(LegalCase legalCase) {
+		ResultDTO result = checkParameters(legalCase.getName(), legalCase.getTime(), legalCase.getRemark());
+		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+			return result;
+		}
 		try {
 			caseDAO.update(legalCase);
 		} catch (Exception e) {
@@ -117,13 +127,17 @@ public class CaseService extends BaseService {
 	 */
 	public ResultDTO delCase(int id) {
 		try {
+			List<Note> notes = selectNoteByCaseId(id);
+			if (notes.size() > 0) {
+				return requestFail("请先删除案件相关的笔录");
+			}
 			List<Procedure> procedures = selectProceduresByCaseId(id);
 			if (procedures.size() > 0) {
 				return requestFail("请先删除案件相关的法律手续");
 			}
-			List<Note> notes = selectNoteByCaseId(id);
-			if (notes.size() > 0) {
-				return requestFail("请先删除案件相关的笔录");
+			List<Clock> clocks = selectClocksByCaseId(id);
+			if (clocks.size() > 0) {
+				return requestFail("请先删除案件相关的闹钟");
 			}
 			if (caseDAO.delete(id) == 1) {
 				return requestSuccess();
@@ -141,6 +155,16 @@ public class CaseService extends BaseService {
 	 */
 	public List<LegalCase> listCase() {
 		return caseDAO.list();
+	}
+
+	/**
+	 * 根据案件Id获取案件细则列表
+	 * 
+	 * @param caseId
+	 * @return
+	 */
+	public List<CaseItemVO> getCaseItems(int caseId) {
+		return caseDAO.getCaseItems(caseId);
 	}
 
 	/**
@@ -239,7 +263,7 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public ResultDTO addNote(int caseId, String name, String startTime, String endTime, String remark, String place,
-			String fileName, String askedPersonIdcard) {
+			String fileName, int askedPersonId) {
 
 		if (StringUtils.isBlank(name)) {
 			return requestFail("笔录名称不能为空");
@@ -272,20 +296,21 @@ public class CaseService extends BaseService {
 		}
 
 		// 校验被询问人
-		Note note = new Note(caseId, name, startTime, endTime, remark, place, fileName, askedPersonIdcard);
+		Note note = new Note(caseId, name, startTime, endTime, remark, place, fileName, askedPersonId);
 		ResultDTO result = checkAskedPerson(note);
 		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 			return result;
 		}
 
 		// 校验警员
-//		String[] polices = policeList.split(",");
-//		for (String policeNumber : polices) {
-//			result = checkNoteByTimeAndPlaceAndPolic(policeNumber, startTime, endTime, place);
-//			if (result.getCode().equals(CommonConstant.RESULT_CODE_FAIL)) {
-//				return result;
-//			}
-//		}
+		// String[] polices = policeList.split(",");
+		// for (String policeNumber : polices) {
+		// result = checkNoteByTimeAndPlaceAndPolic(policeNumber, startTime,
+		// endTime, place);
+		// if (result.getCode().equals(CommonConstant.RESULT_CODE_FAIL)) {
+		// return result;
+		// }
+		// }
 
 		try {
 			// 返回主键
@@ -312,7 +337,7 @@ public class CaseService extends BaseService {
 
 		// 校验警员
 		List<Police> polices = policeDAO.listByNoteId(note.getId());
-		String[] policess = {"",""};
+		String[] policess = { "", "" };
 		for (String policeNumber : policess) {
 			result = checkNoteByTimeAndPlaceAndPolic(policeNumber, note.getStartTime(), note.getEndTime(),
 					note.getPlace());
@@ -400,8 +425,8 @@ public class CaseService extends BaseService {
 		if (!policeSexFlag) {
 			return requestFail("女性未成年人需要女警员在场");
 		}
-		
-		//校验同一案件内所有笔录被询问人是否冲突
+
+		// 校验同一案件内所有笔录被询问人是否冲突
 		List<Note> notes = noteDAO.selectConflictingNotesInSameCase(note);
 		if (notes.size() > 0) {
 			return requestFail("被询问人与同案件下其他笔录冲突");
@@ -509,7 +534,7 @@ public class CaseService extends BaseService {
 	public Police selectPoliceByPoliceNumber(String policeNumber) {
 		return policeDAO.selectByPoliceNumber(policeNumber);
 	}
-	
+
 	/**
 	 * 根据ID查询警员
 	 * 
@@ -517,7 +542,7 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public Police selectPoliceById(int id) {
-	    return policeDAO.selectById(id);
+		return policeDAO.selectById(id);
 	}
 
 	/**
@@ -816,7 +841,16 @@ public class CaseService extends BaseService {
 		}
 	}
 	
-	
+
+	/**
+	 * 根据案件id获取闹钟列表
+	 * @param caseId
+	 * @return
+	 */
+	public List<Clock> selectClocksByCaseId(int caseId) {
+		return clockDAO.selectClocksByCaseId(caseId);
+	}
+
 	public static void main(String[] args) {
 		CaseService caseService = new CaseService();
 		// ResultDTO resultDTO2 = caseService.addNote(1, "笔录1",
