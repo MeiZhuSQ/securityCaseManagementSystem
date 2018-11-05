@@ -47,8 +47,6 @@ import util.GUIUtil;
  
 /**
  * 测试改变指定单元格元素
- * @author 天册
- * 2011年12月8日
  */
 public class TestLists extends JFrame implements ActionListener {
  
