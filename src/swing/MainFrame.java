@@ -60,7 +60,6 @@ public class MainFrame extends BaseFrame {
     public JTable caseTable;
     private TableColumn column;
     public JList<Clock> clockList;
-    private DefaultListModel clockModel;
     public DefaultListModel clockListModel;
     public JFrame f;
     
@@ -145,14 +144,9 @@ public class MainFrame extends BaseFrame {
             clockListModel.addElement(clock);
         }
         clockList = new JList(clockListModel);
-        clockList.setOpaque(false);
-        clockList.setBorder(null);
-        JLabel label = (JLabel) clockList.getCellRenderer();
-        label.setOpaque(false);
-        clockList.setForeground(Color.darkGray);
-        clockList.setSelectionForeground(new Color(40, 101, 156));
         clockList.setFixedCellHeight(40);
         
+        clockList.setCellRenderer(new ClockCellRenderer());
         clockScrollPane.setViewportView(clockList);
         
         JButton clockAddButton = new ImageButton("clock_add.png");

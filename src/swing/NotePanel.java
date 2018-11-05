@@ -53,6 +53,8 @@ public class NotePanel extends JPanel {
     private JTable otherPersonTable;
     public AskedPersonTableModel askedPersonTableModel;
     public OtherPersonTableModel otherPersonTableModel;
+    private JTable policeTable;
+    public PoliceTableModel policeTableModel;
     private static NotePanel instance;
     
     String[] values = new String[] { "1", "2", "3" };
@@ -68,7 +70,7 @@ public class NotePanel extends JPanel {
     public NotePanel() {
         setLayout(null);
         JPanel notePanel = new JPanel();
-        notePanel.setBounds(14, 13, 972, 194);
+        notePanel.setBounds(14, 13, 509, 674);
         add(notePanel);
         Border noteTitleBorder, noteLineBorder;
         noteLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
@@ -82,55 +84,50 @@ public class NotePanel extends JPanel {
         notePanel.add(noteNameLabel);
 
         noteNameField = new JTextField();
-        noteNameField.setBounds(102, 29, 137, 24);
+        noteNameField.setBounds(102, 29, 279, 24);
         notePanel.add(noteNameField);
         noteNameField.setColumns(10);
 
         JLabel startTimeLabel = new JLabel("开始时间");
-        startTimeLabel.setBounds(24, 77, 72, 18);
+        startTimeLabel.setBounds(24, 113, 72, 18);
         notePanel.add(startTimeLabel);
 
         startTime = DateUtil.getDatePicker();
         JPanel startTimePanel = new JPanel();
-        startTimePanel.setBounds(99, 64, 177, 30);
+        startTimePanel.setBounds(99, 100, 177, 30);
         startTimePanel.add(startTime);
         notePanel.add(startTimePanel);
 
         JLabel endTimelabel = new JLabel("结束时间");
-        endTimelabel.setBounds(303, 74, 72, 18);
+        endTimelabel.setBounds(24, 154, 72, 18);
         notePanel.add(endTimelabel);
 
         JPanel endTimePanel = new JPanel();
-        endTimePanel.setBounds(374, 64, 177, 34);
+        endTimePanel.setBounds(95, 144, 177, 34);
         endTime = DateUtil.getDatePicker();
         endTimePanel.add(endTime);
         notePanel.add(endTimePanel);
 
         JLabel placeLabel = new JLabel("地点");
-        placeLabel.setBounds(303, 32, 72, 18);
+        placeLabel.setBounds(24, 66, 72, 18);
         notePanel.add(placeLabel);
 
         placeField = new JTextField();
-        placeField.setBounds(381, 29, 137, 24);
+        placeField.setBounds(102, 63, 279, 24);
         notePanel.add(placeField);
         placeField.setColumns(10);
 
         JLabel remarkLabel = new JLabel("备注");
-        remarkLabel.setBounds(24, 110, 61, 18);
+        remarkLabel.setBounds(24, 226, 61, 18);
         notePanel.add(remarkLabel);
-
-        remarkTextArea = new JTextArea();
-        remarkTextArea.setBorder(new LineBorder(Color.LIGHT_GRAY));
-        remarkTextArea.setBounds(99, 108, 675, 63);
-        notePanel.add(remarkTextArea);
         
         JLabel fileNameLabel = new JLabel("文件名");
-        fileNameLabel.setBounds(575, 32, 72, 18);
+        fileNameLabel.setBounds(24, 190, 72, 18);
         notePanel.add(fileNameLabel);
         
         fileNameField = new JTextField();
         fileNameField.setColumns(10);
-        fileNameField.setBounds(637, 29, 177, 24);
+        fileNameField.setBounds(99, 187, 177, 24);
         notePanel.add(fileNameField);
         
         //自定义组件 处理民警多选框  
@@ -155,8 +152,18 @@ public class NotePanel extends JPanel {
         });
         notePanel.add(mulit);*/
         
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(93, 253, 383, 84);
+        notePanel.add(scrollPane);
+                        
+        remarkTextArea = new JTextArea();
+        scrollPane.setViewportView(remarkTextArea);
+        remarkTextArea.setBorder(new LineBorder(Color.LIGHT_GRAY));
+        remarkTextArea.setLineWrap(true);        
+        remarkTextArea.setWrapStyleWord(true);
+        
         JButton noteSaveButton = new JButton("保存");
-        noteSaveButton.setBounds(818, 144, 113, 27);
+        noteSaveButton.setBounds(179, 636, 113, 27);
         notePanel.add(noteSaveButton);
         
         noteSaveButton.addActionListener(new ActionListener() {
@@ -225,8 +232,8 @@ public class NotePanel extends JPanel {
         });*/
 
         JScrollPane policePanel = new JScrollPane();
-        policePanel.setLocation(14, 220);
-        policePanel.setSize(972, 124);
+        policePanel.setLocation(570, 13);
+        policePanel.setSize(546, 224);
         add(policePanel);
         
         Border policeTitleBorder, policeLineBorder;
@@ -235,13 +242,13 @@ public class NotePanel extends JPanel {
                 TitledBorder.CENTER);
         policePanel.setBorder(policeTitleBorder);
         
-        askedPersonTableModel = new AskedPersonTableModel();
-        //askedPersonTableModel.setList(noteId);
-        askedPersonTable = new JTable(askedPersonTableModel);
-        askedPersonTable.setRowHeight(30);
-        JTableHeader head = askedPersonTable.getTableHeader();
+        policeTableModel = new PoliceTableModel();
+        policeTable = new JTable(policeTableModel);
+        policeTable.setRowHeight(30);
+        policeTable.setRowHeight(30);
+        JTableHeader head = policeTable.getTableHeader();
         head.setPreferredSize(new Dimension(head.getWidth(), 30));
-        policePanel.setViewportView(askedPersonTable);
+        policePanel.setViewportView(policeTable);
         
         askedTypeListener = new NoteAskedTypeListener();
 
@@ -260,7 +267,7 @@ public class NotePanel extends JPanel {
                 askedPersonDialog.setVisible(true);
             }
         });
-        askedAddButton.setBounds(263, 357, 113, 27);
+        askedAddButton.setBounds(590, 266, 113, 27);
         add(askedAddButton);
         
         JButton askedEditButton = new JButton("编辑");
@@ -303,7 +310,7 @@ public class NotePanel extends JPanel {
                 askedPersonDialog.setVisible(true);
             }
         });
-        askedEditButton.setBounds(387, 357, 113, 27);
+        askedEditButton.setBounds(714, 266, 113, 27);
         add(askedEditButton);
         
         JButton askedDeleteButton = new JButton("删除");
@@ -323,11 +330,11 @@ public class NotePanel extends JPanel {
                 instance.updateAskedTable();
             }
         });
-        askedDeleteButton.setBounds(514, 357, 113, 27);
+        askedDeleteButton.setBounds(841, 266, 113, 27);
         add(askedDeleteButton);
 
         JScrollPane otherPanel = new JScrollPane();
-        otherPanel.setBounds(14, 403, 972, 124);
+        otherPanel.setBounds(570, 327, 546, 124);
         add(otherPanel);
         
         Border otherTitleBorder, otherLineBorder;
@@ -360,7 +367,7 @@ public class NotePanel extends JPanel {
                 otherPersonDialog.setVisible(true);
             }
         });
-        otherAddButton.setBounds(263, 540, 113, 27);
+        otherAddButton.setBounds(622, 475, 113, 27);
         add(otherAddButton);
         
         JButton otherEditButton = new JButton("编辑");
@@ -387,7 +394,7 @@ public class NotePanel extends JPanel {
                 otherPersonDialog.setVisible(true);
             }
         });
-        otherEditButton.setBounds(387, 540, 113, 27);
+        otherEditButton.setBounds(746, 475, 113, 27);
         add(otherEditButton);
         
         JButton otherDeleteButton = new JButton("删除");
@@ -407,11 +414,11 @@ public class NotePanel extends JPanel {
                 instance.updateOtherTable();
             }
         });
-        otherDeleteButton.setBounds(514, 540, 113, 27);
+        otherDeleteButton.setBounds(873, 475, 113, 27);
         add(otherDeleteButton);
         
         JPanel askedPanel = new JPanel();
-        askedPanel.setBounds(14, 579, 972, 188);
+        askedPanel.setBounds(570, 515, 546, 185);
         add(askedPanel);
         askedPanel.setLayout(null);
         Border askedTitleBorder, asekdLineBorder;
