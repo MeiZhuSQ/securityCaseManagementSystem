@@ -110,14 +110,12 @@ public class MainFrame extends BaseFrame {
         head.setPreferredSize(new Dimension(head.getWidth(), 30));
         // 以下设置表格列宽
         caseTable.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             column = caseTable.getColumnModel().getColumn(i);
             if (i == 0) {
-                column.setPreferredWidth(50);
-                column.setMaxWidth(50);
-                column.setMinWidth(50);
+                GUIUtil.hideColumn(caseTable, 0);
             }
-            if (i == 4) {
+            if (i == 5) {
                 column.setPreferredWidth(100);
                 column.setMaxWidth(100);
                 column.setMinWidth(100);
@@ -126,7 +124,7 @@ public class MainFrame extends BaseFrame {
         btnName.add("详情");
         btnName.add("修改");
         btnName.add("删除");
-        TableColumn column = caseTable.getColumnModel().getColumn(4);
+        TableColumn column = caseTable.getColumnModel().getColumn(5);
         column.setCellRenderer(new CaseButtonRenderer());
         column.setCellEditor(new CaseButtonEditor());
         
