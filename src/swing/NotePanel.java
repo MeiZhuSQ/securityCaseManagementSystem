@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -33,6 +34,7 @@ import service.CaseService;
 import util.DateUtil;
 import util.GUIUtil;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JRadioButton;
 
 public class NotePanel extends JPanel {
@@ -70,7 +72,7 @@ public class NotePanel extends JPanel {
     public NotePanel() {
         setLayout(null);
         JPanel notePanel = new JPanel();
-        notePanel.setBounds(14, 13, 509, 674);
+        notePanel.setBounds(14, 13, 530, 620);
         add(notePanel);
         Border noteTitleBorder, noteLineBorder;
         noteLineBorder = BorderFactory.createLineBorder(Color.DARK_GRAY);
@@ -94,7 +96,7 @@ public class NotePanel extends JPanel {
 
         startTime = DateUtil.getDatePicker();
         JPanel startTimePanel = new JPanel();
-        startTimePanel.setBounds(99, 100, 177, 30);
+        startTimePanel.setBounds(102, 100, 177, 30);
         startTimePanel.add(startTime);
         notePanel.add(startTimePanel);
 
@@ -103,7 +105,7 @@ public class NotePanel extends JPanel {
         notePanel.add(endTimelabel);
 
         JPanel endTimePanel = new JPanel();
-        endTimePanel.setBounds(95, 144, 177, 34);
+        endTimePanel.setBounds(102, 143, 177, 34);
         endTime = DateUtil.getDatePicker();
         endTimePanel.add(endTime);
         notePanel.add(endTimePanel);
@@ -127,7 +129,7 @@ public class NotePanel extends JPanel {
         
         fileNameField = new JTextField();
         fileNameField.setColumns(10);
-        fileNameField.setBounds(99, 187, 177, 24);
+        fileNameField.setBounds(102, 190, 279, 24);
         notePanel.add(fileNameField);
         
         //自定义组件 处理民警多选框  
@@ -153,7 +155,7 @@ public class NotePanel extends JPanel {
         notePanel.add(mulit);*/
         
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(93, 253, 383, 84);
+        scrollPane.setBounds(93, 226, 402, 341);
         notePanel.add(scrollPane);
                         
         remarkTextArea = new JTextArea();
@@ -163,8 +165,26 @@ public class NotePanel extends JPanel {
         remarkTextArea.setWrapStyleWord(true);
         
         JButton noteSaveButton = new JButton("保存");
-        noteSaveButton.setBounds(179, 636, 113, 27);
+        noteSaveButton.setBounds(215, 580, 113, 27);
         notePanel.add(noteSaveButton);
+        
+        JButton fileChooseButton = new JButton("选择");
+        fileChooseButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser jfc = new JFileChooser();
+                jfc.setCurrentDirectory(new File("d://"));// 文件选择器的初始目录定为d盘
+                jfc.setFileSelectionMode(0);// 设定只能选择到文件
+                int state = jfc.showOpenDialog(null);// 此句是打开文件选择器界面的触发语句
+                if (state == 1) {
+                    return;// 撤销则返回
+                } else {
+                    File f = jfc.getSelectedFile();// f为选择到的文件
+                    fileNameField.setText(f.getAbsolutePath());
+                }
+            }
+        });
+        fileChooseButton.setBounds(395, 190, 72, 24);
+        notePanel.add(fileChooseButton);
         
         noteSaveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -233,7 +253,7 @@ public class NotePanel extends JPanel {
 
         JScrollPane policePanel = new JScrollPane();
         policePanel.setLocation(570, 13);
-        policePanel.setSize(546, 224);
+        policePanel.setSize(546, 140);
         add(policePanel);
         
         Border policeTitleBorder, policeLineBorder;
@@ -267,7 +287,7 @@ public class NotePanel extends JPanel {
                 askedPersonDialog.setVisible(true);
             }
         });
-        askedAddButton.setBounds(590, 266, 113, 27);
+        askedAddButton.setBounds(672, 166, 113, 27);
         add(askedAddButton);
         
         JButton askedEditButton = new JButton("编辑");
@@ -310,7 +330,7 @@ public class NotePanel extends JPanel {
                 askedPersonDialog.setVisible(true);
             }
         });
-        askedEditButton.setBounds(714, 266, 113, 27);
+        askedEditButton.setBounds(796, 166, 113, 27);
         add(askedEditButton);
         
         JButton askedDeleteButton = new JButton("删除");
@@ -330,11 +350,11 @@ public class NotePanel extends JPanel {
                 instance.updateAskedTable();
             }
         });
-        askedDeleteButton.setBounds(841, 266, 113, 27);
+        askedDeleteButton.setBounds(923, 166, 113, 27);
         add(askedDeleteButton);
 
         JScrollPane otherPanel = new JScrollPane();
-        otherPanel.setBounds(570, 327, 546, 124);
+        otherPanel.setBounds(570, 199, 546, 140);
         add(otherPanel);
         
         Border otherTitleBorder, otherLineBorder;
@@ -367,7 +387,7 @@ public class NotePanel extends JPanel {
                 otherPersonDialog.setVisible(true);
             }
         });
-        otherAddButton.setBounds(622, 475, 113, 27);
+        otherAddButton.setBounds(672, 352, 113, 27);
         add(otherAddButton);
         
         JButton otherEditButton = new JButton("编辑");
@@ -394,7 +414,7 @@ public class NotePanel extends JPanel {
                 otherPersonDialog.setVisible(true);
             }
         });
-        otherEditButton.setBounds(746, 475, 113, 27);
+        otherEditButton.setBounds(796, 352, 113, 27);
         add(otherEditButton);
         
         JButton otherDeleteButton = new JButton("删除");
@@ -414,11 +434,11 @@ public class NotePanel extends JPanel {
                 instance.updateOtherTable();
             }
         });
-        otherDeleteButton.setBounds(873, 475, 113, 27);
+        otherDeleteButton.setBounds(923, 352, 113, 27);
         add(otherDeleteButton);
         
         JPanel askedPanel = new JPanel();
-        askedPanel.setBounds(570, 515, 546, 185);
+        askedPanel.setBounds(570, 392, 546, 241);
         add(askedPanel);
         askedPanel.setLayout(null);
         Border askedTitleBorder, asekdLineBorder;
@@ -458,51 +478,59 @@ public class NotePanel extends JPanel {
         askedPanel.add(textField_1);
         
         JLabel label_3 = new JLabel("被询问人类型");
-        label_3.setBounds(31, 59, 90, 15);
+        label_3.setBounds(31, 73, 90, 15);
         askedPanel.add(label_3);
         
         JLabel label_4 = new JLabel("是否成人");
-        label_4.setBounds(31, 101, 90, 21);
+        label_4.setBounds(31, 107, 90, 21);
         askedPanel.add(label_4);
         
         JLabel label_5 = new JLabel("是否健全");
-        label_5.setBounds(31, 156, 95, 17);
+        label_5.setBounds(31, 146, 95, 17);
         askedPanel.add(label_5);
         
         JRadioButton radioButton = new JRadioButton("健全");
         radioButton.setActionCommand("1");
-        radioButton.setBounds(139, 156, 90, 23);
+        radioButton.setBounds(139, 146, 90, 23);
         askedPanel.add(radioButton);
         
         JRadioButton radioButton_1 = new JRadioButton("成年");
         radioButton_1.setActionCommand("1");
-        radioButton_1.setBounds(139, 101, 66, 23);
+        radioButton_1.setBounds(139, 107, 66, 23);
         askedPanel.add(radioButton_1);
         
         JRadioButton radioButton_2 = new JRadioButton("被害人");
         radioButton_2.setActionCommand("1");
-        radioButton_2.setBounds(139, 55, 83, 23);
+        radioButton_2.setBounds(139, 69, 83, 23);
         askedPanel.add(radioButton_2);
         
         JRadioButton radioButton_3 = new JRadioButton("嫌疑人");
         radioButton_3.setActionCommand("2");
-        radioButton_3.setBounds(244, 55, 83, 23);
+        radioButton_3.setBounds(244, 69, 83, 23);
         askedPanel.add(radioButton_3);
         
         JRadioButton radioButton_4 = new JRadioButton("证人");
         radioButton_4.setActionCommand("3");
-        radioButton_4.setBounds(333, 55, 77, 23);
+        radioButton_4.setBounds(333, 69, 77, 23);
         askedPanel.add(radioButton_4);
         
         JRadioButton radioButton_5 = new JRadioButton("未成年");
         radioButton_5.setActionCommand("2");
-        radioButton_5.setBounds(216, 101, 90, 23);
+        radioButton_5.setBounds(216, 107, 90, 23);
         askedPanel.add(radioButton_5);
         
         JRadioButton radioButton_6 = new JRadioButton("非健全");
         radioButton_6.setActionCommand("2");
-        radioButton_6.setBounds(231, 156, 121, 23);
+        radioButton_6.setBounds(231, 146, 121, 23);
         askedPanel.add(radioButton_6);
+        
+        JButton button = new JButton("保存");
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        button.setBounds(196, 189, 113, 27);
+        askedPanel.add(button);
     }
 
     public void updateAskedTable() {
