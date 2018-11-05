@@ -176,14 +176,14 @@ public class NotePanel extends JPanel {
                 }*/
                 CaseService caseService = new CaseService();
                 ResultDTO resultDTO = new ResultDTO();
-                if (noteId == 0) {
+                /*if (noteId == 0) {
                     // 新增笔录信息
                     resultDTO = caseService.addNote(caseId, noteName, startTimeStr, endTimeStr, remark, place,
                             fileName, "");
                 } else {
                     Note note = new Note(noteId, caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, "");
                     resultDTO = caseService.updateNote(note);
-                }
+                }*/
                 if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                     MainFrame.alert(resultDTO.getMessage());
                     return;
