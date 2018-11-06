@@ -149,7 +149,7 @@ public class ViewCasePanel extends JPanel {
                 //notePanel.otherPersonTableModel.setList(0);
                 notePanel.getNoteNameField().setText("");;
                 notePanel.getPlaceField().setText("");
-                notePanel.getFileNameField().setText("");
+                notePanel.fileNameField.setText("");
                 notePanel.getRemarkTextArea().setText("");
                 List<String> policeList = new ArrayList<>();
                 //Object[] defaultValue = new Object[] {};
@@ -211,7 +211,7 @@ public class ViewCasePanel extends JPanel {
                 notePanel.otherPersonTableModel.setList(0);
                 notePanel.getNoteNameField().setText("");;
                 notePanel.getPlaceField().setText("");
-                notePanel.getFileNameField().setText("");
+                notePanel.fileNameField.setText("");
                 notePanel.getRemarkTextArea().setText("");
                 List<String> policeList = new ArrayList<>();
                 //Object[] defaultValue = new Object[] {};

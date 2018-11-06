@@ -1,6 +1,7 @@
 package swing;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,7 +47,7 @@ public class NotePanel extends JPanel {
     //public final MulitCombobox mulit;
     public static int noteId;
     private int procedureId;
-    private JTextField fileNameField;
+    public JLabel fileNameField;
     public NoteAskedTypeListener askedTypeListener;
     private JTable askedPersonTable;
     private JTable otherPersonTable;
@@ -120,26 +121,14 @@ public class NotePanel extends JPanel {
         remarkLabel.setBounds(24, 226, 61, 18);
         notePanel.add(remarkLabel);
         
-        JLabel fileNameLabel = new JLabel("文件名");
+        JLabel fileNameLabel = new JLabel("关联文件");
+        fileNameLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         fileNameLabel.setBounds(24, 190, 72, 18);
         notePanel.add(fileNameLabel);
         
-        fileNameField = new JTextField();
-        fileNameField.setColumns(10);
+        fileNameField = new JLabel("请选择文件");
         fileNameField.setBounds(102, 190, 279, 24);
         notePanel.add(fileNameField);
-        
-        fileNameLabel.addMouseListener(new MouseAdapter() {
-
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    Runtime runtime = Runtime.getRuntime();  
-                    runtime.exec("rundll32 url.dll FileProtocolHandler "+"C:/Users/lpf/Desktop/TestFrame.java");
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
 
         //自定义组件 处理民警多选框  
         /*List<String> policeList = new ArrayList<>();
@@ -189,7 +178,18 @@ public class NotePanel extends JPanel {
                 } else {
                     File f = jfc.getSelectedFile();// f为选择到的文件
                     fileNameField.setText(f.getAbsolutePath());
-                    fileNameLabel.setText("<html><a href='http://www.baidu.com'>baidu</a></html>");
+                    fileNameLabel.setText("<html><a href='"+f.getAbsolutePath()+"'>baidu</a></html>");
+                    fileNameLabel.addMouseListener(new MouseAdapter() {
+
+                        public void mouseClicked(MouseEvent e) {
+                            try {
+                                Runtime runtime = Runtime.getRuntime();  
+                                runtime.exec("rundll32 url.dll FileProtocolHandler "+f.getAbsolutePath());
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -609,11 +609,4 @@ public class NotePanel extends JPanel {
         this.remarkTextArea = remarkTextArea;
     }
 
-    public JTextField getFileNameField() {
-        return fileNameField;
-    }
-
-    public void setFileNameField(JTextField fileNameField) {
-        this.fileNameField = fileNameField;
-    }
 }

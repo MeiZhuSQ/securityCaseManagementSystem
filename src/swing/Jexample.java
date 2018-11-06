@@ -3,6 +3,8 @@ package swing;
 import java.awt.event.ActionEvent;
 
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 
@@ -11,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import java.awt.Container;
+import java.awt.Cursor;
 import java.io.File;
 
 import javax.swing.JFileChooser;
@@ -27,20 +30,21 @@ import javax.swing.JTextField;
  * @author 漆艾林 QQ 172794299 邮箱 qiailing.ok@163.com
  * 
  */
-public class Jexample implements ActionListener {
+public class Jexample extends BaseFrame implements ActionListener {
     JFrame frame = new JFrame("漆艾林-Example");// 框架布局
     JTabbedPane tabPane = new JTabbedPane();// 选项卡布局
     Container con = new Container();//
     JLabel label1 = new JLabel("文件目录");
     JLabel label2 = new JLabel("选择文件");
     JTextField text1 = new JTextField();// TextField 目录的路径
-    JTextField text2 = new JTextField();// 文件的路径
+    JLabel text2 = new JLabel("请选择文件");// 文件的路径
     JButton button1 = new JButton("...");// 选择
     JButton button2 = new JButton("...");// 选择
     JFileChooser jfc = new JFileChooser();// 文件选择器
     JButton button3 = new JButton("确定");//
 
     Jexample() {
+        text2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         jfc.setCurrentDirectory(new File("d://"));// 文件选择器的初始目录定为d盘
 
         double lx = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
@@ -95,7 +99,19 @@ public class Jexample implements ActionListener {
                 return;// 撤销则返回
             } else {
                 File f = jfc.getSelectedFile();// f为选择到的文件
-                text2.setText(f.getAbsolutePath());
+//                text2.setText(f.getAbsolutePath());
+                text2.setText("<html><a href='"+f.getAbsolutePath()+"'>baidu</a></html>");
+                text2.addMouseListener(new MouseAdapter() {
+
+                    public void mouseClicked(MouseEvent e) {
+                        try {
+                            Runtime runtime = Runtime.getRuntime();  
+                            runtime.exec("rundll32 url.dll FileProtocolHandler "+f.getAbsolutePath());
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
             }
         }
         if (e.getSource().equals(button3)) {
