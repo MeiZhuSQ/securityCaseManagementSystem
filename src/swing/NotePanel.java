@@ -178,8 +178,8 @@ public class NotePanel extends JPanel {
                 } else {
                     File f = jfc.getSelectedFile();// f为选择到的文件
                     fileNameField.setText(f.getAbsolutePath());
-                    fileNameLabel.setText("<html><a href='"+f.getAbsolutePath()+"'>baidu</a></html>");
-                    fileNameLabel.addMouseListener(new MouseAdapter() {
+                    fileNameField.setText("<html><a href='"+f.getAbsolutePath()+"'>baidu</a></html>");
+                    fileNameField.addMouseListener(new MouseAdapter() {
 
                         public void mouseClicked(MouseEvent e) {
                             try {
