@@ -122,11 +122,11 @@ public class NotePanel extends JPanel {
         notePanel.add(remarkLabel);
         
         JLabel fileNameLabel = new JLabel("关联文件");
-        fileNameLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         fileNameLabel.setBounds(24, 190, 72, 18);
         notePanel.add(fileNameLabel);
         
         fileNameField = new JLabel("请选择文件");
+        fileNameField.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         fileNameField.setBounds(102, 190, 279, 24);
         notePanel.add(fileNameField);
 
@@ -178,7 +178,7 @@ public class NotePanel extends JPanel {
                 } else {
                     File f = jfc.getSelectedFile();// f为选择到的文件
                     fileNameField.setText(f.getAbsolutePath());
-                    fileNameField.setText("<html><a href='"+f.getAbsolutePath()+"'>baidu</a></html>");
+                    fileNameField.setText("<html><a href='"+f.getAbsolutePath()+"'>"+f.getAbsolutePath()+"</a></html>");
                     fileNameField.addMouseListener(new MouseAdapter() {
 
                         public void mouseClicked(MouseEvent e) {
