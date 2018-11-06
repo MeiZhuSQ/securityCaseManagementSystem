@@ -4,16 +4,19 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -22,20 +25,14 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
 
 import com.eltima.components.ui.DatePicker;
 
 import constant.CommonConstant;
 import dto.ResultDTO;
-import entity.Note;
-import entity.Police;
 import service.CaseService;
 import util.DateUtil;
 import util.GUIUtil;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JRadioButton;
 
 public class NotePanel extends JPanel {
 
@@ -132,6 +129,18 @@ public class NotePanel extends JPanel {
         fileNameField.setBounds(102, 190, 279, 24);
         notePanel.add(fileNameField);
         
+        fileNameLabel.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    Runtime runtime = Runtime.getRuntime();  
+                    runtime.exec("rundll32 url.dll FileProtocolHandler "+"C:/Users/lpf/Desktop/TestFrame.java");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
         //自定义组件 处理民警多选框  
         /*List<String> policeList = new ArrayList<>();
         Object[] defaultValue = new Object[] {};
@@ -180,6 +189,7 @@ public class NotePanel extends JPanel {
                 } else {
                     File f = jfc.getSelectedFile();// f为选择到的文件
                     fileNameField.setText(f.getAbsolutePath());
+                    fileNameLabel.setText("<html><a href='http://www.baidu.com'>baidu</a></html>");
                 }
             }
         });
