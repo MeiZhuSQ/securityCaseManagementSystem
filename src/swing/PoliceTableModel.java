@@ -12,6 +12,10 @@ public class PoliceTableModel extends AbstractTableModel {
     private String[] columnNames = new String[] { "序号", "姓名", "性别", "警号" };
     public List<Police> list = new CaseService().listPolice();
 
+    public void setList(int noteId) {
+        list = new CaseService().selectPoliceForNote(noteId);
+    }
+    
     @Override
     public int getRowCount() {
         return list.size();

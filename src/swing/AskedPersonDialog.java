@@ -182,7 +182,7 @@ public class AskedPersonDialog extends JDialog {
                     return;
                 }
                 MainFrame.alert("保存成功");
-                NotePanel.getInstance().updateAskedTable();
+                //NotePanel.getInstance().updateAskedTable();
                 getInstance().setVisible(false);
             }
         });

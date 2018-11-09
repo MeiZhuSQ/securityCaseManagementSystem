@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -57,11 +59,34 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
 
             public void actionPerformed(ActionEvent e) {
                 int i = MainFrame.getInstance().caseTable.getSelectedRow();
-                String caseId = MainFrame.getInstance().caseTableModel.getValueAt(i, 0)+"";
-                ViewCasePanel viewPanel = ViewCasePanel.getInstance();
-                viewPanel.setCaseId(Integer.parseInt(caseId));
-                MainFrame.tabbedPane.addTab("案件详情", viewPanel, null);
-                MainFrame.tabbedPane.setSelectedComponent(viewPanel);
+                int caseId = Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0).toString());
+                String caseName = MainFrame.getInstance().caseTableModel.getValueAt(i, 1).toString();
+                String caseTime = MainFrame.getInstance().caseTableModel.getValueAt(i, 2).toString();
+                String caseRemark = MainFrame.getInstance().caseTableModel.getValueAt(i, 3).toString();
+              //NotePanel notePanel = new NotePanel(caseId);
+                NotePanel notePanel = NotePanel.getInstance();
+                notePanel.setCaseId(caseId);
+                //重置noteId
+                NotePanel.noteId = 0;
+                //给两表格置空
+                //notePanel.askedPersonTableModel.setList(0);
+                //notePanel.otherPersonTableModel.setList(0);
+                notePanel.getNoteNameField().setText("");;
+                notePanel.getPlaceField().setText("");
+                notePanel.fileNameField.setText("");
+                notePanel.getRemarkTextArea().setText("");
+                List<String> policeList = new ArrayList<>();
+                //Object[] defaultValue = new Object[] {};
+                /*CaseService caseService = new CaseService();
+                List<Police> polices = caseService.listPolice();
+                for (Police police : polices) {
+                    policeList.add(polices.get(i).getId() + "_" + police.getName());
+
+                }
+                Object[] defaultValue = new String[] {"请选择"};
+                notePanel.mulit.MulitCombobox_all(policeList.toArray(new String[policeList.size()]), defaultValue);*/
+                MainFrame.tabbedPane.addTab("新建笔录", notePanel, null);
+                MainFrame.tabbedPane.setSelectedComponent(notePanel);
                 fireEditingStopped();
             }
         });
