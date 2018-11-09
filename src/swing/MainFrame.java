@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -25,6 +27,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -45,6 +48,8 @@ import entity.Clock;
 import service.CaseService;
 import util.DateUtil;
 import util.GUIUtil;
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
 
 /**
  * 主窗体
@@ -71,6 +76,7 @@ public class MainFrame extends BaseFrame {
     int Location_y = (int) (toolkit.getScreenSize().getHeight() - DEFAULE_HEIGH) / 2;
     
     private static MainFrame instance;
+    private JTextField searchCaseNameField;
     
     static {
         GUIUtil.useLNF();
@@ -101,8 +107,23 @@ public class MainFrame extends BaseFrame {
         splitPane.setDividerSize(3);
         tabbedPane.addTab("主页", null, splitPane, null);
         
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BorderLayout(0, 0));
+        JPanel searchPanel = new JPanel();
+        searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); 
+        leftPanel.add(searchPanel, BorderLayout.NORTH);
+        
+        JLabel lblNewLabel = new JLabel("案件名称");
+        searchPanel.add(lblNewLabel);
+        
+        searchCaseNameField = new JTextField();
+        searchCaseNameField.setPreferredSize(new Dimension(150, 20));
+        ImageButton searchButton = new ImageButton("search.png","搜索");
+        searchPanel.add(searchCaseNameField);
+        searchPanel.add(searchButton);
         JScrollPane caseScrollPane = new JScrollPane();
-        splitPane.setLeftComponent(caseScrollPane);
+        leftPanel.add(caseScrollPane);
+        splitPane.setLeftComponent(leftPanel);
         caseTableModel = new CaseTableModel();
         caseTable = new JTable(caseTableModel);
         caseTable.setRowHeight(30);
@@ -131,13 +152,13 @@ public class MainFrame extends BaseFrame {
         //initMainTable();
         caseScrollPane.setViewportView(caseTable);
         
-        JPanel panel = new JPanel();
-        splitPane.setRightComponent(panel);
-        panel.setLayout(null);
+        JPanel rightPanel = new JPanel();
+        splitPane.setRightComponent(rightPanel);
+        rightPanel.setLayout(null);
         
         JScrollPane clockScrollPane = new JScrollPane();
         clockScrollPane.setBounds(0, 0, 544, 531);
-        panel.add(clockScrollPane);
+        rightPanel.add(clockScrollPane);
         
         clockListModel = new DefaultListModel();
         List<Clock> clocks = new CaseService().getClocks();
@@ -150,7 +171,13 @@ public class MainFrame extends BaseFrame {
         clockList.setCellRenderer(new ClockCellRenderer());
         clockScrollPane.setViewportView(clockList);
         
-        JButton clockAddButton = new ImageButton("clock_add.png");
+        ImageIcon icon = new ImageIcon((new File(GUIUtil.imgFolder, "complete.png")).getAbsolutePath());
+        Image scaledInstance = icon.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+        icon.setImage(scaledInstance);
+        JButton clockAddButton = new JButton("标记已完成", icon);
+        clockAddButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        clockAddButton.setVerticalTextPosition(SwingConstants.CENTER);
+        
         clockAddButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
         		ClockDialog clockDialog = ClockDialog.getInstance();
@@ -161,10 +188,10 @@ public class MainFrame extends BaseFrame {
                 clockDialog.setVisible(true);
         	}
         });
-        clockAddButton.setBounds(25, 544, 30, 30);
-        panel.add(clockAddButton);
+        clockAddButton.setBounds(80, 544, 110, 30);
+        rightPanel.add(clockAddButton);
         
-        JButton clockEditButton = new ImageButton("clock_edit.png");
+        /*JButton clockEditButton = new ImageButton("clock_edit.png","");
         clockEditButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		ClockDialog clockDialog = ClockDialog.getInstance();
@@ -178,9 +205,9 @@ public class MainFrame extends BaseFrame {
         	}
         });
         clockEditButton.setBounds(70, 544, 30, 30);
-        panel.add(clockEditButton);
+        rightPanel.add(clockEditButton);
         
-        JButton clockDeleteButton = new ImageButton("clock_delete.png");
+        JButton clockDeleteButton = new ImageButton("clock_delete.png","");
         clockDeleteButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		if (MainFrame.prompt("确定删除该闹钟吗？")){
@@ -201,7 +228,7 @@ public class MainFrame extends BaseFrame {
         	}
         });
         clockDeleteButton.setBounds(115, 544, 30, 30);
-        panel.add(clockDeleteButton);
+        rightPanel.add(clockDeleteButton);*/
         
         JMenuBar menuBar = new JMenuBar();
         this.setJMenuBar(menuBar);
@@ -275,7 +302,7 @@ public class MainFrame extends BaseFrame {
         splitPane.setDividerLocation(0.8);
         //定时提醒
         f = new JFrame("闹钟提示");
-        setLayout(new BorderLayout());
+        getContentPane().setLayout(new BorderLayout());
         Timer timer=new Timer();
 	    timer.schedule(new TimerTask(){
 	        @Override
@@ -287,7 +314,7 @@ public class MainFrame extends BaseFrame {
 			        	JButton j = new JButton();
 			        	j.setSize(new Dimension(100, 100));
 			        	j.setText("8888888");
-			        	f.add(j, BorderLayout.CENTER);
+			        	f.getContentPane().add(j, BorderLayout.CENTER);
 			        	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 						Rectangle bounds = new Rectangle(screenSize);
 						Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(f.getGraphicsConfiguration());

@@ -53,9 +53,9 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
 
     private void initButton() {
 
-        button = new ImageButton("view.png");
-        button1 = new ImageButton("edit.png");
-        button2 = new ImageButton("delete.png");
+        button = new ImageButton("view.png","详情1");
+        button1 = new ImageButton("edit.png","修改1");
+        button2 = new ImageButton("delete.png","删除1");
         button.setSize(new Dimension(16, 16));
         button1.setSize(new Dimension(50, 25));
         button2.setSize(new Dimension(50, 25));
@@ -107,7 +107,7 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
         button2.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-            	if (MainFrame.getInstance().caseTable.getSelectedRow() <= 0) {
+            	if (MainFrame.getInstance().caseTable.getSelectedRow() < 0) {
 	           		 MainFrame.alert("请选择一行！");
 	           		 return;
             	}

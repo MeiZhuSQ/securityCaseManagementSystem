@@ -116,9 +116,29 @@ public class ViewCasePanel extends JPanel {
         JTableHeader head = caseDetailTable.getTableHeader();
         head.setPreferredSize(new Dimension(head.getWidth(), 30));
         GUIUtil.hideColumn(caseDetailTable, 0);
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             TableColumn column = caseDetailTable.getColumnModel().getColumn(i);
-            if (i == 5) {
+            if (i == 1) {
+                column.setPreferredWidth(50);
+                column.setMaxWidth(50);
+                column.setMinWidth(50);
+            }
+            if (i == 2) {
+                column.setPreferredWidth(250);
+                column.setMaxWidth(250);
+                column.setMinWidth(250);
+            }
+            if (i == 3) {
+                column.setPreferredWidth(80);
+                column.setMaxWidth(80);
+                column.setMinWidth(80);
+            }
+            if (i == 4) {
+                column.setPreferredWidth(150);
+                column.setMaxWidth(150);
+                column.setMinWidth(150);
+            }
+            if (i == 6) {
                 column.setPreferredWidth(80);
                 column.setMaxWidth(80);
                 column.setMinWidth(80);
@@ -127,7 +147,7 @@ public class ViewCasePanel extends JPanel {
         
         btnName.add("修改");
         btnName.add("删除");
-        TableColumn column = caseDetailTable.getColumnModel().getColumn(5);
+        TableColumn column = caseDetailTable.getColumnModel().getColumn(6);
         column.setCellRenderer(new CaseDetailButtonRenderer());
         column.setCellEditor(new CaseDetailButtonEditor());
         noteScrollPane.setViewportView(caseDetailTable);
@@ -170,61 +190,12 @@ public class ViewCasePanel extends JPanel {
         JButton createProcedureButton = new JButton("新建法律手续");
         createProcedureButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-               /* //NotePanel notePanel = new NotePanel(caseId);
-                NotePanel notePanel = NotePanel.getInstance();
-                notePanel.setCaseId(caseId);
-                int i = caseDetailTable.getSelectedRow();
-                int noteId = Integer.parseInt(caseDetailTableModel.getValueAt(i, 0) + "");
-                //askedPersonTableModel赋值
-                notePanel.askedPersonTableModel.setList(noteId);
-                //otherPersonTableModel赋值
-                notePanel.otherPersonTableModel.setList(noteId);
-                //传入noteId，防止新增时选中了行
-                NotePanel.noteId = noteId;
-                //给note赋值
-                Note note = new CaseService().selectNoteById(noteId);
-                notePanel.getNoteNameField().setText(note.getName());
-                notePanel.getPlaceField().setText(note.getPlace());
-                notePanel.getFileNameField().setText(note.getFileName());
-                notePanel.getRemarkTextArea().setText(note.getRemark());
-                
-                List<String> policeList = new ArrayList<>();
-                //Object[] defaultValue = new Object[] {};
-                CaseService caseService = new CaseService();
-                List<Police> polices = caseService.listPolice();
-                for (Police police : polices) {
-                    policeList.add(polices.get(i).getId() + "_" + police.getName());
-
-                }
-                String[] defaultValue = note.getPoliceList().split(",")null;
-                notePanel.mulit.MulitCombobox_all(policeList.toArray(new String[policeList.size()]), defaultValue);
-                MainFrame.tabbedPane.addTab("修改笔录", notePanel, null);
-                MainFrame.tabbedPane.setSelectedComponent(notePanel);*/
-                
-                //2018-11-02 更新
-                NotePanel notePanel = NotePanel.getInstance();
-                notePanel.setCaseId(caseId);
-                //重置noteId
-                NotePanel.noteId = 0;
-                //给两表格置空
-                notePanel.askedPersonTableModel.setList(0);
-                notePanel.otherPersonTableModel.setList(0);
-                notePanel.getNoteNameField().setText("");;
-                notePanel.getPlaceField().setText("");
-                notePanel.fileNameField.setText("");
-                notePanel.getRemarkTextArea().setText("");
-                List<String> policeList = new ArrayList<>();
-                //Object[] defaultValue = new Object[] {};
-                /*CaseService caseService = new CaseService();
-                List<Police> polices = caseService.listPolice();
-                for (Police police : polices) {
-                    policeList.add(polices.get(i).getId() + "_" + police.getName());
-
-                }
-                Object[] defaultValue = new String[] {"请选择"};
-                notePanel.mulit.MulitCombobox_all(policeList.toArray(new String[policeList.size()]), defaultValue);*/
-                MainFrame.tabbedPane.addTab("新建法律手续", notePanel, null);
-                MainFrame.tabbedPane.setSelectedComponent(notePanel);
+                ProcedureDialog procedureDialog = ProcedureDialog.getInstance();
+                procedureDialog.setSize(new Dimension(500, 400));
+                procedureDialog.procedureNameField.setText("");
+                procedureDialog.remarkField.setText("");
+                GUIUtil.setCenter(procedureDialog);
+                procedureDialog.setVisible(true);
             }
         });
         panel.add(createProcedureButton);
@@ -232,22 +203,12 @@ public class ViewCasePanel extends JPanel {
         JButton createClockButton = new JButton("新建闹钟");
         createClockButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	if (caseDetailTable.getSelectedRow() <= 0) {
-	           		 MainFrame.alert("请选择一行！");
-	           		 return;
-            	}
-            	if (MainFrame.prompt("确定删除该笔录吗？")){
-                    int i = caseDetailTable.getSelectedRow();
-                    String noteId = caseDetailTableModel.getValueAt(i, 0)+"";
-                    CaseService caseService = new CaseService();
-                    ResultDTO resultDTO = caseService.delNote(Integer.valueOf(noteId));
-                    if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
-                        MainFrame.alert(resultDTO.getMessage());
-                        return;
-                    }
-                    MainFrame.alert("删除成功");
-                    updateNoteTable();
-                }
+                ClockDialog clockDialog = ClockDialog.getInstance();
+                clockDialog.setSize(new Dimension(500, 400));
+                clockDialog.clockNameField.setText("");
+                clockDialog.remarkField.setText("");
+                GUIUtil.setCenter(clockDialog);
+                clockDialog.setVisible(true);
             }
         });
         panel.add(createClockButton);
