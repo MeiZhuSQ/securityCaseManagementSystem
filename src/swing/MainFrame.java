@@ -117,8 +117,15 @@ public class MainFrame extends BaseFrame {
         searchPanel.add(lblNewLabel);
         
         searchCaseNameField = new JTextField();
-        searchCaseNameField.setPreferredSize(new Dimension(150, 20));
+        searchCaseNameField.setPreferredSize(new Dimension(150, 25));
         ImageButton searchButton = new ImageButton("search.png","搜索");
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                
+            }
+        });
         searchPanel.add(searchCaseNameField);
         searchPanel.add(searchButton);
         JScrollPane caseScrollPane = new JScrollPane();
