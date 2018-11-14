@@ -49,6 +49,8 @@ import service.CaseService;
 import util.DateUtil;
 import util.GUIUtil;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 
 /**
@@ -77,6 +79,7 @@ public class MainFrame extends BaseFrame {
     
     private static MainFrame instance;
     private JTextField searchCaseNameField;
+    private JTextField searchCaseTimeField;
     
     static {
         GUIUtil.useLNF();
@@ -110,7 +113,8 @@ public class MainFrame extends BaseFrame {
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BorderLayout(0, 0));
         JPanel searchPanel = new JPanel();
-        searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); 
+        searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        searchPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
         leftPanel.add(searchPanel, BorderLayout.NORTH);
         
         JLabel lblNewLabel = new JLabel("案件名称");
@@ -118,15 +122,26 @@ public class MainFrame extends BaseFrame {
         
         searchCaseNameField = new JTextField();
         searchCaseNameField.setPreferredSize(new Dimension(150, 25));
-        ImageButton searchButton = new ImageButton("search.png","搜索");
+        searchPanel.add(searchCaseNameField);
+        
+        JLabel lblNewLabel2 = new JLabel("案件时间");
+        searchPanel.add(lblNewLabel2);
+        
+        searchCaseTimeField = new JTextField();
+        searchCaseTimeField.setPreferredSize(new Dimension(150, 25));
+        searchPanel.add(searchCaseTimeField);
+        
+        ImageButton searchButton = new ImageButton("search.png","案件搜索");
+        searchButton.setHorizontalAlignment(FlowLayout.RIGHT);
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                
+                String caseName = searchCaseNameField.getText();
+                //查询案件
+                //new CaseService().selectCaseByName(caseName);
+                //getInstance().updateCaseTable();
             }
         });
-        searchPanel.add(searchCaseNameField);
         searchPanel.add(searchButton);
         JScrollPane caseScrollPane = new JScrollPane();
         leftPanel.add(caseScrollPane);
@@ -164,7 +179,7 @@ public class MainFrame extends BaseFrame {
         rightPanel.setLayout(null);
         
         JScrollPane clockScrollPane = new JScrollPane();
-        clockScrollPane.setBounds(0, 0, 544, 531);
+        clockScrollPane.setBounds(0, 0, 544, 610);
         rightPanel.add(clockScrollPane);
         
         clockListModel = new DefaultListModel();
@@ -173,8 +188,8 @@ public class MainFrame extends BaseFrame {
             clockListModel.addElement(clock);
         }
         clockList = new JList(clockListModel);
-        clockList.setFixedCellHeight(40);
-        
+        clockList.setFixedCellHeight(50);
+        clockList.setFixedCellWidth(200);
         clockList.setCellRenderer(new ClockCellRenderer());
         clockScrollPane.setViewportView(clockList);
         
@@ -187,15 +202,12 @@ public class MainFrame extends BaseFrame {
         
         clockAddButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
-        		ClockDialog clockDialog = ClockDialog.getInstance();
-            	clockDialog.setSize(new Dimension(500, 400));
-                clockDialog.clockNameField.setText("");
-                clockDialog.remarkField.setText("");
-                GUIUtil.setCenter(clockDialog);
-                clockDialog.setVisible(true);
+        	    Clock selectedValue = clockList.getSelectedValue();
+        	    //TODO 标记已完成
+        	    alert("标记已完成成功");
         	}
         });
-        clockAddButton.setBounds(80, 544, 110, 30);
+        clockAddButton.setBounds(80, 620, 110, 30);
         rightPanel.add(clockAddButton);
         
         /*JButton clockEditButton = new ImageButton("clock_edit.png","");
@@ -257,7 +269,7 @@ public class MainFrame extends BaseFrame {
         });
         createMenu.add(caseMenuItem);
 
-        JMenuItem lawsMenuItem = new JMenuItem("新建闹钟");
+        /*JMenuItem lawsMenuItem = new JMenuItem("新建闹钟");
         lawsMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	ClockDialog clockDialog = ClockDialog.getInstance();
@@ -266,7 +278,7 @@ public class MainFrame extends BaseFrame {
                 clockDialog.setVisible(true);
             }
         });
-        createMenu.add(lawsMenuItem);
+        createMenu.add(lawsMenuItem);*/
         
         /*JMenu policeMenu = new JMenu("警员维护");
         policeMenu.setPreferredSize(new Dimension(60, 20));

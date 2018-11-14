@@ -16,7 +16,7 @@ public class ImageButton extends JButton {
 
     public ImageButton(String fileName, String toolTip) {
         ImageIcon icon = new ImageIcon((new File(GUIUtil.imgFolder, fileName)).getAbsolutePath());
-        Image scaledInstance = icon.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT);
+        Image scaledInstance = icon.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT);
         icon.setImage(scaledInstance);
         setSize(icon.getImage().getWidth(null), icon.getImage().getHeight(null));
         setIcon(icon);
@@ -25,7 +25,7 @@ public class ImageButton extends JButton {
         setBorderPainted(false);// 不打印边框
         setBorder(null);// 除去边框
         setText(null);// 除去按钮的默认名称
-        //setFocusPainted(false);// 除去焦点的框
+        setFocusPainted(false);// 除去焦点的框
         setContentAreaFilled(false);// 除去默认的背景填充
         setToolTipText(toolTip);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

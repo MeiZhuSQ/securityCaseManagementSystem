@@ -91,8 +91,8 @@ public class Clock {
 	@Override
 	public String toString() {
 	    
-	    return "<html><font color='red'>"+time+"</font><div style='margin-left:10px;'>"
-	            +name+"</div></html>";
+	    return "<html><font color='gray'>"+time+"</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font>未开始</font><br><span style='float:left'>"
+	            +name+"</span></html>";
 	}
 	
 }
