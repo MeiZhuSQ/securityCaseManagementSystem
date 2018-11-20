@@ -285,8 +285,8 @@ public class CaseService extends BaseService {
 			e1.printStackTrace();
 			return requestFail("时间格式错误");
 		}
-		if (remark.length() > 50) {
-			return requestFail("备注不能超过50个字符");
+		if (remark.length() > 500) {
+			return requestFail("备注不能超过500个字符");
 		}
 		if (StringUtils.isBlank(place)) {
 			return requestFail("地点不能为空");
@@ -775,7 +775,7 @@ public class CaseService extends BaseService {
 			return requestFail("备注不能超过50个字符");
 		}
 		try {
-			clockDAO.add(new Clock(name, time, remark, "", 0, caseId));
+			clockDAO.add(new Clock(name, time, remark, "", 0, caseId,CommonConstant.NO));
 			return requestSuccess();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -788,8 +788,8 @@ public class CaseService extends BaseService {
 	 * 
 	 * @return
 	 */
-	public List<Clock> getClocks() {
-		return clockDAO.list();
+	public List<Clock> getClocksInThreeDaysAndLastDay() {
+		return clockDAO.getClocksInThreeDaysAndLastDay();
 	}
 
 	/**
