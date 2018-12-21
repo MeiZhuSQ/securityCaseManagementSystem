@@ -295,23 +295,8 @@ public class CaseService extends BaseService {
 			return requestFail("对应文件名不能为空");
 		}
 
-		// 校验被询问人
 		Note note = new Note(caseId, name, startTime, endTime, remark, place, fileName, askedPersonId);
-		ResultDTO result = checkAskedPerson(note);
-		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-			return result;
-		}
-
-		// 校验警员
-		// String[] polices = policeList.split(",");
-		// for (String policeNumber : polices) {
-		// result = checkNoteByTimeAndPlaceAndPolic(policeNumber, startTime,
-		// endTime, place);
-		// if (result.getCode().equals(CommonConstant.RESULT_CODE_FAIL)) {
-		// return result;
-		// }
-		// }
-
+		
 		try {
 			// 返回主键
 			int id = noteDAO.add(note);
@@ -441,8 +426,21 @@ public class CaseService extends BaseService {
 	 * @param id
 	 * @return
 	 */
-	public ResultDTO delNote(int id) {
-		if (noteDAO.delete(id) == 1) {
+	public ResultDTO delNote(int noteId) {
+		List<AskedPerson> askedPersons = askedPersonDAO.selectByNoteId(noteId);
+		if (askedPersons.size() > 0) {
+			return requestFail("请先删除笔录关联的被询问人");
+		}
+		List<Police> polices = policeDAO.listByNoteId(noteId);
+		if (polices.size() > 0) {
+			return requestFail("请先删除笔录关联的警员");
+		}
+		List<OtherPerson> otherPersons = otherPersonDAO.selectByNoteId(noteId);
+		if (otherPersons.size() > 0) {
+			return requestFail("请先删除笔录关联的其他工作人员");
+		}
+		
+		if (noteDAO.delete(noteId) == 1) {
 			return requestSuccess();
 		}
 		return requestFail();
@@ -784,7 +782,7 @@ public class CaseService extends BaseService {
 	}
 
 	/**
-	 * 获取全部闹钟列表
+	 * 获取过去一天和未来三天的闹钟
 	 * 
 	 * @return
 	 */
