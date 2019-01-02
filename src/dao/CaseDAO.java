@@ -47,7 +47,7 @@ public class CaseDAO {
 		return result;
 	}
 
-	public int delete(int id) throws Exception{
+	public int delete(int id) throws Exception {
 		String sql = "delete from legal_case where id = ?";
 		int result = 0;
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -75,7 +75,7 @@ public class CaseDAO {
 		}
 		return null;
 	}
-	
+
 	public LegalCase selectByName(String name) throws Exception {
 		String sql = "select * from legal_case where name = ?";
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -90,10 +90,10 @@ public class CaseDAO {
 			throw e;
 		}
 		return null;
-		
+
 	}
 
-	public List<LegalCase> list(int start, int count){
+	public List<LegalCase> list(int start, int count) {
 		String sql = "select * from legal_case order by time desc limit ?,?";
 		List<LegalCase> legalCases = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -111,7 +111,7 @@ public class CaseDAO {
 		return legalCases;
 	}
 
-	public List<LegalCase> list(){
+	public List<LegalCase> list() {
 		return list(0, Short.MAX_VALUE);
 	}
 
@@ -129,12 +129,9 @@ public class CaseDAO {
 	}
 
 	public List<CaseItemVO> getCaseItems(int caseId) {
-		String sql = "SELECT id,name,start_time as time,remark ,'1' as type FROM note where case_id = ?"
-				+ "UNION "
-				+ "SELECT id,name,time,remark ,'2' as type FROM procedure where case_id = ?"
-				+ "UNION "
-				+ "SELECT id,name,time,remark ,'3' as type FROM clock where case_id = ?"
-				+ "ORDER BY time desc";
+		String sql = "SELECT id,name,start_time as time,remark ,'1' as type FROM note where case_id = ?" + "UNION "
+				+ "SELECT id,name,time,remark ,'2' as type FROM procedure where case_id = ?" + "UNION "
+				+ "SELECT id,name,time,remark ,'3' as type FROM clock where case_id = ?" + "ORDER BY time desc";
 		List<CaseItemVO> caseItems = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, caseId);
@@ -143,15 +140,49 @@ public class CaseDAO {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				CaseItemVO caseItemVO = new CaseItemVO(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
-						rs.getString("remark"),rs.getString("type"));
+						rs.getString("remark"), rs.getString("type"));
 				caseItems.add(caseItemVO);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return caseItems;
-		
+
 	}
 
+	public List<CaseItemVO> getCaseItemsByTimeAndKeyWord(int caseId, String keyWord, String startTime, String endTime) {
+		String sql = "select id,name,time,remark,type from "
+				+ "(SELECT id,name,start_time as time,remark ,'1' as type FROM note where case_id = ?" + "UNION "
+				+ "SELECT id,name,time,remark ,'2' as type FROM procedure where case_id = ?" + "UNION "
+				+ "SELECT id,name,time,remark ,'3' as type FROM clock where case_id = ?) a "
+				+ "WHERE a.name LIKE ? and time > ? and ? > time ORDER BY time desc";
+		List<CaseItemVO> caseItems = new ArrayList<>();
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setInt(1, caseId);
+			ps.setInt(2, caseId);
+			ps.setInt(3, caseId);
+			ps.setString(4, "%" + keyWord + "%");
+			ps.setString(5, startTime);
+			ps.setString(6, endTime);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				CaseItemVO caseItemVO = new CaseItemVO(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
+						rs.getString("remark"), rs.getString("type"));
+				caseItems.add(caseItemVO);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return caseItems;
+	}
+
+	public static void main(String[] args) {
+		CaseDAO caseDAO = new CaseDAO();
+		List<CaseItemVO> caseItemVOs = caseDAO.getCaseItemsByTimeAndKeyWord(1, "笔录", "2000-01-01 00:00:00",
+				"2020-01-01 00:00:00");
+		for (CaseItemVO caseItemVO : caseItemVOs) {
+			System.out.println(caseItemVO.getName());
+		}
+	}
 
 }

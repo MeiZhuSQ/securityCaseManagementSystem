@@ -96,7 +96,7 @@ public class PoliceDAO {
 		return list(0, Short.MAX_VALUE);
 	}
 
-	public Police selectByPoliceNumber(String policeNumber) {
+	public Police selectByPoliceNameInCase(String policeNumber, int caseId) {
 		String sql = "select * from police where note_id = ?";
 		Police police = null;
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
