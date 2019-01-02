@@ -99,7 +99,7 @@ public class NotePanel extends JPanel {
         startTimeLabel.setBounds(24, 113, 72, 18);
         notePanel.add(startTimeLabel);
 
-        startTime = DateUtil.getDatePicker();
+        startTime = DateUtil.getDatePicker(DateUtil.FORMAT_YYYYMMDDHHMMSS);
         JPanel startTimePanel = new JPanel();
         startTimePanel.setBounds(102, 100, 177, 30);
         startTimePanel.add(startTime);
@@ -111,7 +111,7 @@ public class NotePanel extends JPanel {
 
         JPanel endTimePanel = new JPanel();
         endTimePanel.setBounds(102, 143, 177, 34);
-        endTime = DateUtil.getDatePicker();
+        endTime = DateUtil.getDatePicker(DateUtil.FORMAT_YYYYMMDDHHMMSS);
         endTimePanel.add(endTime);
         notePanel.add(endTimePanel);
 

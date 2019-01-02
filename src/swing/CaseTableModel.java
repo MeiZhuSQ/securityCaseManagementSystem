@@ -1,5 +1,6 @@
 package swing;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import entity.LegalCase;
@@ -11,8 +12,12 @@ public class CaseTableModel extends AbstractTableModel{
     
     private String[] columnNames = new String[] { "ID", "序号", "案件名称", "时间", "备注","操作"};
     
-    public List<LegalCase> list = new CaseService().listCase();
+    public List<LegalCase> list = new ArrayList<LegalCase>();
 
+    public void setList(String caseName) {
+        list = new CaseService().listCaseByKeyWord(caseName);
+    }
+    
     @Override
     public int getRowCount() {
         return list.size();

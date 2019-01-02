@@ -42,9 +42,14 @@ import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.eltima.components.ui.DatePicker;
+
 import constant.CommonConstant;
 import dto.ResultDTO;
 import entity.Clock;
+import entity.LegalCase;
 import service.CaseService;
 import util.DateUtil;
 import util.GUIUtil;
@@ -79,7 +84,9 @@ public class MainFrame extends BaseFrame {
     
     private static MainFrame instance;
     private JTextField searchCaseNameField;
-    private JTextField searchCaseTimeField;
+    public DatePicker searchCaseTimeField;
+    //private JTextField searchCaseTimeField;
+    private JTextField searchCaseRemarkField;
     
     static {
         GUIUtil.useLNF();
@@ -124,12 +131,19 @@ public class MainFrame extends BaseFrame {
         searchCaseNameField.setPreferredSize(new Dimension(150, 25));
         searchPanel.add(searchCaseNameField);
         
-        JLabel lblNewLabel2 = new JLabel("案件时间");
+        /*JLabel lblNewLabel2 = new JLabel("案件时间");
         searchPanel.add(lblNewLabel2);
         
-        searchCaseTimeField = new JTextField();
+        searchCaseTimeField = new JTextField()DateUtil.getDatePicker(DateUtil.FORMAT_YYYYMMDD);
         searchCaseTimeField.setPreferredSize(new Dimension(150, 25));
         searchPanel.add(searchCaseTimeField);
+        
+        JLabel lblNewLabel3 = new JLabel("备注");
+        searchPanel.add(lblNewLabel3);
+        
+        searchCaseRemarkField = new JTextField();
+        searchCaseRemarkField.setPreferredSize(new Dimension(150, 25));
+        searchPanel.add(searchCaseRemarkField);*/
         
         ImageButton searchButton = new ImageButton("search.png","案件搜索");
         searchButton.setHorizontalAlignment(FlowLayout.RIGHT);
@@ -137,9 +151,11 @@ public class MainFrame extends BaseFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String caseName = searchCaseNameField.getText();
+                /*String caseTime = searchCaseTimeField.getText();
+                String caseRemark = searchCaseRemarkField.getText();*/
                 //查询案件
-                //new CaseService().selectCaseByName(caseName);
-                //getInstance().updateCaseTable();
+                List<LegalCase> listCaseByKeyWord = new CaseService().listCaseByKeyWord(caseName);
+                getInstance().updateCaseTable();
             }
         });
         searchPanel.add(searchButton);
@@ -413,7 +429,11 @@ public class MainFrame extends BaseFrame {
     }*/
     
     public void updateCaseTable() {
-        caseTableModel.list = new CaseService().listCase();
+        String caseName = "";
+        if (StringUtils.isNotBlank(searchCaseNameField.getText())) {
+            caseName = searchCaseNameField.getText();
+        }
+        caseTableModel.setList(caseName);
         //或 policeTableModel.fireTableDataChanged();
         caseTable.updateUI();
     }
