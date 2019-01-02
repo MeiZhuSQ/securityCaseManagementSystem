@@ -8,8 +8,9 @@ public class Clock {
 	private String type;// 1笔录2法律手续
 	private int ownerId;
 	private int caseId;
+	private String overFlag;//完成标记：1完成；0未完成
 
-	public Clock(int id, String name, String time, String remark, String type, int ownerId, int caseId) {
+	public Clock(int id, String name, String time, String remark, String type, int ownerId, int caseId, String overFlag) {
 		this.setId(id);
 		this.setName(name);
 		this.setTime(time);
@@ -17,15 +18,17 @@ public class Clock {
 		this.setType(type);
 		this.setOwnerId(ownerId);
 		this.setCaseId(caseId);
+		this.setOverFlag(overFlag);
 	}
 
-	public Clock(String name, String time, String remark, String type, int ownerId, int caseId) {
+	public Clock(String name, String time, String remark, String type, int ownerId, int caseId, String overFlag) {
 		this.setName(name);
 		this.setTime(time);
 		this.setRemark(remark);
 		this.setType(type);
 		this.setOwnerId(ownerId);
 		this.setCaseId(caseId);
+		this.setOverFlag(overFlag);
 	}
 
 	public Clock() {
@@ -100,6 +103,14 @@ public class Clock {
                     +name+"</span></html>";
 	    }
 	    return html;
+	}
+
+	public String getOverFlag() {
+		return overFlag;
+	}
+
+	public void setOverFlag(String overFlag) {
+		this.overFlag = overFlag;
 	}
 	
 }
