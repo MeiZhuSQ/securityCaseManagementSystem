@@ -125,7 +125,7 @@ public class PolicePanel extends JPanel {
      */
 
     public void updateTable() {
-        policeTableModel.list = new CaseService().listPolice();
+        //policeTableModel.list = new CaseService().listPolice();
         //或 policeTableModel.fireTableDataChanged();
         policeTable.updateUI();
     }

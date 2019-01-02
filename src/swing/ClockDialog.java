@@ -79,7 +79,7 @@ public class ClockDialog extends JDialog {
                 MainFrame.alert("保存成功");
                 getInstance().setVisible(false);
                 MainFrame.getInstance().clockListModel.removeAllElements();
-                List<Clock> clocks = new CaseService().getClocks();
+                List<Clock> clocks = new CaseService().getClocksInThreeDaysAndLastDay();
                 for (Clock clock : clocks) {
                 	MainFrame.getInstance().clockListModel.addElement(clock);
                 }

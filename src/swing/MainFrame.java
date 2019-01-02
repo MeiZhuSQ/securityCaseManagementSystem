@@ -183,7 +183,7 @@ public class MainFrame extends BaseFrame {
         rightPanel.add(clockScrollPane);
         
         clockListModel = new DefaultListModel();
-        List<Clock> clocks = new CaseService().getClocks();
+        List<Clock> clocks = new CaseService().getClocksInThreeDaysAndLastDay();
         for (Clock clock : clocks) {
             clockListModel.addElement(clock);
         }
@@ -326,7 +326,7 @@ public class MainFrame extends BaseFrame {
 	    timer.schedule(new TimerTask(){
 	        @Override
 	        public void run() {
-	            List<Clock> clockList = new CaseService().getClocks();
+	            List<Clock> clockList = new CaseService().getClocksInThreeDaysAndLastDay();
 	            for (Clock clock : clockList) {
 					if (clock.getTime().equals(DateUtil.getTime())) {
 						f.setUndecorated(true);

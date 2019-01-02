@@ -571,7 +571,7 @@ public class NotePanel extends JPanel {
     }
 
     public void updatePoliceTable() {
-        policeTableModel.list = new CaseService().listPolice();
+        policeTableModel.setList(noteId);;
         //或 policeTableModel.fireTableDataChanged();
         policeTable.updateUI();
     }
