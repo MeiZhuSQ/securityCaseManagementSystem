@@ -156,6 +156,17 @@ public class CaseService extends BaseService {
 	public List<LegalCase> listCase() {
 		return caseDAO.list();
 	}
+	
+	/**
+	 * 通过时间和关键字模糊查询案件
+	 * @param keyWord
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	public List<LegalCase> listCaseByTimeAndKeyWord(String keyWord,String startTime,String endTime) {
+		return caseDAO.listCaseByTimeAndKeyWord(keyWord,startTime,endTime);
+	}
 
 	/**
 	 * 根据案件Id获取案件细则列表
