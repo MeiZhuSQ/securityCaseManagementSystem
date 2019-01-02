@@ -114,6 +114,25 @@ public class CaseDAO {
 	public List<LegalCase> list() {
 		return list(0, Short.MAX_VALUE);
 	}
+	
+	public List<LegalCase> listCaseByTimeAndKeyWord(String keyWord,String startTime,String endTime) {
+		String sql = "select * from legal_case where name like ? and time > ? and time < ? order by time desc ";
+		List<LegalCase> legalCases = new ArrayList<>();
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setString(1, "%" + keyWord + "%");
+			ps.setString(2, startTime);
+			ps.setString(3, endTime);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				LegalCase legalCase = new LegalCase(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
+						rs.getString("remark"));
+				legalCases.add(legalCase);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return legalCases;
+	}
 
 	public int getTotal() {
 		String sql = "select count(*) from legal_case";
