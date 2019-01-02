@@ -158,14 +158,12 @@ public class CaseService extends BaseService {
 	}
 	
 	/**
-	 * 通过时间和关键字模糊查询案件
+	 * 通过关键字模糊查询案件
 	 * @param keyWord
-	 * @param startTime
-	 * @param endTime
 	 * @return
 	 */
-	public List<LegalCase> listCaseByTimeAndKeyWord(String keyWord,String startTime,String endTime) {
-		return caseDAO.listCaseByTimeAndKeyWord(keyWord,startTime,endTime);
+	public List<LegalCase> listCaseByKeyWord(String keyWord) {
+		return caseDAO.listCaseByKeyWord(keyWord);
 	}
 
 	/**
@@ -179,13 +177,13 @@ public class CaseService extends BaseService {
 	}
 	
 	/**
-	 * 根据关键字和时间查询案件细则列表
+	 * 根据关键字模糊查询案件细则列表
 	 * 
 	 * @param caseId
 	 * @return
 	 */
-	public List<CaseItemVO> getCaseItemsByTimeAndKeyWord(int caseId,String keyWord,String startTime,String endTime) {
-		return caseDAO.getCaseItemsByTimeAndKeyWord(caseId,keyWord,startTime,endTime);
+	public List<CaseItemVO> getCaseItemsByKeyWord(int caseId,String keyWord) {
+		return caseDAO.getCaseItemsByKeyWord(caseId,keyWord);
 	}
 
 	/**

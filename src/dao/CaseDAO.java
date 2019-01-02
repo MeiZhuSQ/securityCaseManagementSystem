@@ -115,13 +115,11 @@ public class CaseDAO {
 		return list(0, Short.MAX_VALUE);
 	}
 	
-	public List<LegalCase> listCaseByTimeAndKeyWord(String keyWord,String startTime,String endTime) {
-		String sql = "select * from legal_case where name like ? and time > ? and time < ? order by time desc ";
+	public List<LegalCase> listCaseByKeyWord(String keyWord) {
+		String sql = "select * from legal_case where name like ?  order by time desc ";
 		List<LegalCase> legalCases = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, "%" + keyWord + "%");
-			ps.setString(2, startTime);
-			ps.setString(3, endTime);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				LegalCase legalCase = new LegalCase(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
@@ -169,20 +167,18 @@ public class CaseDAO {
 
 	}
 
-	public List<CaseItemVO> getCaseItemsByTimeAndKeyWord(int caseId, String keyWord, String startTime, String endTime) {
+	public List<CaseItemVO> getCaseItemsByKeyWord(int caseId, String keyWord) {
 		String sql = "select id,name,time,remark,type from "
 				+ "(SELECT id,name,start_time as time,remark ,'1' as type FROM note where case_id = ?" + "UNION "
 				+ "SELECT id,name,time,remark ,'2' as type FROM procedure where case_id = ?" + "UNION "
 				+ "SELECT id,name,time,remark ,'3' as type FROM clock where case_id = ?) a "
-				+ "WHERE a.name LIKE ? and time > ? and ? > time ORDER BY time desc";
+				+ "WHERE a.name LIKE ?  ORDER BY time desc";
 		List<CaseItemVO> caseItems = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, caseId);
 			ps.setInt(2, caseId);
 			ps.setInt(3, caseId);
 			ps.setString(4, "%" + keyWord + "%");
-			ps.setString(5, startTime);
-			ps.setString(6, endTime);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				CaseItemVO caseItemVO = new CaseItemVO(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
