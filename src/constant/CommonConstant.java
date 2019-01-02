@@ -3,6 +3,14 @@ package constant;
 public class CommonConstant {
 	public final static String RESULT_CODE_SUCCESS = "1";
 	public final static String RESULT_CODE_FAIL = "0";
+	/**
+	 * 逻辑是
+	 */
+	public final static String YES = "1";
+	/**
+	 * 逻辑非
+	 */
+	public final static String NO = "0";
 
 	/**
 	 * 案件细则类型：笔录

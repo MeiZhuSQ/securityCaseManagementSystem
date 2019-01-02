@@ -214,4 +214,53 @@ public class DateUtil {
         datepick.setTimePanleVisible(true);
         return datepick;
     }
+    
+	/**
+	 * 获得给定日期的0点
+	 */
+	public static Date getZeroTimeOfDay(Date date){
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return c.getTime();
+	}
+
+    /**
+     * 获得给定日期的23点59分59秒
+     */
+    public static Date getEndTimeOfDay(Date date){
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE, 59);
+        c.set(Calendar.SECOND, 59);
+        return c.getTime();
+    }
+    
+	/**
+	 * 得到日期时间字符串，转换格式（yyyy-MM-dd HH:mm:ss）
+	 */
+	public static String formatDateTime(Date date) {
+		String s=null;
+		if(date!=null){
+			s = formatDate(date, "yyyy-MM-dd HH:mm:ss");
+		}
+		return s;
+	}
+	
+	/**
+	 * 得到日期字符串 默认格式（yyyy-MM-dd） pattern可以为："yyyy-MM-dd" "HH:mm:ss" "E"
+	 */
+	private static String formatDate(Date date, Object... pattern) {
+		String formatDate;
+		if (pattern != null && pattern.length > 0) {
+			formatDate = DateFormatUtils.format(date, pattern[0].toString());
+		} else {
+			formatDate = DateFormatUtils.format(date, "yyyy-MM-dd");
+		}
+		return formatDate;
+	}
 }
