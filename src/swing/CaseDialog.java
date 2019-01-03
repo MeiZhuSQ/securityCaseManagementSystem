@@ -25,7 +25,7 @@ public class CaseDialog extends JDialog {
     
     private static final long serialVersionUID = 7334759086622449699L;
     public JTextField caseNameField;
-    public DatePicker datePickerField;
+    public static DatePicker datePickerField;
     private static CaseDialog instance;
     public JTextField remarkField;
     private int caseId = 0;
@@ -84,7 +84,7 @@ public class CaseDialog extends JDialog {
         lblNewLabel.setBounds(81, 90, 72, 18);
         getContentPane().add(lblNewLabel);
 
-        datePickerField = DateUtil.getDatePicker();
+        datePickerField = DateUtil.getDatePicker(DateUtil.FORMAT_YYYYMMDDHHMMSS);
         datePickerField.setBounds(167, 90, 181, 24);
         getContentPane().add(datePickerField);
         

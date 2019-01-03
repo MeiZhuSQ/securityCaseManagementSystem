@@ -36,9 +36,9 @@ public class CaseButtonRenderer implements TableCellRenderer {
 
     private void initButton() {
 
-        button = new ImageButton("view.png");
-        button1 = new ImageButton("edit.png");
-        button2 = new ImageButton("delete.png");
+        button = new ImageButton("view.png","详情");
+        button1 = new ImageButton("edit.png","修改");
+        button2 = new ImageButton("delete.png","删除");
         /*button.setSize(new Dimension(16, 16));
         button1.setSize(new Dimension(50, 25));
         button2.setSize(new Dimension(50, 25));*/

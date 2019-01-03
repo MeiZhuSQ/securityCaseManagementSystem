@@ -7,12 +7,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
+import constant.CommonConstant;
+import dto.ResultDTO;
+import entity.Clock;
+import entity.Note;
+import entity.Procedure;
+import service.CaseService;
 import util.DateUtil;
 import util.GUIUtil;
 
@@ -45,8 +53,8 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
 
     private void initButton() {
 
-        button = new ImageButton("edit.png");
-        button1 = new ImageButton("delete.png");
+        button = new ImageButton("edit.png","");
+        button1 = new ImageButton("delete.png","");
         button.setSize(new Dimension(16, 16));
         button1.setSize(new Dimension(50, 25));
         /*GUIUtil.setImageIcon(button, "edit.png", null);
@@ -56,33 +64,72 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
         button.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                int i = MainFrame.getInstance().caseTable.getSelectedRow();
-                String caseId = MainFrame.getInstance().caseTableModel.getValueAt(i, 0)+"";
-                ViewCasePanel viewPanel = ViewCasePanel.getInstance();
-                viewPanel.setCaseId(Integer.parseInt(caseId));
-                MainFrame.tabbedPane.addTab("案件详情", viewPanel, null);
-                MainFrame.tabbedPane.setSelectedComponent(viewPanel);
+                int i = ViewCasePanel.getInstance().caseDetailTable.getSelectedRow();
+                int caseItemId = Integer.parseInt(ViewCasePanel.getInstance().caseDetailTable.getValueAt(i, 0).toString());
+                String caseItemType = ViewCasePanel.getInstance().caseDetailTableModel.getValueAt(i, 3).toString();
+                //选择的是笔录
+                if ("笔录".equals(caseItemType)) {
+                    Note note = new CaseService().selectNoteById(caseItemId);
+                    NotePanel notePanel = NotePanel.getInstance();
+                    notePanel.noteId = note.getId();
+                    //编辑时，传入caseId
+                    notePanel.setCaseId(note.getCaseId());
+                    notePanel.getNoteNameField().setText(note.getName());
+                    notePanel.getNoteNameField().setText("");;
+                    notePanel.getPlaceField().setText("");
+                    notePanel.fileNameField.setText("");
+                    notePanel.getRemarkTextArea().setText("");
+                    MainFrame.tabbedPane.addTab("编辑笔录", notePanel, null);
+                    MainFrame.tabbedPane.setSelectedComponent(notePanel);
+                    //选择的是手续
+                } else if ("法律手续".equals(caseItemType)) {
+                    Procedure procedure = new CaseService().selectProceduresById(caseItemId);
+                    ProcedureDialog procedureDialog = ProcedureDialog.getInstance();
+                    procedureDialog.setSize(new Dimension(500, 400));
+                    GUIUtil.setCenter(procedureDialog);
+                    procedureDialog.setCaseId(ViewCasePanel.getInstance().getCaseId());
+                    procedureDialog.setProcedureId(caseItemId);
+                    procedureDialog.procedureNameField.setText(procedure.getName());
+                    procedureDialog.remarkField.setText(procedure.getRemark());
+                    procedureDialog.setVisible(true);
+                } else {
+                    //选择的是闹钟
+                    ClockDialog clockDialog = ClockDialog.getInstance();
+                    clockDialog.setSize(new Dimension(500, 400));
+                    GUIUtil.setCenter(clockDialog);
+                    Clock clock = new CaseService().getClockById(caseItemId);
+                    clockDialog.setClockId(clock.getId());
+                    clockDialog.clockNameField.setText(clock.getName());
+                    clockDialog.remarkField.setText(clock.getRemark());
+                    clockDialog.setVisible(true);
+                }
                 fireEditingStopped();
             }
         });
         button1.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                CaseDialog caseDialog = CaseDialog.getInstance();
-                caseDialog.setSize(new Dimension(500, 400));
-                GUIUtil.setCenter(caseDialog);
-                int i = MainFrame.getInstance().caseTable.getSelectedRow();
-                caseDialog.setCaseId(Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + ""));
-                caseDialog.caseNameField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 1) + "");
-                try {
-                    caseDialog.datePickerField = DateUtil.setDatePicker(MainFrame.getInstance().caseTableModel.getValueAt(i, 2) + "");
-                    caseDialog.datePickerField.updateUI();
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
+                if (MainFrame.prompt("确定删除该条记录吗？")){
+                    int i = ViewCasePanel.getInstance().caseDetailTable.getSelectedRow();
+                    int caseItemId = Integer.parseInt(ViewCasePanel.getInstance().caseDetailTableModel.getValueAt(i, 0)+"");
+                    String caseItemType = ViewCasePanel.getInstance().caseDetailTableModel.getValueAt(i, 3).toString();
+                    CaseService caseService = new CaseService();
+                    ResultDTO resultDTO = new ResultDTO();
+                    //选择的是笔录
+                    if ("笔录".equals(caseItemType)) {
+                        caseService.delNote(caseItemId);
+                    } else if ("法律手续".equals(caseItemType)) {
+                        resultDTO = caseService.delProcedure(caseItemId);
+                    } else {
+                        resultDTO = caseService.delClock(caseItemId);
+                    }
+                    if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                        MainFrame.alert(resultDTO.getMessage());
+                        return;
+                    }
+                    MainFrame.alert("删除成功");
+                    MainFrame.getInstance().updateCaseTable();
                 }
-                caseDialog.remarkField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 3) + "");
-                //注意：必须放在最后，否则无效
-                caseDialog.setVisible(true);
                 fireEditingStopped();
             }
         });

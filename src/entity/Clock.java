@@ -93,9 +93,16 @@ public class Clock {
 
 	@Override
 	public String toString() {
-	    
-	    return "<html><font color='red'>"+time+"</font><div style='margin-left:10px;'>"
-	            +name+"</div></html>";
+	    String status = "2";
+	    String html = "";
+	    if ("1".equals(status)) {
+	        html = "<html><font color='gray'>"+time+"</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font>未开始</font><br><span style='float:left'>"
+	                +name+"</span></html>";
+	    } else if ("2".equals(status)) {
+	        html = "<html><font color='gray'>"+time+"</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font>已完成</font><br><span style='float:left'>"
+                    +name+"</span></html>";
+	    }
+	    return html;
 	}
 
 	public String getOverFlag() {

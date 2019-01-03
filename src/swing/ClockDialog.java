@@ -79,7 +79,7 @@ public class ClockDialog extends JDialog {
                 MainFrame.alert("保存成功");
                 getInstance().setVisible(false);
                 MainFrame.getInstance().clockListModel.removeAllElements();
-                List<Clock> clocks = new CaseService().getClocks();
+                List<Clock> clocks = new CaseService().getClocksInThreeDaysAndLastDay();
                 for (Clock clock : clocks) {
                 	MainFrame.getInstance().clockListModel.addElement(clock);
                 }
@@ -92,7 +92,7 @@ public class ClockDialog extends JDialog {
         lblNewLabel.setBounds(81, 90, 72, 18);
         getContentPane().add(lblNewLabel);
 
-        datePickerField = DateUtil.getDatePicker();
+        datePickerField = DateUtil.getDatePicker(DateUtil.FORMAT_YYYYMMDDHHMMSS);
         datePickerField.setBounds(167, 90, 181, 24);
         getContentPane().add(datePickerField);
         

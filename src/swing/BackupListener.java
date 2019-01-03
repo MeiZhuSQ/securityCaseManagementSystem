@@ -43,6 +43,9 @@ public class BackupListener extends MouseAdapter {
 
             try {
                 SQLUtil.backup(file.getAbsolutePath());
+                /*打开本地文件
+                Runtime runtime = Runtime.getRuntime();  
+                runtime.exec("rundll32 url.dll FileProtocolHandler "+"C:/Users/lpf/Desktop/TestFrame.java"); */
                 JOptionPane.showMessageDialog(p, "备份成功,备份文件位于:\r\n" + file.getAbsolutePath());
             } catch (Exception e1) {
                 e1.printStackTrace();

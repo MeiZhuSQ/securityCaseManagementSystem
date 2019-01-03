@@ -20,6 +20,9 @@ import com.eltima.components.ui.DatePicker;
 public class DateUtil {
     // 定义一天的时间
     private static final long millisecondsOfOneDay = 1000 * 60 * 60 * 24;
+    
+    public static final String FORMAT_YYYYMMDDHHMMSS = "yyyy-MM-dd HH:mm:ss";
+    public static final String FORMAT_YYYYMMDD = "yyyy-MM-dd";
     // 获取日历
     private static Calendar c = Calendar.getInstance();
 
@@ -155,10 +158,10 @@ public class DateUtil {
      * 
      * @return
      */
-    public static DatePicker getDatePicker() {
+    public static DatePicker getDatePicker(String format) {
         final DatePicker datepick;
         // 格式
-        String DefaultFormat = "yyyy-MM-dd HH:mm:ss";
+        //String DefaultFormat = "yyyy-MM-dd HH:mm:ss";
         // 当前时间
         Date date = new Date();
         // 字体
@@ -166,22 +169,22 @@ public class DateUtil {
 
         Dimension dimension = new Dimension(177, 24);
 
-        int[] hilightDays = { 1, 3, 5, 7 };
+        /*int[] hilightDays = { 1, 3, 5, 7 };
 
-        int[] disabledDays = { 4, 6, 5, 9 };
+        int[] disabledDays = { 4, 6, 5, 9 };*/
         // 构造方法（初始时间，时间显示格式，字体，控件大小）
-        datepick = new DatePicker(date, DefaultFormat, font, dimension);
+        datepick = new DatePicker(date, format, font, dimension);
 
         datepick.setLocation(137, 83);// 设置起始位置
         /*
          * //也可用setBounds()直接设置大小与位置 datepick.setBounds(137, 83, 177, 24);
          */
         // 设置一个月份中需要高亮显示的日子
-        datepick.setHightlightdays(hilightDays, Color.red);
+        /*datepick.setHightlightdays(hilightDays, Color.red);
         // 设置一个月份中不需要的日子，呈灰色显示
-        datepick.setDisableddays(disabledDays);
+        datepick.setDisableddays(disabledDays);*/
         // 设置国家
-        datepick.setLocale(Locale.CANADA);
+        datepick.setLocale(Locale.CHINA);
         // 设置时钟面板可见
         datepick.setTimePanleVisible(true);
         return datepick;

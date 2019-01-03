@@ -1,5 +1,6 @@
 package swing;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import entity.LegalCase;
@@ -9,10 +10,14 @@ public class CaseTableModel extends AbstractTableModel{
     
     private static final long serialVersionUID = -9105203202190115194L;
     
-    private String[] columnNames = new String[] { "序号", "案件名称", "时间", "备注","操作"};
+    private String[] columnNames = new String[] { "ID", "序号", "案件名称", "时间", "备注","操作"};
     
-    public List<LegalCase> list = new CaseService().listCase();
+    public List<LegalCase> list = new ArrayList<LegalCase>();
 
+    public void setList(String caseName) {
+        list = new CaseService().listCaseByKeyWord(caseName);
+    }
+    
     @Override
     public int getRowCount() {
         return list.size();
@@ -31,10 +36,7 @@ public class CaseTableModel extends AbstractTableModel{
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         //第5列可编辑
-        if (columnIndex == 4) {
-            return true;
-        }
-        if (columnIndex == 3) {
+        if (columnIndex == 5) {
             return true;
         }
         return false;
@@ -46,10 +48,12 @@ public class CaseTableModel extends AbstractTableModel{
         if (columnIndex == 0)
             return legalCase.getId();
         if (columnIndex == 1)
-            return legalCase.getName();
+            return rowIndex + 1;
         if (columnIndex == 2)
-            return legalCase.getTime();
+            return legalCase.getName();
         if (columnIndex == 3)
+            return legalCase.getTime();
+        if (columnIndex == 4)
             return legalCase.getRemark();
         return null;
     }

@@ -53,9 +53,9 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
 
     private void initButton() {
 
-        button = new ImageButton("view.png");
-        button1 = new ImageButton("edit.png");
-        button2 = new ImageButton("delete.png");
+        button = new ImageButton("view.png","详情1");
+        button1 = new ImageButton("edit.png","修改1");
+        button2 = new ImageButton("delete.png","删除1");
         button.setSize(new Dimension(16, 16));
         button1.setSize(new Dimension(50, 25));
         button2.setSize(new Dimension(50, 25));
@@ -68,9 +68,9 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
             public void actionPerformed(ActionEvent e) {
                 int i = MainFrame.getInstance().caseTable.getSelectedRow();
                 int caseId = Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0).toString());
-                String caseName = MainFrame.getInstance().caseTableModel.getValueAt(i, 1).toString();
-                String caseTime = MainFrame.getInstance().caseTableModel.getValueAt(i, 2).toString();
-                String caseRemark = MainFrame.getInstance().caseTableModel.getValueAt(i, 3).toString();
+                String caseName = MainFrame.getInstance().caseTableModel.getValueAt(i, 2).toString();
+                String caseTime = MainFrame.getInstance().caseTableModel.getValueAt(i, 3).toString();
+                String caseRemark = MainFrame.getInstance().caseTableModel.getValueAt(i, 4).toString();
                 ViewCasePanel viewPanel = ViewCasePanel.getInstance();
                 viewPanel.setCaseId(caseId);
                 viewPanel.caseNameField.setText(caseName);
@@ -91,14 +91,14 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
                 GUIUtil.setCenter(caseDialog);
                 int i = MainFrame.getInstance().caseTable.getSelectedRow();
                 caseDialog.setCaseId(Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + ""));
-                caseDialog.caseNameField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 1) + "");
+                caseDialog.caseNameField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 2) + "");
                 try {
-                    caseDialog.datePickerField = DateUtil.setDatePicker(MainFrame.getInstance().caseTableModel.getValueAt(i, 2) + "");
+                    caseDialog.datePickerField = DateUtil.setDatePicker(MainFrame.getInstance().caseTableModel.getValueAt(i, 3) + "");
                     caseDialog.datePickerField.updateUI();
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
-                caseDialog.remarkField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 3) + "");
+                caseDialog.remarkField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 4) + "");
                 //注意：必须放在最后，否则无效
                 caseDialog.setVisible(true);
                 fireEditingStopped();
@@ -107,7 +107,7 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
         button2.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-            	if (MainFrame.getInstance().caseTable.getSelectedRow() <= 0) {
+            	if (MainFrame.getInstance().caseTable.getSelectedRow() < 0) {
 	           		 MainFrame.alert("请选择一行！");
 	           		 return;
             	}
