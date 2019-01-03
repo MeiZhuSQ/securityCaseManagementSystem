@@ -257,7 +257,7 @@ public class NotePanel extends JPanel {
         policePanel.setBorder(policeTitleBorder);
         
         policeTableModel = new PoliceTableModel();
-        policeTableModel.setList(noteId);
+        //policeTableModel.setList(noteId);
         policeTable = new JTable(policeTableModel);
         policeTable.setRowHeight(30);
         /*JTableHeader head = policeTable.getTableHeader();
@@ -269,7 +269,7 @@ public class NotePanel extends JPanel {
         JButton policeAddButton = new JButton("新增");
         policeAddButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (newNoteId == 0) {
+                if (newNoteId == 0 && noteId == 0) {
                     MainFrame.alert("请先填写并保存笔录信息");
                     return;
                 }
@@ -286,7 +286,7 @@ public class NotePanel extends JPanel {
         JButton policeEditButton = new JButton("编辑");
         policeEditButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (newNoteId == 0) {
+                if (newNoteId == 0 && noteId == 0) {
                     MainFrame.alert("请先填写并保存笔录信息");
                     return;
                 }
@@ -347,7 +347,7 @@ public class NotePanel extends JPanel {
         JButton askedDeleteButton = new JButton("删除");
         askedDeleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (newNoteId == 0) {
+                if (newNoteId == 0 && noteId == 0) {
                     MainFrame.alert("请先填写并保存笔录信息");
                     return;
                 }
@@ -383,7 +383,7 @@ public class NotePanel extends JPanel {
         otherPanel.setBorder(otherTitleBorder);
         
         otherPersonTableModel = new OtherPersonTableModel();
-        otherPersonTableModel.setList(noteId);
+        //otherPersonTableModel.setList(noteId);
         otherPersonTable = new JTable(otherPersonTableModel);
         otherPersonTable.setRowHeight(30);
         //head.setPreferredSize(new Dimension(otherPersonTable.getTableHeader().getWidth(), 30));
@@ -396,7 +396,7 @@ public class NotePanel extends JPanel {
         JButton otherAddButton = new JButton("新增");
         otherAddButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (newNoteId == 0) {
+                if (newNoteId == 0 && noteId == 0) {
                     MainFrame.alert("请先填写并保存笔录信息");
                     return;
                 }
@@ -417,7 +417,7 @@ public class NotePanel extends JPanel {
         JButton otherEditButton = new JButton("编辑");
         otherEditButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (newNoteId == 0) {
+                if (newNoteId == 0 && noteId == 0) {
                     MainFrame.alert("请先填写并保存笔录信息");
                     return;
                 }
@@ -448,7 +448,7 @@ public class NotePanel extends JPanel {
         JButton otherDeleteButton = new JButton("删除");
         otherDeleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (newNoteId == 0) {
+                if (newNoteId == 0 && noteId == 0) {
                     MainFrame.alert("请先填写并保存笔录信息");
                     return;
                 }

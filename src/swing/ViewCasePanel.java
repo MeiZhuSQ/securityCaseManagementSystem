@@ -164,6 +164,8 @@ public class ViewCasePanel extends JPanel {
                 notePanel.setCaseId(caseId);
                 //重置noteId
                 notePanel.noteId = 0;
+                notePanel.policeTableModel.setList(0);
+                notePanel.otherPersonTableModel.setList(0);
                 //给两表格置空
                 //notePanel.askedPersonTableModel.setList(0);
                 //notePanel.otherPersonTableModel.setList(0);

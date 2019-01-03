@@ -72,6 +72,8 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                     Note note = new CaseService().selectNoteById(caseItemId);
                     NotePanel notePanel = NotePanel.getInstance();
                     notePanel.noteId = note.getId();
+                    notePanel.policeTableModel.setList(note.getId());
+                    notePanel.otherPersonTableModel.setList(note.getId());
                     //编辑时，传入caseId
                     notePanel.setCaseId(note.getCaseId());
                     notePanel.getNoteNameField().setText(note.getName());
