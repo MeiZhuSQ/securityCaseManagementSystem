@@ -26,10 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.JTableHeader;
-
 import com.eltima.components.ui.DatePicker;
-
 import constant.CommonConstant;
 import dto.ResultDTO;
 import entity.AskedPerson;
@@ -48,7 +45,10 @@ public class NotePanel extends JPanel {
     private JTextArea remarkTextArea;
     private int caseId;
     //public final MulitCombobox mulit;
-    public static int noteId;
+    //上页面传入的笔录ID
+    public int noteId;
+    //新增生成的笔录ID 未保存默认为0
+    public int newNoteId = 0;
     private int procedureId;
     public JLabel fileNameField;
     public NoteAskedTypeListener askedTypeListener;
@@ -216,6 +216,8 @@ public class NotePanel extends JPanel {
                 if (noteId == 0) {
                     // 新增笔录信息
                     resultDTO = caseService.addNote(caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, 0);
+                    //获取新增的笔录ID
+                    newNoteId = Integer.parseInt(resultDTO.getData().toString());
                 } else {
                     Note note = new Note(noteId, caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, 0);
                     resultDTO = caseService.updateNote(note);
@@ -258,28 +260,40 @@ public class NotePanel extends JPanel {
         policeTableModel.setList(noteId);
         policeTable = new JTable(policeTableModel);
         policeTable.setRowHeight(30);
-        policeTable.setRowHeight(30);
-        JTableHeader head = policeTable.getTableHeader();
-        head.setPreferredSize(new Dimension(head.getWidth(), 30));
+        /*JTableHeader head = policeTable.getTableHeader();
+        head.setPreferredSize(new Dimension(head.getWidth(), 30));*/
         policePanel.setViewportView(policeTable);
         
         askedTypeListener = new NoteAskedTypeListener();
 
-        JButton askedAddButton = new JButton("新增");
-        askedAddButton.addActionListener(new ActionListener() {
+        JButton policeAddButton = new JButton("新增");
+        policeAddButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (newNoteId == 0) {
+                    MainFrame.alert("请先填写并保存笔录信息");
+                    return;
+                }
                 PoliceDialog policeDialog = PoliceDialog.getInstance();
+                policeDialog.setTitle("新增民警");
                 policeDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(policeDialog);
                 policeDialog.setVisible(true);
             }
         });
-        askedAddButton.setBounds(672, 166, 113, 27);
-        add(askedAddButton);
+        policeAddButton.setBounds(672, 166, 113, 27);
+        add(policeAddButton);
         
-        JButton askedEditButton = new JButton("编辑");
-        askedEditButton.addActionListener(new ActionListener() {
+        JButton policeEditButton = new JButton("编辑");
+        policeEditButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (newNoteId == 0) {
+                    MainFrame.alert("请先填写并保存笔录信息");
+                    return;
+                }
+                if (policeTable.getSelectedRow() < 0) {
+                    MainFrame.alert("请选择一行！");
+                    return;
+                }
                 PoliceDialog policeDialog = PoliceDialog.getInstance();
                 policeDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(policeDialog);
@@ -288,7 +302,7 @@ public class NotePanel extends JPanel {
                 policeDialog.policeNameField.setText(policeTableModel.getValueAt(i, 1) + "");
                 String sex = policeTableModel.getValueAt(i, 2) + "";
                 policeDialog.policeSexField.setSelectedIndex(sex.equals("男") ? 0 : 1);
-                policeDialog.policeCodeField.setText(policeTableModel.getValueAt(i, 3) + "");
+                //policeDialog.policeCodeField.setText(policeTableModel.getValueAt(i, 3) + "");
                 policeDialog.setVisible(true);
                 /*AskedPersonDialog askedPersonDialog = AskedPersonDialog.getInstance();
                 askedPersonDialog.setSize(new Dimension(500, 400));
@@ -327,12 +341,20 @@ public class NotePanel extends JPanel {
                 askedPersonDialog.setVisible(true);*/
             }
         });
-        askedEditButton.setBounds(796, 166, 113, 27);
-        add(askedEditButton);
+        policeEditButton.setBounds(796, 166, 113, 27);
+        add(policeEditButton);
         
         JButton askedDeleteButton = new JButton("删除");
         askedDeleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (newNoteId == 0) {
+                    MainFrame.alert("请先填写并保存笔录信息");
+                    return;
+                }
+                if (policeTable.getSelectedRow() < 0) {
+                    MainFrame.alert("请选择一行！");
+                    return;
+                }
                 if (MainFrame.prompt("确定删除该民警信息吗？")){
                     int i = policeTable.getSelectedRow();
                     int policeId = Integer.parseInt(policeTableModel.getValueAt(i, 0) + "");
@@ -364,7 +386,7 @@ public class NotePanel extends JPanel {
         otherPersonTableModel.setList(noteId);
         otherPersonTable = new JTable(otherPersonTableModel);
         otherPersonTable.setRowHeight(30);
-        head.setPreferredSize(new Dimension(otherPersonTable.getTableHeader().getWidth(), 30));
+        //head.setPreferredSize(new Dimension(otherPersonTable.getTableHeader().getWidth(), 30));
         
         /*TableColumn column = otherPersonTable.getColumnModel().getColumn(2);
         column.setCellEditor(new ComboBoxEditor(values));*/
@@ -374,7 +396,12 @@ public class NotePanel extends JPanel {
         JButton otherAddButton = new JButton("新增");
         otherAddButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (newNoteId == 0) {
+                    MainFrame.alert("请先填写并保存笔录信息");
+                    return;
+                }
                 OtherPersonDialog otherPersonDialog = OtherPersonDialog.getInstance();
+                otherPersonDialog.setTitle("新增其他人");
                 otherPersonDialog.nameField.setText("");
                 otherPersonDialog.sexComboBox.setSelectedIndex(0);
                 otherPersonDialog.idCardField.setText("");
@@ -390,6 +417,10 @@ public class NotePanel extends JPanel {
         JButton otherEditButton = new JButton("编辑");
         otherEditButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (newNoteId == 0) {
+                    MainFrame.alert("请先填写并保存笔录信息");
+                    return;
+                }
                 OtherPersonDialog otherPersonDialog = OtherPersonDialog.getInstance();
                 otherPersonDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(otherPersonDialog);
@@ -417,6 +448,10 @@ public class NotePanel extends JPanel {
         JButton otherDeleteButton = new JButton("删除");
         otherDeleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (newNoteId == 0) {
+                    MainFrame.alert("请先填写并保存笔录信息");
+                    return;
+                }
                 if (MainFrame.prompt("确定删除该其他类型人员吗？")){
                     int i = otherPersonTable.getSelectedRow();
                     int otherId = Integer.parseInt(otherPersonTableModel.getValueAt(i, 0) + "");
@@ -546,7 +581,7 @@ public class NotePanel extends JPanel {
                 String selectedAbled = askedAbleTypeGroup.getSelection().getActionCommand();
                 //新增
                 if (noteId == 0) {
-                    resultDTO = caseService.addAskedPerson(NotePanel.noteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
+                    resultDTO = caseService.addAskedPerson(noteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
                 } else {
                     //更新
                     Note note = caseService.selectNoteById(noteId);

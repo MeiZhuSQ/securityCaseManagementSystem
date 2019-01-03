@@ -84,9 +84,9 @@ public class MainFrame extends BaseFrame {
     
     private static MainFrame instance;
     private JTextField searchCaseNameField;
-    public DatePicker searchCaseTimeField;
+    //public DatePicker searchCaseTimeField;
     //private JTextField searchCaseTimeField;
-    private JTextField searchCaseRemarkField;
+    //private JTextField searchCaseRemarkField;
     
     static {
         GUIUtil.useLNF();
@@ -150,12 +150,12 @@ public class MainFrame extends BaseFrame {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String caseName = searchCaseNameField.getText();
+                //String caseName = searchCaseNameField.getText();
                 /*String caseTime = searchCaseTimeField.getText();
                 String caseRemark = searchCaseRemarkField.getText();*/
                 //查询案件
-                List<LegalCase> listCaseByKeyWord = new CaseService().listCaseByKeyWord(caseName);
-                getInstance().updateCaseTable();
+                //List<LegalCase> listCaseByKeyWord = new CaseService().listCaseByKeyWord(caseName);
+                updateCaseTable();
             }
         });
         searchPanel.add(searchButton);
@@ -163,6 +163,7 @@ public class MainFrame extends BaseFrame {
         leftPanel.add(caseScrollPane);
         splitPane.setLeftComponent(leftPanel);
         caseTableModel = new CaseTableModel();
+        caseTableModel.setList("");
         caseTable = new JTable(caseTableModel);
         caseTable.setRowHeight(30);
         JTableHeader head = caseTable.getTableHeader();
@@ -348,7 +349,7 @@ public class MainFrame extends BaseFrame {
 						f.setUndecorated(true);
 			        	JButton j = new JButton();
 			        	j.setSize(new Dimension(100, 100));
-			        	j.setText("8888888");
+			        	j.setText("");
 			        	f.getContentPane().add(j, BorderLayout.CENTER);
 			        	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 						Rectangle bounds = new Rectangle(screenSize);
@@ -436,5 +437,9 @@ public class MainFrame extends BaseFrame {
         caseTableModel.setList(caseName);
         //或 policeTableModel.fireTableDataChanged();
         caseTable.updateUI();
+        //刷新Table，重新设置高度 20190103
+        caseTable.setRowHeight(30);
+        JTableHeader head = caseTable.getTableHeader();
+        head.setPreferredSize(new Dimension(head.getWidth(), 30));
     }
 }

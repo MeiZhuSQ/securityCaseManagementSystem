@@ -164,7 +164,7 @@ public class AskedPersonDialog extends JDialog {
                 String selectedOtherType = otherTypeListener.selectedOtherType;*/
                 //新增
                 if (askedPersonId == 0) {
-                    resultDTO = caseService.addAskedPerson(NotePanel.noteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
+                    resultDTO = caseService.addAskedPerson(NotePanel.getInstance().noteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
                 } else {
                     //更新
                     AskedPerson askedPerson = caseService.selectAskedPersonById(askedPersonId);

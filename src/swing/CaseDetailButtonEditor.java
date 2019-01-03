@@ -70,14 +70,17 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                 //选择的是笔录
                 if ("笔录".equals(caseItemType)) {
                     Note note = new CaseService().selectNoteById(caseItemId);
-                    ViewCasePanel viewPanel = ViewCasePanel.getInstance();
+                    NotePanel notePanel = NotePanel.getInstance();
+                    notePanel.noteId = note.getId();
                     //编辑时，传入caseId
-                    viewPanel.setCaseId(note.getCaseId());
-                    viewPanel.caseNameField.setText(note.getName());
-                    viewPanel.caseTimeField.setText(note.getStartTime());
-                    viewPanel.caseRemarkField.setText(note.getRemark());
-                    MainFrame.tabbedPane.addTab("编辑笔录", viewPanel, null);
-                    MainFrame.tabbedPane.setSelectedComponent(viewPanel);
+                    notePanel.setCaseId(note.getCaseId());
+                    notePanel.getNoteNameField().setText(note.getName());
+                    notePanel.getNoteNameField().setText("");;
+                    notePanel.getPlaceField().setText("");
+                    notePanel.fileNameField.setText("");
+                    notePanel.getRemarkTextArea().setText("");
+                    MainFrame.tabbedPane.addTab("编辑笔录", notePanel, null);
+                    MainFrame.tabbedPane.setSelectedComponent(notePanel);
                     //选择的是手续
                 } else if ("法律手续".equals(caseItemType)) {
                     Procedure procedure = new CaseService().selectProceduresById(caseItemId);

@@ -163,7 +163,7 @@ public class ViewCasePanel extends JPanel {
                 NotePanel notePanel = NotePanel.getInstance();
                 notePanel.setCaseId(caseId);
                 //重置noteId
-                NotePanel.noteId = 0;
+                notePanel.noteId = 0;
                 //给两表格置空
                 //notePanel.askedPersonTableModel.setList(0);
                 //notePanel.otherPersonTableModel.setList(0);
@@ -171,7 +171,7 @@ public class ViewCasePanel extends JPanel {
                 notePanel.getPlaceField().setText("");
                 notePanel.fileNameField.setText("");
                 notePanel.getRemarkTextArea().setText("");
-                List<String> policeList = new ArrayList<>();
+                //List<String> policeList = new ArrayList<>();
                 //Object[] defaultValue = new Object[] {};
                 /*CaseService caseService = new CaseService();
                 List<Police> polices = caseService.listPolice();

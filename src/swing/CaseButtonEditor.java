@@ -68,9 +68,9 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
             public void actionPerformed(ActionEvent e) {
                 int i = MainFrame.getInstance().caseTable.getSelectedRow();
                 int caseId = Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0).toString());
-                String caseName = MainFrame.getInstance().caseTableModel.getValueAt(i, 1).toString();
-                String caseTime = MainFrame.getInstance().caseTableModel.getValueAt(i, 2).toString();
-                String caseRemark = MainFrame.getInstance().caseTableModel.getValueAt(i, 3).toString();
+                String caseName = MainFrame.getInstance().caseTableModel.getValueAt(i, 2).toString();
+                String caseTime = MainFrame.getInstance().caseTableModel.getValueAt(i, 3).toString();
+                String caseRemark = MainFrame.getInstance().caseTableModel.getValueAt(i, 4).toString();
                 ViewCasePanel viewPanel = ViewCasePanel.getInstance();
                 viewPanel.setCaseId(caseId);
                 viewPanel.caseNameField.setText(caseName);
