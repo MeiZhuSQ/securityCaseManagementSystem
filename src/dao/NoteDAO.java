@@ -16,7 +16,7 @@ public class NoteDAO {
 		ResultSet rs = null;
 		PreparedStatement sta = null;
 		Connection con = null;
-		String sql = "insert into note (`case_id`,`name`,`start_time`,`end_time`,remark,place,file_name,asked_person_idcard) values (?,?,?,?,?,?,?,?)";
+		String sql = "insert into note (`case_id`,`name`,`start_time`,`end_time`,remark,place,file_name,asked_person_id) values (?,?,?,?,?,?,?,?)";
 		try {
 			con = JDBCUtil.getConnection();
 			PreparedStatement ps = con.prepareStatement(sql);
@@ -126,7 +126,7 @@ public class NoteDAO {
 			while (rs.next()) {
 				Note conflictingNote = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
 						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
-						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_idcard"));
+						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_id"));
 				notes.add(conflictingNote);
 			}
 		} catch (SQLException e) {
@@ -153,7 +153,7 @@ public class NoteDAO {
 			while (rs.next()) {
 				Note conflictingNote = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
 						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
-						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_idcard"));
+						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_id"));
 				notes.add(conflictingNote);
 			}
 		} catch (SQLException e) {
@@ -181,7 +181,7 @@ public class NoteDAO {
 			while (rs.next()) {
 				Note conflictingNote = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
 						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
-						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_idcard"));
+						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_id"));
 				notes.add(conflictingNote);
 			}
 		} catch (SQLException e) {
