@@ -92,12 +92,8 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
                 int i = MainFrame.getInstance().caseTable.getSelectedRow();
                 caseDialog.setCaseId(Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + ""));
                 caseDialog.caseNameField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 2) + "");
-                try {
-                    caseDialog.datePickerField = DateUtil.setDatePicker(MainFrame.getInstance().caseTableModel.getValueAt(i, 3) + "");
-                    caseDialog.datePickerField.updateUI();
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
+                //caseDialog.datePickerField = DateUtil.setDatePicker(MainFrame.getInstance().caseTableModel.getValueAt(i, 3) + "");
+                caseDialog.datePickerField.updateUI();
                 caseDialog.remarkField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 4) + "");
                 //注意：必须放在最后，否则无效
                 caseDialog.setVisible(true);

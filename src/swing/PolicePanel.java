@@ -125,6 +125,12 @@ public class PolicePanel extends JPanel {
      */
 
     public void updateTable() {
+        //区分新增和修改
+        if (NotePanel.getInstance().newNoteId == 0 && NotePanel.getInstance().noteId == 0) {
+            policeTableModel.setList(NotePanel.getInstance().newNoteId);
+        } else {
+            policeTableModel.setList(NotePanel.getInstance().noteId);
+        }
         //policeTableModel.list = new CaseService().listPolice();
         //或 policeTableModel.fireTableDataChanged();
         policeTable.updateUI();

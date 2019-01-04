@@ -105,7 +105,7 @@ public class OtherPersonDialog extends JDialog {
                 String selectedOtherType = otherTypeGroup.getSelection().getActionCommand();;
                 //新增
                 if (otherPersonId == 0) {
-                    resultDTO = caseService.addOtherPerson(NotePanel.getInstance().noteId, otherName, String.valueOf(otherSex), idCard, selectedOtherType);
+                    resultDTO = caseService.addOtherPerson(NotePanel.getInstance().newNoteId, otherName, String.valueOf(otherSex), idCard, selectedOtherType);
                 } else {
                     //更新
                     OtherPerson otherPerson = caseService.selectOtherPersonById(otherPersonId);

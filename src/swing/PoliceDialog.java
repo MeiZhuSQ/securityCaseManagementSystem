@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import constant.CommonConstant;
 import dto.ResultDTO;
+import entity.Police;
 import service.CaseService;
 
 public class PoliceDialog extends JDialog{
@@ -69,14 +70,13 @@ public class PoliceDialog extends JDialog{
                 ResultDTO resultDTO = new ResultDTO();
                 //新增
                 if (policeId == 0) {
-                    resultDTO = caseService.addPolice(policeNameField.getText(), String.valueOf(policeSexField.getSelectedIndex()), NotePanel.getInstance().noteId);
+                    resultDTO = caseService.addPolice(policeNameField.getText(), String.valueOf(policeSexField.getSelectedIndex()), NotePanel.getInstance().newNoteId);
                 } else {
                     //更新
-                    /*Police police = caseService.selectPoliceById(policeId);
+                    Police police = caseService.selectPoliceById(policeId);
                     police.setName(policeNameField.getText());
                     police.setSex(String.valueOf(policeSexField.getSelectedIndex()));
-                    police.setPoliceNumber(policeCodeField.getText());
-                    resultDTO = caseService.updatePolice(police);*/
+                    resultDTO = caseService.updatePolice(police, NotePanel.getInstance().noteId);
                 }
                 if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                     MainFrame.alert(resultDTO.getMessage());
