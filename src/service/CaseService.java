@@ -312,8 +312,14 @@ public class CaseService extends BaseService {
 		if (note != null) {
 			return requestFail("笔录名称重复");
 		}
-
+		
 		note = new Note(caseId, name, startTime, endTime, remark, place, fileName, askedPersonId);
+		
+		// 校验笔录
+		ResultDTO result = checkNote(note, true);
+		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+			return result;
+		}
 
 		try {
 			// 返回主键
@@ -324,6 +330,26 @@ public class CaseService extends BaseService {
 		}
 		return requestFail();
 	}
+	
+	/**
+	 * 校验笔录
+	 * @param note
+	 * @param addFlag
+	 * @return
+	 */
+	private ResultDTO checkNote(Note note, boolean addFlag) {
+		List<Note> notes = noteDAO.selectConflictingNotes(note);
+		if (addFlag) {
+			if (notes.size() > 0) {
+				return requestFail("警员、时间、地点与同一案件下其他笔录冲突", notes);
+			}
+		} else {
+			if (notes.size() > 1) {
+				return requestFail("警员、时间、地点与同一案件下其他笔录冲突", notes);
+			}
+		}
+		return requestSuccess();
+	}
 
 	/**
 	 * 更新笔录
@@ -332,6 +358,13 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public ResultDTO updateNote(Note note) {
+		
+		// 校验笔录
+		ResultDTO result = checkNote(note, false);
+		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+			return result;
+		}
+		
 		// 校验被询问人
 		ResultDTO result = checkAskedPerson(note, false);
 		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
@@ -339,22 +372,22 @@ public class CaseService extends BaseService {
 		}
 
 		// 校验警员
-		List<Police> polices = policeDAO.listByNoteId(note.getId());
-		for (Police police : polices) {
-			result = checkPolic(note, police.getName(), false);
-			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-				return result;
-			}
-		}
+//		List<Police> polices = policeDAO.listByNoteId(note.getId());
+//		for (Police police : polices) {
+//			result = checkPolic(note, police.getName(), false);
+//			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+//				return result;
+//			}
+//		}
 
 		// 校验其他工作人员
-		List<OtherPerson> otherPersons = otherPersonDAO.selectByNoteId(note.getId());
-		for (OtherPerson otherPerson : otherPersons) {
-			result = checkOtherPerson(note, otherPerson.getIdCard(), false);
-			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-				return result;
-			}
-		}
+//		List<OtherPerson> otherPersons = otherPersonDAO.selectByNoteId(note.getId());
+//		for (OtherPerson otherPerson : otherPersons) {
+//			result = checkOtherPerson(note, otherPerson.getIdCard(), false);
+//			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+//				return result;
+//			}
+//		}
 
 		// 更新笔录
 		if (1 == noteDAO.update(note)) {
@@ -563,7 +596,7 @@ public class CaseService extends BaseService {
 		try {
 
 			Note note = noteDAO.selectById(noteId);
-			ResultDTO result = checkPolic(note, police.getName(), true);
+			ResultDTO result = checkPolic(note, name, true);
 			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 				return result;
 			}

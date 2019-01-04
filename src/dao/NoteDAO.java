@@ -161,6 +161,32 @@ public class NoteDAO {
 		}
 		return notes;
 	}
+	
+	public List<Note> selectConflictingNotes(Note note) {
+		int caseId = note.getCaseId();
+		String startTime = note.getStartTime();
+		String endTime = note.getEndTime();
+		String place = note.getPlace();
+		String sql = "select * from note  "
+				+ "WHERE start_time < ? and  end_time > ? and  place = ?  and case_id = ?";
+		List<Note> notes = new ArrayList<>();
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setString(1, endTime);
+			ps.setString(2, startTime);
+			ps.setString(3, place);
+			ps.setInt(4, caseId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Note conflictingNote = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
+						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
+						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_id"));
+				notes.add(conflictingNote);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return notes;
+	}
 
 	public List<Note> selectConflictingNotesForAskedPerson(Note note) {
 		int caseId = note.getCaseId();
