@@ -562,13 +562,10 @@ public class CaseService extends BaseService {
 		}
 		try {
 
-			List<Police> polices = policeDAO.listByNoteId(noteId);
 			Note note = noteDAO.selectById(noteId);
-			for (Police police : polices) {
-				ResultDTO result = checkPolic(note, police.getName(), true);
-				if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-					return result;
-				}
+			ResultDTO result = checkPolic(note, police.getName(), true);
+			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+				return result;
 			}
 
 			policeDAO.add(new Police(name, sex, noteId));
