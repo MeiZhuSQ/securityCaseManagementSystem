@@ -225,6 +225,23 @@ public class NoteDAO {
 		return note;
 	}
 
+	public Note selectByName(String name) {
+		String sql = "select * from note where name = ? order by start_time desc limit 1";
+		Note note = null;
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setString(1, name);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				note = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
+						rs.getString("start_time"), rs.getString("end_time"), rs.getString("remark"),
+						rs.getString("place"), rs.getString("file_name"), rs.getInt("asked_person_id"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return note;
+	}
+
 	public static void main(String[] args) {
 		NoteDAO noteDAO = new NoteDAO();
 		List<Note> notes = noteDAO.selectByCaseId(1);

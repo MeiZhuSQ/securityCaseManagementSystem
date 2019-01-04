@@ -307,8 +307,13 @@ public class CaseService extends BaseService {
 		if (StringUtils.isBlank(fileName)) {
 			return requestFail("对应文件名不能为空");
 		}
+		
+		Note note = noteDAO.selectByName(name);
+		if (note != null) {
+			return requestFail("笔录名称重复");
+		}
 
-		Note note = new Note(caseId, name, startTime, endTime, remark, place, fileName, askedPersonId);
+		note = new Note(caseId, name, startTime, endTime, remark, place, fileName, askedPersonId);
 
 		try {
 			// 返回主键
@@ -557,13 +562,10 @@ public class CaseService extends BaseService {
 		}
 		try {
 
-			List<Police> polices = policeDAO.listByNoteId(noteId);
 			Note note = noteDAO.selectById(noteId);
-			for (Police police : polices) {
-				ResultDTO result = checkPolic(note, police.getName(), true);
-				if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-					return result;
-				}
+			ResultDTO result = checkPolic(note, police.getName(), true);
+			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+				return result;
 			}
 
 			policeDAO.add(new Police(name, sex, noteId));
