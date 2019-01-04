@@ -72,10 +72,6 @@ public class CaseService extends BaseService {
 			return result;
 		}
 		try {
-			LegalCase legalCase = caseDAO.selectByName(name);
-			if (null != legalCase) {
-				return requestFail("已存在同名案件");
-			}
 			caseDAO.add(new LegalCase(name, time, remark));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -365,8 +361,10 @@ public class CaseService extends BaseService {
 			return result;
 		}
 		
+		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId()).get(0);
+		
 		// 校验被询问人
-		result = checkAskedPerson(note, false);
+		result = checkAskedPerson(askedPerson, note, false);
 		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 			return result;
 		}
@@ -456,8 +454,7 @@ public class CaseService extends BaseService {
 	 *            true:添加;false:更新
 	 * @return
 	 */
-	private ResultDTO checkAskedPerson(Note note, boolean addFlag) {
-		AskedPerson askedPerson = askedPersonDAO.selectById(note.getAskedPersonId());
+	private ResultDTO checkAskedPerson(AskedPerson askedPerson, Note note, boolean addFlag) {
 		List<OtherPerson> otherPersons = selectOtherPersonByNoteId(note.getId());
 		List<Police> polices = selectPoliceForNote(note.getId());
 
@@ -660,7 +657,10 @@ public class CaseService extends BaseService {
 	 */
 	public ResultDTO delPolice(int id) {
 		Police police = selectPoliceById(id);
-		ResultDTO resultDTO = checkAskedPerson(noteDAO.selectById(police.getNoteId()), false);
+		Note note = noteDAO.selectById(police.getNoteId());
+		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId()).get(0);
+				
+		ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(police.getNoteId()), false);
 		if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
 			return requestFail();
 		}
@@ -760,7 +760,9 @@ public class CaseService extends BaseService {
 	public ResultDTO delOtherPerson(int id) {
 		
 		OtherPerson otherPerson = otherPersonDAO.selectById(id);
-		ResultDTO resultDTO = checkAskedPerson(noteDAO.selectById(otherPerson.getNoteId()), false);
+		Note note = noteDAO.selectById(otherPerson.getNoteId());
+		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId()).get(0);
+		ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(otherPerson.getNoteId()), false);
 		if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
 			return requestFail();
 		}
@@ -815,14 +817,16 @@ public class CaseService extends BaseService {
 		
 		Note note = noteDAO.selectById(noteId);
 		
+		AskedPerson askedPerson = new AskedPerson(noteId, name, sex, type, adultFlag, idCard, disabledFlag);
+		
 		// 校验被询问人
-		ResultDTO result = checkAskedPerson(note, true);
+		ResultDTO result = checkAskedPerson(askedPerson, note, true);
 		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 			return result;
 		}
 		
 		try {
-			askedPersonDAO.add(new AskedPerson(noteId, name, sex, type, adultFlag, idCard, disabledFlag));
+			askedPersonDAO.add(askedPerson);
 			return requestSuccess();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -990,27 +994,14 @@ public class CaseService extends BaseService {
 
 	public static void main(String[] args) {
 		CaseService caseService = new CaseService();
-		// ResultDTO resultDTO2 = caseService.addNote(1, "笔录1",
-		// "2018-10-10 17:00:00", "2018-10-10 18:00:00", "备注", "办公室",
-		// "案件1.doc", "123456,234567");
-		// System.out.println(resultDTO2);
-		// ResultDTO resultDTO3 = caseService.addNote(1, "笔录2",
-		// "2018-10-10 17:00:00", "2018-10-10 18:00:00", "备注",
-		// "办公室1", "案件2.doc", "123457,234568");
-		// System.out.println(resultDTO3);
-		// ResultDTO resultDTO4 = caseService.addProcedure(1, "法律手续1",
-		// DateUtil.getTime(), "备注1");
-		// System.out.println(resultDTO4);
-		// ResultDTO resultDTO5 = caseService.delCase(1);
-		// System.out.println(resultDTO5);
-		// ResultDTO resultDTO6 = caseService.addAskedPerson(1, "被询问人1", "0",
-		// CommonConstant.ASKED_PERSON_TYPE_1, "0",
-		// "123456789012345", "1");
-		// System.out.println(resultDTO6);
-		List<CaseItemVO> caseItemVOs = caseService.getCaseItems(1);
-		for (CaseItemVO caseItemVO : caseItemVOs) {
-			System.out.println(caseItemVO.getName());
-		}
+		ResultDTO resultDTO = new ResultDTO();
+		resultDTO = caseService.addCase("案件2", "2019-01-01 00:00:00", "备注2");
+		resultDTO = caseService.addClock("闹钟1", "2019-01-01 00:00:00", "备注1");
+		resultDTO = caseService.addClock("闹钟1", "2019-01-01 00:00:00", "备注1", 1);
+		resultDTO = caseService.addProcedure(1, "法律手续1", "2019-01-01 00:00:00", "备注1");
+		resultDTO = caseService.addProcedure(1, "法律手续1", "2019-01-01 00:00:00", "备注1");
+		System.out.println(resultDTO);
+		
 	}
 
 }
