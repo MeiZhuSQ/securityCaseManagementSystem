@@ -366,7 +366,7 @@ public class CaseService extends BaseService {
 		}
 		
 		// 校验被询问人
-		ResultDTO result = checkAskedPerson(note, false);
+		result = checkAskedPerson(note, false);
 		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 			return result;
 		}
