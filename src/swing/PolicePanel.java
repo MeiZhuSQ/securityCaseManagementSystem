@@ -84,7 +84,7 @@ public class PolicePanel extends JPanel {
                     }
                     MainFrame.alert("删除成功");
                 }
-                instance.updateTable();
+                instance.updatePoliceTable();
             }
         });
         btnNewButton_2.setBounds(380, 348, 113, 27);
@@ -124,9 +124,15 @@ public class PolicePanel extends JPanel {
      * }
      */
 
-    public void updateTable() {
+    public void updatePoliceTable() {
+        //区分新增和修改
+        if (NotePanel.getInstance().noteId == 0) {
+            policeTableModel.setList(NotePanel.getInstance().newNoteId);
+        } else {
+            policeTableModel.setList(NotePanel.getInstance().noteId);
+        }
         //policeTableModel.list = new CaseService().listPolice();
-        //或 policeTableModel.fireTableDataChanged();
+        //policeTableModel.fireTableDataChanged();
         policeTable.updateUI();
     }
 

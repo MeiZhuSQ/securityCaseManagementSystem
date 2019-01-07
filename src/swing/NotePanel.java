@@ -9,10 +9,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -39,8 +41,8 @@ public class NotePanel extends JPanel {
 
     private static final long serialVersionUID = 5820832059732422488L;
     private JTextField noteNameField;
-    private DatePicker startTime;
-    private DatePicker endTime;
+    public DatePicker startTime;
+    public DatePicker endTime;
     private JTextField placeField;
     private JTextArea remarkTextArea;
     private int caseId;
@@ -51,6 +53,8 @@ public class NotePanel extends JPanel {
     public int newNoteId = 0;
     private int procedureId;
     public JLabel fileNameField;
+    //选择的关联文件
+    public File f;
     public NoteAskedTypeListener askedTypeListener;
     private JTable askedPersonTable;
     private JTable otherPersonTable;
@@ -183,10 +187,10 @@ public class NotePanel extends JPanel {
                 if (state == 1) {
                     return;// 撤销则返回
                 } else {
-                    File f = jfc.getSelectedFile();// f为选择到的文件
+                    f = jfc.getSelectedFile();// f为选择到的文件
                     fileNameField.setText(f.getAbsolutePath());
-                    fileNameField.setText("<html><a href='"+f.getAbsolutePath()+"'>"+f.getAbsolutePath()+"</a></html>");
-                    fileNameField.addMouseListener(new MouseAdapter() {
+                    //fileNameField.setText("<html><a href='"+f.getAbsolutePath()+"'>"+f.getAbsolutePath()+"</a></html>");
+                    /*fileNameField.addMouseListener(new MouseAdapter() {
 
                         public void mouseClicked(MouseEvent e) {
                             try {
@@ -196,7 +200,18 @@ public class NotePanel extends JPanel {
                                 ex.printStackTrace();
                             }
                         }
-                    });
+                    });*/
+                }
+            }
+        });
+        
+        fileNameField.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    Runtime runtime = Runtime.getRuntime();  
+                    runtime.exec("rundll32 url.dll FileProtocolHandler "+f.getAbsolutePath());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             }
         });
@@ -262,8 +277,8 @@ public class NotePanel extends JPanel {
         policeTable.setRowHeight(30);
         /*JTableHeader head = policeTable.getTableHeader();
         head.setPreferredSize(new Dimension(head.getWidth(), 30));*/
+        GUIUtil.hideColumn(policeTable, 0);
         policePanel.setViewportView(policeTable);
-        
         askedTypeListener = new NoteAskedTypeListener();
 
         JButton policeAddButton = new JButton("新增");
@@ -387,7 +402,7 @@ public class NotePanel extends JPanel {
         otherPersonTable = new JTable(otherPersonTableModel);
         otherPersonTable.setRowHeight(30);
         //head.setPreferredSize(new Dimension(otherPersonTable.getTableHeader().getWidth(), 30));
-        
+        GUIUtil.hideColumn(otherPersonTable, 0);
         /*TableColumn column = otherPersonTable.getColumnModel().getColumn(2);
         column.setCellEditor(new ComboBoxEditor(values));*/
         
@@ -493,6 +508,7 @@ public class NotePanel extends JPanel {
         askedPanel.add(label_1);
         
         JComboBox<String> sexComboBox = new JComboBox<String>();
+        sexComboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"男", "女"}));
         sexComboBox.setBounds(366, 25, 77, 21);
         askedPanel.add(sexComboBox);
         
@@ -581,18 +597,24 @@ public class NotePanel extends JPanel {
                 String selectedAbled = askedAbleTypeGroup.getSelection().getActionCommand();
                 //新增
                 if (noteId == 0) {
-                    resultDTO = caseService.addAskedPerson(noteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
+                    resultDTO = caseService.addAskedPerson(newNoteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
                 } else {
                     //更新
-                    Note note = caseService.selectNoteById(noteId);
-                    AskedPerson askedPerson = caseService.selectAskedPersonById(note.getAskedPersonId());
-                    askedPerson.setName(askedName);
-                    askedPerson.setSex(String.valueOf(askedSex));
-                    askedPerson.setIdCard(idCard);
-                    askedPerson.setType(selectedAskedType);
-                    askedPerson.setAdultFlag(selectedAskedAudlt);
-                    askedPerson.setDisabledFlag(selectedAbled);
-                    resultDTO = caseService.updateAskedPerson(askedPerson);
+                    //Note note = caseService.selectNoteById(noteId);
+                    List<AskedPerson> askedPersons = caseService.selectAskedPersonByNoteId(noteId);
+                    //如果存在被询问人更新  反之添加（存在之前只保存笔录后就中断操作的情况）
+                    if (askedPersons != null && askedPersons.size() > 0) {
+                        AskedPerson askedPerson  = askedPersons.get(0);
+                        askedPerson.setName(askedName);
+                        askedPerson.setSex(String.valueOf(askedSex));
+                        askedPerson.setIdCard(idCard);
+                        askedPerson.setType(selectedAskedType);
+                        askedPerson.setAdultFlag(selectedAskedAudlt);
+                        askedPerson.setDisabledFlag(selectedAbled);
+                        resultDTO = caseService.updateAskedPerson(askedPerson);
+                    } else {
+                        resultDTO = caseService.addAskedPerson(noteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
+                    }
                 }
                 if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                     MainFrame.alert(resultDTO.getMessage());
@@ -630,22 +652,6 @@ public class NotePanel extends JPanel {
 
     public void setNoteNameField(JTextField noteNameField) {
         this.noteNameField = noteNameField;
-    }
-
-    public DatePicker getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(DatePicker startTime) {
-        this.startTime = startTime;
-    }
-
-    public DatePicker getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(DatePicker endTime) {
-        this.endTime = endTime;
     }
 
     public JTextField getPlaceField() {

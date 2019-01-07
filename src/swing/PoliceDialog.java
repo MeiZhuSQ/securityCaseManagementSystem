@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import constant.CommonConstant;
 import dto.ResultDTO;
+import entity.Police;
 import service.CaseService;
 
 public class PoliceDialog extends JDialog{
@@ -67,23 +68,30 @@ public class PoliceDialog extends JDialog{
             public void actionPerformed(ActionEvent e) {
                 CaseService caseService = new CaseService();
                 ResultDTO resultDTO = new ResultDTO();
-                //新增
-                if (policeId == 0) {
-                    resultDTO = caseService.addPolice(policeNameField.getText(), String.valueOf(policeSexField.getSelectedIndex()), NotePanel.getInstance().noteId);
+                NotePanel notePanel = NotePanel.getInstance();
+                int noteId;
+                if (notePanel.noteId == 0) {
+                    //新增笔录
+                    noteId = notePanel.newNoteId;
                 } else {
-                    //更新
-                    /*Police police = caseService.selectPoliceById(policeId);
+                    noteId = notePanel.noteId;
+                }
+                if (policeId == 0) {
+                    //新增民警
+                    resultDTO = caseService.addPolice(policeNameField.getText(), String.valueOf(policeSexField.getSelectedIndex()), noteId);
+                } else {
+                    //更新民警
+                    Police police = caseService.selectPoliceById(policeId);
                     police.setName(policeNameField.getText());
                     police.setSex(String.valueOf(policeSexField.getSelectedIndex()));
-                    police.setPoliceNumber(policeCodeField.getText());
-                    resultDTO = caseService.updatePolice(police);*/
+                    resultDTO = caseService.updatePolice(police, noteId);
                 }
                 if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                     MainFrame.alert(resultDTO.getMessage());
                     return;
                 }
                 MainFrame.alert("保存成功");
-                PolicePanel.getInstance().updateTable();
+                PolicePanel.getInstance().updatePoliceTable();
                 PoliceDialog.this.setVisible(false);
             }
         });

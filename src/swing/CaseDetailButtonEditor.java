@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,10 +78,11 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                     //编辑时，传入caseId
                     notePanel.setCaseId(note.getCaseId());
                     notePanel.getNoteNameField().setText(note.getName());
-                    notePanel.getNoteNameField().setText("");;
-                    notePanel.getPlaceField().setText("");
-                    notePanel.fileNameField.setText("");
-                    notePanel.getRemarkTextArea().setText("");
+                    notePanel.startTime = DateUtil.getDatePicker2(DateUtil.FORMAT_YYYYMMDD);
+                    notePanel.getPlaceField().setText(note.getPlace());
+                    notePanel.fileNameField.setText(note.getFileName());
+                    notePanel.f = new File(note.getFileName());
+                    notePanel.getRemarkTextArea().setText(note.getRemark());
                     MainFrame.tabbedPane.addTab("编辑笔录", notePanel, null);
                     MainFrame.tabbedPane.setSelectedComponent(notePanel);
                     //选择的是手续
