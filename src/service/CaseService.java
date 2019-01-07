@@ -435,7 +435,7 @@ public class CaseService extends BaseService {
 	 */
 	private ResultDTO checkPolic(Note note, String policeName, boolean addFlag) {
 		List<Note> notes = noteDAO.selectConflictingNotesForPolice(note, policeName);
-		if (addFlag) {
+		/*if (addFlag) {
 			if (notes.size() > 0) {
 				return requestFail("警员、时间、地点与同一案件下其他笔录冲突", notes);
 			}
@@ -443,7 +443,7 @@ public class CaseService extends BaseService {
 			if (notes.size() > 1) {
 				return requestFail("警员、时间、地点与同一案件下其他笔录冲突", notes);
 			}
-		}
+		}*/
 		return requestSuccess();
 	}
 

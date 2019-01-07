@@ -597,7 +597,7 @@ public class NotePanel extends JPanel {
                 String selectedAbled = askedAbleTypeGroup.getSelection().getActionCommand();
                 //新增
                 if (noteId == 0) {
-                    resultDTO = caseService.addAskedPerson(noteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
+                    resultDTO = caseService.addAskedPerson(newNoteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
                 } else {
                     //更新
                     //Note note = caseService.selectNoteById(noteId);
