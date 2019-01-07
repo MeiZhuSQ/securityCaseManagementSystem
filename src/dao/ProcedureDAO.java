@@ -120,7 +120,7 @@ public class ProcedureDAO {
 
 	public Procedure selectById(int id) {
 		String sql = "select * from procedure where id = ?";
-        Procedure Procedure = new Procedure();
+        Procedure Procedure = null;
         try (Connection c = JDBCUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -137,7 +137,7 @@ public class ProcedureDAO {
 
 	public Procedure selectByName(String name, int caseId) {
 		String sql = "select * from procedure where name = ? and case_id = ?";
-        Procedure Procedure = new Procedure();
+        Procedure Procedure = null;
         try (Connection c = JDBCUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, name);

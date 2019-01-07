@@ -35,7 +35,7 @@ public class ResultDTO {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "code:" + getCode() + ";message:" + getMessage() + ";data:" + data.toString();
+		return "code:" + getCode() + ";message:" + getMessage() + ";data:" + (data == null ? "" : data.toString());
 	}
 
 }

@@ -128,7 +128,7 @@ public class ClockDAO {
 
 	public Clock selectById(int id) {
 		String sql = "select * from clock where id = ?";
-		Clock clock = new Clock();
+		Clock clock = null;
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
