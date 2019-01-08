@@ -120,10 +120,28 @@ public class ProcedureDAO {
 
 	public Procedure selectById(int id) {
 		String sql = "select * from procedure where id = ?";
-        Procedure Procedure = new Procedure();
+        Procedure Procedure = null;
         try (Connection c = JDBCUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Procedure = new Procedure(rs.getInt("id"),rs.getInt("case_id"),rs.getString("name"),rs.getString("time"),
+                		rs.getString("remark"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Procedure;
+	}
+
+	public Procedure selectByName(String name, int caseId) {
+		String sql = "select * from procedure where name = ? and case_id = ?";
+        Procedure Procedure = null;
+        try (Connection c = JDBCUtil.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setInt(2, caseId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Procedure = new Procedure(rs.getInt("id"),rs.getInt("case_id"),rs.getString("name"),rs.getString("time"),

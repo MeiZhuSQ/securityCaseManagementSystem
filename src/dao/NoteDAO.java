@@ -113,7 +113,7 @@ public class NoteDAO {
 		String startTime = note.getStartTime();
 		String endTime = note.getEndTime();
 		String place = note.getPlace();
-		String sql = "select * from note LEFT JOIN other_person on other_person.note_id = note.id "
+		String sql = "select * from other_person LEFT JOIN note on other_person.note_id = note.id "
 				+ "WHERE start_time < ? and  end_time > ? and  (place = ? or other_person.id_card = ?) and case_id = ?";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -140,7 +140,7 @@ public class NoteDAO {
 		String startTime = note.getStartTime();
 		String endTime = note.getEndTime();
 		String place = note.getPlace();
-		String sql = "select * from note LEFT JOIN police on police.note_id = note.id "
+		String sql = "select * from  police LEFT JOIN note on police.note_id = note.id "
 				+ "WHERE start_time < ? and  end_time > ? and  (place = ? or police.name = ?) and case_id = ?";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -194,7 +194,7 @@ public class NoteDAO {
 		String startTime = note.getStartTime();
 		String endTime = note.getEndTime();
 		String place = note.getPlace();
-		String sql = "select * from note LEFT JOIN asked_person on note.asked_person_id = asked_person.id "
+		String sql = "select * from asked_person LEFT JOIN  note on note.asked_person_id = asked_person.id "
 				+ "WHERE start_time < ? and  end_time > ? and  (place = ? or asked_person.id_card = ?) and case_id = ?";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
