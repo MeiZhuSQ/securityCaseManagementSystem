@@ -617,13 +617,10 @@ public class CaseService extends BaseService {
 	 */
 	public ResultDTO updatePolice(Police police, int noteId) {
 
-		List<Police> polices = policeDAO.listByNoteId(noteId);
 		Note note = noteDAO.selectById(noteId);
-		for (Police oldPolice : polices) {
-			ResultDTO result = checkPolic(note, oldPolice.getName(), false);
-			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-				return result;
-			}
+		ResultDTO result = checkPolic(note, police.getName(), false);
+		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+			return result;
 		}
 
 		if (1 == policeDAO.update(police)) {
@@ -740,13 +737,10 @@ public class CaseService extends BaseService {
 	public ResultDTO updateOtherPerson(OtherPerson otherPerson) {
 
 		// 校验其他人员
-		List<OtherPerson> otherPersons = otherPersonDAO.selectByNoteId(otherPerson.getNoteId());
 		Note note = noteDAO.selectById(otherPerson.getNoteId());
-		for (OtherPerson oldOtherPerson : otherPersons) {
-			ResultDTO result = checkOtherPerson(note, oldOtherPerson.getIdCard(), false);
-			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-				return result;
-			}
+		ResultDTO result = checkOtherPerson(note, otherPerson.getIdCard(), false);
+		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+			return result;
 		}
 
 		otherPersonDAO.update(otherPerson);
