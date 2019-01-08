@@ -112,16 +112,14 @@ public class NoteDAO {
 		int caseId = note.getCaseId();
 		String startTime = note.getStartTime();
 		String endTime = note.getEndTime();
-		String place = note.getPlace();
 		String sql = "select * from other_person LEFT JOIN note on other_person.note_id = note.id "
-				+ "WHERE start_time < ? and  end_time > ? and  (place = ? or other_person.id_card = ?) and case_id = ?";
+				+ "WHERE start_time < ? and  end_time > ? and other_person.id_card = ? and case_id = ?";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, endTime);
 			ps.setString(2, startTime);
-			ps.setString(3, place);
-			ps.setString(4, otherPersonIdCard);
-			ps.setInt(5, caseId);
+			ps.setString(3, otherPersonIdCard);
+			ps.setInt(4, caseId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				Note conflictingNote = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
@@ -139,16 +137,14 @@ public class NoteDAO {
 		int caseId = note.getCaseId();
 		String startTime = note.getStartTime();
 		String endTime = note.getEndTime();
-		String place = note.getPlace();
 		String sql = "select * from  police LEFT JOIN note on police.note_id = note.id "
-				+ "WHERE start_time < ? and  end_time > ? and  (place = ? or police.name = ?) and case_id = ?";
+				+ "WHERE start_time < ? and  end_time > ? and  police.name = ? and case_id = ?";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, endTime);
 			ps.setString(2, startTime);
-			ps.setString(3, place);
-			ps.setString(4, policeName);
-			ps.setInt(5, caseId);
+			ps.setString(3, policeName);
+			ps.setInt(4, caseId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				Note conflictingNote = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),
@@ -193,16 +189,14 @@ public class NoteDAO {
 		int askedPersonId = note.getAskedPersonId();
 		String startTime = note.getStartTime();
 		String endTime = note.getEndTime();
-		String place = note.getPlace();
 		String sql = "select * from asked_person LEFT JOIN  note on note.asked_person_id = asked_person.id "
-				+ "WHERE start_time < ? and  end_time > ? and  (place = ? or asked_person.id_card = ?) and case_id = ?";
+				+ "WHERE start_time < ? and  end_time > ? and asked_person.id_card = ? and case_id = ?";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, endTime);
 			ps.setString(2, startTime);
-			ps.setString(3, place);
-			ps.setInt(4, askedPersonId);
-			ps.setInt(5, caseId);
+			ps.setInt(3, askedPersonId);
+			ps.setInt(4, caseId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				Note conflictingNote = new Note(rs.getInt("id"), rs.getInt("case_id"), rs.getString("name"),

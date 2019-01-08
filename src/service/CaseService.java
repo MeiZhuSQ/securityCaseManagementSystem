@@ -305,12 +305,8 @@ public class CaseService extends BaseService {
 			return requestFail("对应文件名不能为空");
 		}
 
-		Note note = noteDAO.selectByName(name);
-		if (note != null) {
-			return requestFail("笔录名称重复");
-		}
 
-		note = new Note(caseId, name, startTime, endTime, remark, place, fileName, askedPersonId);
+		Note note = new Note(caseId, name, startTime, endTime, remark, place, fileName, askedPersonId);
 
 		// 校验笔录
 		ResultDTO result = checkNote(note, true);
@@ -339,11 +335,11 @@ public class CaseService extends BaseService {
 		List<Note> notes = noteDAO.selectConflictingNotes(note);
 		if (addFlag) {
 			if (notes.size() > 0) {
-				return requestFail("警员、时间、地点与同一案件下其他笔录冲突", notes);
+				return requestFail("时间、地点与同一案件下其他笔录冲突", notes);
 			}
 		} else {
 			if (notes.size() > 1) {
-				return requestFail("警员、时间、地点与同一案件下其他笔录冲突", notes);
+				return requestFail("时间、地点与同一案件下其他笔录冲突", notes);
 			}
 		}
 		return requestSuccess();
@@ -998,21 +994,21 @@ public class CaseService extends BaseService {
 	public static void main(String[] args) {
 		CaseService caseService = new CaseService();
 		ResultDTO resultDTO = new ResultDTO();
-//		resultDTO = caseService.addCase("案件1", "2019-01-01 00:00:00", "备注1");
-//		System.out.println(resultDTO);
+		resultDTO = caseService.addCase("案件1", "2019-01-01 00:00:00", "备注1");
+		System.out.println(resultDTO);
 //		resultDTO = caseService.addClock("闹钟1", "2019-01-01 00:00:00", "备注1");
 //		System.out.println(resultDTO);
 //		resultDTO = caseService.addClock("闹钟2", "2019-01-01 00:00:00", "备注2", 1);
 //		System.out.println(resultDTO);
 //		resultDTO = caseService.addProcedure(1, "法律手续1", "2019-01-01 00:00:00", "备注1");
 //		System.out.println(resultDTO);
-//		resultDTO = caseService.addNote(1, "闹钟1", "2019-01-01 00:00:00", "2019-01-01 00:10:00", 
-//				"备注1", "地点1", "地点1", 0);
-//		System.out.println(resultDTO);
+		resultDTO = caseService.addNote(1, "笔录1", "2019-01-01 00:00:00", "2019-01-01 00:10:00", 
+				"备注1", "地点2", "文件1", 0);
+		System.out.println(resultDTO);
 //		resultDTO = caseService.addPolice("警员1", "1", 1);
 //		System.out.println(resultDTO);
-//		resultDTO = caseService.addOtherPerson(1, "其他1", "1", "110111198612101111", CommonConstant.OTHER_PERSON_TYPE_1);
-//		System.out.println(resultDTO);
+		resultDTO = caseService.addOtherPerson(2, "其他1", "1", "110111198612101112", CommonConstant.OTHER_PERSON_TYPE_1);
+		System.out.println(resultDTO);
 //		resultDTO = caseService.addAskedPerson(1, "被询问人1", "1", CommonConstant.ASKED_PERSON_TYPE_1, "0", "110111198612101111", "0");
 //		System.out.println(resultDTO);
 		
