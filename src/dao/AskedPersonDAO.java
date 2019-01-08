@@ -106,7 +106,7 @@ public class AskedPersonDAO {
 
 	public AskedPerson selectById(int id) {
 		String sql = "select * from asked_person where id = ?";
-		AskedPerson askedPerson = new AskedPerson();
+		AskedPerson askedPerson = null;
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();

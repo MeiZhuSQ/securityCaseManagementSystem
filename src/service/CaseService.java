@@ -72,10 +72,6 @@ public class CaseService extends BaseService {
 			return result;
 		}
 		try {
-			LegalCase legalCase = caseDAO.selectByName(name);
-			if (null != legalCase) {
-				return requestFail("已存在同名案件");
-			}
 			caseDAO.add(new LegalCase(name, time, remark));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -159,6 +155,7 @@ public class CaseService extends BaseService {
 	
 	/**
 	 * 通过关键字模糊查询案件
+	 * 
 	 * @param keyWord
 	 * @return
 	 */
@@ -175,15 +172,15 @@ public class CaseService extends BaseService {
 	public List<CaseItemVO> getCaseItems(int caseId) {
 		return caseDAO.getCaseItems(caseId);
 	}
-	
+
 	/**
 	 * 根据关键字模糊查询案件细则列表
 	 * 
 	 * @param caseId
 	 * @return
 	 */
-	public List<CaseItemVO> getCaseItemsByKeyWord(int caseId,String keyWord) {
-		return caseDAO.getCaseItemsByKeyWord(caseId,keyWord);
+	public List<CaseItemVO> getCaseItemsByKeyWord(int caseId, String keyWord) {
+		return caseDAO.getCaseItemsByKeyWord(caseId, keyWord);
 	}
 
 	/**
@@ -307,14 +304,14 @@ public class CaseService extends BaseService {
 		if (StringUtils.isBlank(fileName)) {
 			return requestFail("对应文件名不能为空");
 		}
-		
+
 		Note note = noteDAO.selectByName(name);
 		if (note != null) {
 			return requestFail("笔录名称重复");
 		}
-		
+
 		note = new Note(caseId, name, startTime, endTime, remark, place, fileName, askedPersonId);
-		
+
 		// 校验笔录
 		ResultDTO result = checkNote(note, true);
 		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
@@ -330,9 +327,10 @@ public class CaseService extends BaseService {
 		}
 		return requestFail();
 	}
-	
+
 	/**
 	 * 校验笔录
+	 * 
 	 * @param note
 	 * @param addFlag
 	 * @return
@@ -358,36 +356,39 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public ResultDTO updateNote(Note note) {
-		
+
 		// 校验笔录
 		ResultDTO result = checkNote(note, false);
 		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 			return result;
 		}
-		
+
+		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId()).get(0);
+
 		// 校验被询问人
-		result = checkAskedPerson(note, false);
+		result = checkAskedPerson(askedPerson, note, false);
 		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 			return result;
 		}
 
 		// 校验警员
-//		List<Police> polices = policeDAO.listByNoteId(note.getId());
-//		for (Police police : polices) {
-//			result = checkPolic(note, police.getName(), false);
-//			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-//				return result;
-//			}
-//		}
+		// List<Police> polices = policeDAO.listByNoteId(note.getId());
+		// for (Police police : polices) {
+		// result = checkPolic(note, police.getName(), false);
+		// if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+		// return result;
+		// }
+		// }
 
 		// 校验其他工作人员
-//		List<OtherPerson> otherPersons = otherPersonDAO.selectByNoteId(note.getId());
-//		for (OtherPerson otherPerson : otherPersons) {
-//			result = checkOtherPerson(note, otherPerson.getIdCard(), false);
-//			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-//				return result;
-//			}
-//		}
+		// List<OtherPerson> otherPersons =
+		// otherPersonDAO.selectByNoteId(note.getId());
+		// for (OtherPerson otherPerson : otherPersons) {
+		// result = checkOtherPerson(note, otherPerson.getIdCard(), false);
+		// if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+		// return result;
+		// }
+		// }
 
 		// 更新笔录
 		if (1 == noteDAO.update(note)) {
@@ -435,7 +436,7 @@ public class CaseService extends BaseService {
 	 */
 	private ResultDTO checkPolic(Note note, String policeName, boolean addFlag) {
 		List<Note> notes = noteDAO.selectConflictingNotesForPolice(note, policeName);
-		/*if (addFlag) {
+		if (addFlag) {
 			if (notes.size() > 0) {
 				return requestFail("警员、时间、地点与同一案件下其他笔录冲突", notes);
 			}
@@ -443,7 +444,7 @@ public class CaseService extends BaseService {
 			if (notes.size() > 1) {
 				return requestFail("警员、时间、地点与同一案件下其他笔录冲突", notes);
 			}
-		}*/
+		}
 		return requestSuccess();
 	}
 
@@ -456,8 +457,7 @@ public class CaseService extends BaseService {
 	 *            true:添加;false:更新
 	 * @return
 	 */
-	private ResultDTO checkAskedPerson(Note note, boolean addFlag) {
-		AskedPerson askedPerson = askedPersonDAO.selectById(note.getAskedPersonId());
+	private ResultDTO checkAskedPerson(AskedPerson askedPerson, Note note, boolean addFlag) {
 		List<OtherPerson> otherPersons = selectOtherPersonByNoteId(note.getId());
 		List<Police> polices = selectPoliceForNote(note.getId());
 
@@ -660,7 +660,10 @@ public class CaseService extends BaseService {
 	 */
 	public ResultDTO delPolice(int id) {
 		Police police = selectPoliceById(id);
-		ResultDTO resultDTO = checkAskedPerson(noteDAO.selectById(police.getNoteId()), false);
+		Note note = noteDAO.selectById(police.getNoteId());
+		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId()).get(0);
+
+		ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(police.getNoteId()), false);
 		if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
 			return requestFail();
 		}
@@ -712,13 +715,10 @@ public class CaseService extends BaseService {
 		try {
 
 			// 校验其他人员
-			List<OtherPerson> otherPersons = otherPersonDAO.selectByNoteId(noteId);
 			Note note = noteDAO.selectById(noteId);
-			for (OtherPerson oldOtherPerson : otherPersons) {
-				ResultDTO result = checkOtherPerson(note, oldOtherPerson.getIdCard(), true);
-				if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-					return result;
-				}
+			ResultDTO result = checkOtherPerson(note, idCard, true);
+			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+				return result;
 			}
 
 			otherPersonDAO.add(new OtherPerson(noteId, name, sex, type, idCard));
@@ -758,13 +758,15 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public ResultDTO delOtherPerson(int id) {
-		
+
 		OtherPerson otherPerson = otherPersonDAO.selectById(id);
-		ResultDTO resultDTO = checkAskedPerson(noteDAO.selectById(otherPerson.getNoteId()), false);
+		Note note = noteDAO.selectById(otherPerson.getNoteId());
+		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId()).get(0);
+		ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(otherPerson.getNoteId()), false);
 		if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
 			return requestFail();
 		}
-		
+
 		if (1 == otherPersonDAO.delete(id)) {
 			return requestSuccess();
 		}
@@ -812,17 +814,19 @@ public class CaseService extends BaseService {
 		if (idCard.length() < 15 || idCard.length() > 18) {
 			return requestFail("请输入15-18位的正确身份证号");
 		}
-		
+
 		Note note = noteDAO.selectById(noteId);
-		
+
+		AskedPerson askedPerson = new AskedPerson(noteId, name, sex, type, adultFlag, idCard, disabledFlag);
+
 		// 校验被询问人
-		ResultDTO result = checkAskedPerson(note, true);
+		ResultDTO result = checkAskedPerson(askedPerson, note, true);
 		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 			return result;
 		}
-		
+
 		try {
-			askedPersonDAO.add(new AskedPerson(noteId, name, sex, type, adultFlag, idCard, disabledFlag));
+			askedPersonDAO.add(askedPerson);
 			return requestSuccess();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -990,27 +994,24 @@ public class CaseService extends BaseService {
 
 	public static void main(String[] args) {
 		CaseService caseService = new CaseService();
-		// ResultDTO resultDTO2 = caseService.addNote(1, "笔录1",
-		// "2018-10-10 17:00:00", "2018-10-10 18:00:00", "备注", "办公室",
-		// "案件1.doc", "123456,234567");
-		// System.out.println(resultDTO2);
-		// ResultDTO resultDTO3 = caseService.addNote(1, "笔录2",
-		// "2018-10-10 17:00:00", "2018-10-10 18:00:00", "备注",
-		// "办公室1", "案件2.doc", "123457,234568");
-		// System.out.println(resultDTO3);
-		// ResultDTO resultDTO4 = caseService.addProcedure(1, "法律手续1",
-		// DateUtil.getTime(), "备注1");
-		// System.out.println(resultDTO4);
-		// ResultDTO resultDTO5 = caseService.delCase(1);
-		// System.out.println(resultDTO5);
-		// ResultDTO resultDTO6 = caseService.addAskedPerson(1, "被询问人1", "0",
-		// CommonConstant.ASKED_PERSON_TYPE_1, "0",
-		// "123456789012345", "1");
-		// System.out.println(resultDTO6);
-		List<CaseItemVO> caseItemVOs = caseService.getCaseItems(1);
-		for (CaseItemVO caseItemVO : caseItemVOs) {
-			System.out.println(caseItemVO.getName());
-		}
+		ResultDTO resultDTO = new ResultDTO();
+//		resultDTO = caseService.addCase("案件1", "2019-01-01 00:00:00", "备注1");
+//		System.out.println(resultDTO);
+//		resultDTO = caseService.addClock("闹钟1", "2019-01-01 00:00:00", "备注1");
+//		System.out.println(resultDTO);
+//		resultDTO = caseService.addClock("闹钟2", "2019-01-01 00:00:00", "备注2", 1);
+//		System.out.println(resultDTO);
+//		resultDTO = caseService.addProcedure(1, "法律手续1", "2019-01-01 00:00:00", "备注1");
+//		System.out.println(resultDTO);
+//		resultDTO = caseService.addNote(1, "闹钟1", "2019-01-01 00:00:00", "2019-01-01 00:10:00", 
+//				"备注1", "地点1", "地点1", 0);
+//		System.out.println(resultDTO);
+//		resultDTO = caseService.addPolice("警员1", "1", 1);
+//		System.out.println(resultDTO);
+//		resultDTO = caseService.addOtherPerson(1, "其他1", "1", "110111198612101111", CommonConstant.OTHER_PERSON_TYPE_1);
+//		System.out.println(resultDTO);
+//		resultDTO = caseService.addAskedPerson(1, "被询问人1", "1", CommonConstant.ASKED_PERSON_TYPE_1, "0", "110111198612101111", "0");
+//		System.out.println(resultDTO);
+		
 	}
-
 }

@@ -192,12 +192,7 @@ public class CaseDAO {
 	}
 
 	public static void main(String[] args) {
-		/*CaseDAO caseDAO = new CaseDAO();
-		List<CaseItemVO> caseItemVOs = caseDAO.getCaseItemsByTimeAndKeyWord(1, "笔录", "2000-01-01 00:00:00",
-				"2020-01-01 00:00:00");
-		for (CaseItemVO caseItemVO : caseItemVOs) {
-			System.out.println(caseItemVO.getName());
-		}*/
+
 	}
 
 }
