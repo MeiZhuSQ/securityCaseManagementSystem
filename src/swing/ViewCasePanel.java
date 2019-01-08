@@ -355,15 +355,18 @@ public class ViewCasePanel extends JPanel {
      * 
      * }
      */
-    public void updateNoteTable() {
+    public void updateCaseDetailTable() {
         caseDetailTableModel.setList(caseId);
         caseDetailTable.updateUI();
+        caseDetailTable.setRowHeight(30);
+        JTableHeader head = caseDetailTable.getTableHeader();
+        head.setPreferredSize(new Dimension(head.getWidth(), 30));
     }
 
-    public void updateProcedureTable() {
+    /*public void updateProcedureTable() {
         procedureTableModel.setList(caseId);
         procedureTable.updateUI();
-    }
+    }*/
 
 	public int getCaseId() {
 		return caseId;

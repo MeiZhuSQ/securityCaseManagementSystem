@@ -19,7 +19,11 @@ import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
+/**
+ * 新版弃用 2019-01-08
+ * @author lpf
+ *
+ */
 public class AskedPersonDialog extends JDialog {
     
     private static final long serialVersionUID = -1192280828630672161L;
@@ -175,7 +179,7 @@ public class AskedPersonDialog extends JDialog {
                     askedPerson.setType(selectedAskedType);
                     askedPerson.setAdultFlag(selectedAskedAudlt);
                     askedPerson.setDisabledFlag(selectedAbled);
-                    resultDTO = caseService.updateAskedPerson(askedPerson);
+                    resultDTO = caseService.updateAskedPerson(askedPerson, NotePanel.getInstance().noteId);
                 }
                 if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                     MainFrame.alert(resultDTO.getMessage());

@@ -242,7 +242,7 @@ public class NotePanel extends JPanel {
                     return;
                 }
                 MainFrame.alert("保存成功");
-                ViewCasePanel.getInstance().updateNoteTable();
+                ViewCasePanel.getInstance().updateCaseDetailTable();
             }
         });
         
@@ -274,7 +274,7 @@ public class NotePanel extends JPanel {
         policeTableModel = new PoliceTableModel();
         //policeTableModel.setList(noteId);
         policeTable = new JTable(policeTableModel);
-        policeTable.setRowHeight(30);
+        //policeTable.setRowHeight(30);
         /*JTableHeader head = policeTable.getTableHeader();
         head.setPreferredSize(new Dimension(head.getWidth(), 30));*/
         GUIUtil.hideColumn(policeTable, 0);
@@ -314,8 +314,8 @@ public class NotePanel extends JPanel {
                 GUIUtil.setCenter(policeDialog);
                 int i = policeTable.getSelectedRow();
                 policeDialog.setPoliceId(Integer.parseInt(policeTableModel.getValueAt(i, 0) + ""));
-                policeDialog.policeNameField.setText(policeTableModel.getValueAt(i, 1) + "");
-                String sex = policeTableModel.getValueAt(i, 2) + "";
+                policeDialog.policeNameField.setText(policeTableModel.getValueAt(i, 2) + "");
+                String sex = policeTableModel.getValueAt(i, 3) + "";
                 policeDialog.policeSexField.setSelectedIndex(sex.equals("男") ? 0 : 1);
                 //policeDialog.policeCodeField.setText(policeTableModel.getValueAt(i, 3) + "");
                 policeDialog.setVisible(true);
@@ -400,7 +400,7 @@ public class NotePanel extends JPanel {
         otherPersonTableModel = new OtherPersonTableModel();
         //otherPersonTableModel.setList(noteId);
         otherPersonTable = new JTable(otherPersonTableModel);
-        otherPersonTable.setRowHeight(30);
+        //otherPersonTable.setRowHeight(30);
         //head.setPreferredSize(new Dimension(otherPersonTable.getTableHeader().getWidth(), 30));
         GUIUtil.hideColumn(otherPersonTable, 0);
         /*TableColumn column = otherPersonTable.getColumnModel().getColumn(2);
@@ -417,6 +417,7 @@ public class NotePanel extends JPanel {
                 }
                 OtherPersonDialog otherPersonDialog = OtherPersonDialog.getInstance();
                 otherPersonDialog.setTitle("新增其他人");
+                otherPersonDialog.setOtherPersonId(0);
                 otherPersonDialog.nameField.setText("");
                 otherPersonDialog.sexComboBox.setSelectedIndex(0);
                 otherPersonDialog.idCardField.setText("");
@@ -441,15 +442,23 @@ public class NotePanel extends JPanel {
                 GUIUtil.setCenter(otherPersonDialog);
                 int i = otherPersonTable.getSelectedRow();
                 otherPersonDialog.setOtherPersonId(Integer.parseInt(otherPersonTableModel.getValueAt(i, 0) + ""));
-                otherPersonDialog.nameField.setText(otherPersonTableModel.getValueAt(i, 1) + "");
-                String sex = otherPersonTableModel.getValueAt(i, 2) + "";
+                otherPersonDialog.nameField.setText(otherPersonTableModel.getValueAt(i, 2) + "");
+                String sex = otherPersonTableModel.getValueAt(i, 3) + "";
                 otherPersonDialog.sexComboBox.setSelectedIndex(sex.equals("男") ? 0 : 1);
-                otherPersonDialog.idCardField.setText(otherPersonTableModel.getValueAt(i, 3) + "");
+                otherPersonDialog.idCardField.setText(otherPersonTableModel.getValueAt(i, 4) + "");
                 //回显radioButton
+                String otherType = otherPersonTableModel.getValueAt(i, 5)+"";
                 Enumeration<AbstractButton> radioBtns = otherPersonDialog.otherTypeGroup.getElements();  
                 while (radioBtns.hasMoreElements()) {  
                     AbstractButton btn = radioBtns.nextElement();  
-                    if(btn.getActionCommand().equals(otherPersonTableModel.getValueAt(i, 4) + "")){  
+                    if ("监护人".equals(otherType)) {
+                        otherType = CommonConstant.OTHER_PERSON_TYPE_1;
+                    } else if ("翻译".equals(otherType)) {
+                        otherType = CommonConstant.OTHER_PERSON_TYPE_2;
+                    } else if ("其他人员".equals(otherType)) {
+                        otherType = CommonConstant.OTHER_PERSON_TYPE_3;
+                    } 
+                    if(btn.getActionCommand().equals(otherType)){  
                         btn.setSelected(true);;
                         break;  
                     }  
@@ -611,7 +620,7 @@ public class NotePanel extends JPanel {
                         askedPerson.setType(selectedAskedType);
                         askedPerson.setAdultFlag(selectedAskedAudlt);
                         askedPerson.setDisabledFlag(selectedAbled);
-                        resultDTO = caseService.updateAskedPerson(askedPerson);
+                        resultDTO = caseService.updateAskedPerson(askedPerson, noteId);
                     } else {
                         resultDTO = caseService.addAskedPerson(noteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
                     }
@@ -628,13 +637,23 @@ public class NotePanel extends JPanel {
     }
 
     public void updatePoliceTable() {
-        policeTableModel.setList(noteId);;
+        //区分新增和修改
+        if (noteId == 0) {
+            policeTableModel.setList(newNoteId);
+        } else {
+            policeTableModel.setList(noteId);
+        }
         //或 policeTableModel.fireTableDataChanged();
         policeTable.updateUI();
     }
     
     public void updateOtherTable() {
-        otherPersonTableModel.setList(noteId);
+        //区分新增和修改
+        if (noteId == 0) {
+            otherPersonTableModel.setList(newNoteId);
+        } else {
+            otherPersonTableModel.setList(noteId);
+        }
         otherPersonTable.updateUI();
     }
     

@@ -93,12 +93,11 @@ public class Clock {
 
 	@Override
 	public String toString() {
-	    String status = "2";
 	    String html = "";
-	    if ("1".equals(status)) {
+	    if ("0".equals(overFlag)) {
 	        html = "<html><font color='gray'>"+time+"</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font>未开始</font><br><span style='float:left'>"
 	                +name+"</span></html>";
-	    } else if ("2".equals(status)) {
+	    } else if ("1".equals(overFlag)) {
 	        html = "<html><font color='gray'>"+time+"</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font>已完成</font><br><span style='float:left'>"
                     +name+"</span></html>";
 	    }

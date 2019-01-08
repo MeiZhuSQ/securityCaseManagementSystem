@@ -63,7 +63,7 @@ public class ClockDialog extends JDialog {
                 ResultDTO resultDTO = new ResultDTO();
                 //新增
                 if (clockId == 0) {
-                    resultDTO = caseService.addClock(name, time, remark);
+                    resultDTO = caseService.addClock(name, time, remark, ViewCasePanel.getInstance().getCaseId());
                 } else {
                     //更新
                     Clock clock = caseService.getClockById(clockId);
@@ -78,11 +78,13 @@ public class ClockDialog extends JDialog {
                 }
                 MainFrame.alert("保存成功");
                 getInstance().setVisible(false);
+                ViewCasePanel.getInstance().updateCaseDetailTable();
                 MainFrame.getInstance().clockListModel.removeAllElements();
                 List<Clock> clocks = new CaseService().getClocksInThreeDaysAndLastDay();
                 for (Clock clock : clocks) {
                 	MainFrame.getInstance().clockListModel.addElement(clock);
                 }
+                
             }
         });
         saveButton.setBounds(90, 254, 113, 27);
