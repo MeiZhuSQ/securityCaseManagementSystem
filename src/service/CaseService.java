@@ -661,12 +661,14 @@ public class CaseService extends BaseService {
 	public ResultDTO delPolice(int id) {
 		Police police = selectPoliceById(id);
 		Note note = noteDAO.selectById(police.getNoteId());
-		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId()).get(0);
-
-		ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(police.getNoteId()), false);
-		if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
-			return requestFail();
+		List<AskedPerson> askedPersons = askedPersonDAO.selectByNoteId(note.getId());
+		if (askedPersons.size() > 0) {
+			ResultDTO resultDTO = checkAskedPerson(askedPersons.get(0), noteDAO.selectById(police.getNoteId()), false);
+			if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
+				return requestFail();
+			}
 		}
+
 		if (1 == policeDAO.delete(id)) {
 			return requestSuccess();
 		}
@@ -761,10 +763,12 @@ public class CaseService extends BaseService {
 
 		OtherPerson otherPerson = otherPersonDAO.selectById(id);
 		Note note = noteDAO.selectById(otherPerson.getNoteId());
-		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId()).get(0);
-		ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(otherPerson.getNoteId()), false);
-		if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
-			return requestFail();
+		List<AskedPerson> askedPersons = askedPersonDAO.selectByNoteId(note.getId());
+		if (askedPersons.size() > 0) {
+			ResultDTO resultDTO = checkAskedPerson(askedPersons.get(0), noteDAO.selectById(otherPerson.getNoteId()), false);
+			if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
+				return requestFail();
+			}	
 		}
 
 		if (1 == otherPersonDAO.delete(id)) {
@@ -840,7 +844,12 @@ public class CaseService extends BaseService {
 	 * @param askedPerson
 	 * @return
 	 */
-	public ResultDTO updateAskedPerson(AskedPerson askedPerson) {
+	public ResultDTO updateAskedPerson(AskedPerson askedPerson, int noteId) {
+		Note note = noteDAO.selectById(noteId);
+		ResultDTO resultDTO = checkAskedPerson(askedPerson, note, false);
+		if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+			return resultDTO;
+		}
 		if (1 == askedPersonDAO.update(askedPerson)) {
 			return requestSuccess();
 		}
