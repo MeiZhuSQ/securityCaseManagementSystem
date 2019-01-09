@@ -289,6 +289,9 @@ public class NotePanel extends JPanel {
                     return;
                 }
                 PoliceDialog policeDialog = PoliceDialog.getInstance();
+                policeDialog.setPoliceId(0);
+                policeDialog.policeNameField.setText("");
+                policeDialog.policeSexField.setSelectedIndex(0);
                 policeDialog.setTitle("新增民警");
                 policeDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(policeDialog);
@@ -310,6 +313,7 @@ public class NotePanel extends JPanel {
                     return;
                 }
                 PoliceDialog policeDialog = PoliceDialog.getInstance();
+                policeDialog.setTitle("编辑民警");
                 policeDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(policeDialog);
                 int i = policeTable.getSelectedRow();
@@ -438,6 +442,7 @@ public class NotePanel extends JPanel {
                     return;
                 }
                 OtherPersonDialog otherPersonDialog = OtherPersonDialog.getInstance();
+                otherPersonDialog.setTitle("编辑其他人");
                 otherPersonDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(otherPersonDialog);
                 int i = otherPersonTable.getSelectedRow();

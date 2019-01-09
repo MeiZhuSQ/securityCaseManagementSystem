@@ -83,6 +83,7 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                     notePanel.fileNameField.setText(note.getFileName());
                     notePanel.f = new File(note.getFileName());
                     notePanel.getRemarkTextArea().setText(note.getRemark());
+                    //回显被询问人 20190109
                     MainFrame.tabbedPane.addTab("编辑笔录", notePanel, null);
                     MainFrame.tabbedPane.setSelectedComponent(notePanel);
                     //选择的是手续
