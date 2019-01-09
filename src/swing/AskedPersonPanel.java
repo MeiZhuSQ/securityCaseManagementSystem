@@ -18,6 +18,11 @@ import util.GUIUtil;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * 2019-01-08 弃用
+ * @author lpf
+ *
+ */
 public class AskedPersonPanel extends JPanel {
 
     private static final long serialVersionUID = -6102284463671287341L;

@@ -91,7 +91,7 @@ public class PoliceDialog extends JDialog{
                     return;
                 }
                 MainFrame.alert("保存成功");
-                PolicePanel.getInstance().updatePoliceTable();
+                notePanel.updatePoliceTable();
                 PoliceDialog.this.setVisible(false);
             }
         });

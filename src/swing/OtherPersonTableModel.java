@@ -3,6 +3,8 @@ package swing;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+
+import constant.CommonConstant;
 import entity.OtherPerson;
 import service.CaseService;
 
@@ -49,8 +51,17 @@ public class OtherPersonTableModel extends AbstractTableModel {
             return otherPerson.getSex().equals("0") ? "男" : "女";
         if (columnIndex == 4)
             return otherPerson.getIdCard();
-        if (columnIndex == 5)
-            return otherPerson.getType();
+        if (columnIndex == 5) {
+            if (CommonConstant.OTHER_PERSON_TYPE_1.equals(otherPerson.getType())) {
+                return "监护人";
+            } else if (CommonConstant.OTHER_PERSON_TYPE_2.equals(otherPerson.getType())) {
+                return "翻译";
+            } else if (CommonConstant.OTHER_PERSON_TYPE_3.equals(otherPerson.getType())) {
+                return "其他人员";
+            } else {
+                return "-";
+            }
+        }
         return null;
     }
 

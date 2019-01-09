@@ -73,7 +73,7 @@ public class MainFrame extends BaseFrame {
     private TableColumn column;
     public JList<Clock> clockList;
     public DefaultListModel clockListModel;
-    public JFrame f;
+    //public JFrame f;
     
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     private int DEFAULE_WIDTH = 1000;
@@ -219,8 +219,13 @@ public class MainFrame extends BaseFrame {
         
         clockAddButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
-        	    Clock selectedValue = clockList.getSelectedValue();
-        	    //TODO 标记已完成
+        	    Clock clock = clockList.getSelectedValue();
+        	    if ("1".equals(clock.getOverFlag())) {
+        	        alert("该闹钟已经完成，无须标记");
+        	        return;
+        	    }
+        	    clock.setOverFlag("1");
+        	    new CaseService().updateClock(clock);
         	    alert("标记已完成成功");
         	}
         });
@@ -337,7 +342,7 @@ public class MainFrame extends BaseFrame {
         this.setVisible(true);
         splitPane.setDividerLocation(0.8);
         //定时提醒
-        f = new JFrame("闹钟提示");
+        //f = new JFrame("闹钟提示");
         getContentPane().setLayout(new BorderLayout());
         Timer timer=new Timer();
 	    timer.schedule(new TimerTask(){
@@ -346,7 +351,8 @@ public class MainFrame extends BaseFrame {
 	            List<Clock> clockList = new CaseService().getClocksInThreeDaysAndLastDay();
 	            for (Clock clock : clockList) {
 					if (clock.getTime().equals(DateUtil.getTime())) {
-						f.setUndecorated(true);
+						/*全屏
+						 * f.setUndecorated(true);
 			        	JButton j = new JButton();
 			        	j.setSize(new Dimension(100, 100));
 			        	j.setText("");
@@ -359,7 +365,15 @@ public class MainFrame extends BaseFrame {
 						bounds.width -= insets.left + insets.right;
 						bounds.height -= insets.top + insets.bottom;
 						f.setBounds(bounds);
-			        	f.setVisible(true);
+			        	f.setVisible(true);*/
+					    clock.setOverFlag("1");
+					    new CaseService().updateClock(clock);
+					    alert("闹钟提示", "闹钟【" + clock.getName()+ "】时间已到！");
+					    clockListModel.removeAllElements();
+		                List<Clock> clocks = new CaseService().getClocksInThreeDaysAndLastDay();
+		                for (Clock c : clocks) {
+		                   clockListModel.addElement(c);
+		                }
 			        	File file = new File("resources/audio/1073.wav");
 
 						try {
