@@ -12,7 +12,7 @@ import util.JDBCUtil;
 import entity.AskedPerson;
 
 public class AskedPersonDAO {
-	public void add(AskedPerson askedPerson) throws Exception {
+	public int add(AskedPerson askedPerson) throws Exception {
 		String sql = "insert into asked_person (`name`,`sex`,type,adult_flag,id_card,disabled_flag) values (?,?,?,?,?,?)";
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, askedPerson.getName());
@@ -23,10 +23,12 @@ public class AskedPersonDAO {
 			ps.setString(6, askedPerson.getDisabledFlag());
 			ps.execute();
 			ResultSet rs = ps.getGeneratedKeys();
+			int id = 0;
 			if (rs.next()) {
-				int id = rs.getInt(1);
+				id = rs.getInt(1);
 				askedPerson.setId(id);
 			}
+			return id;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
