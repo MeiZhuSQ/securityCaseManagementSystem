@@ -143,7 +143,7 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                     procedureDialog.setTitle("编辑法律手续");
                     procedureDialog.setSize(new Dimension(500, 400));
                     GUIUtil.setCenter(procedureDialog);
-                    procedureDialog.setCaseId(ViewCasePanel.getInstance().getCaseId());
+                    //procedureDialog.setCaseId(ViewCasePanel.getInstance().getCaseId());
                     procedureDialog.setProcedureId(caseItemId);
                     procedureDialog.procedureNameField.setText(procedure.getName());
                     procedureDialog.remarkField.setText(procedure.getRemark());

@@ -2,13 +2,19 @@ package swing;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.eltima.components.ui.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.components.DateTimePicker;
+import com.github.lgooddatepicker.components.TimePickerSettings;
 
 import constant.CommonConstant;
 import dto.ResultDTO;
@@ -25,7 +31,8 @@ public class CaseDialog extends JDialog {
     
     private static final long serialVersionUID = 7334759086622449699L;
     public JTextField caseNameField;
-    public static DatePicker datePickerField;
+    //public static DatePicker datePickerField;
+    public DateTimePicker dateTimePicker;
     private static CaseDialog instance;
     public JTextField remarkField;
     private int caseId = 0;
@@ -42,29 +49,38 @@ public class CaseDialog extends JDialog {
         getContentPane().setLayout(null);
         
         JLabel caseName = new JLabel("案件名称");
-        caseName.setBounds(81, 49, 72, 18);
+        caseName.setBounds(51, 49, 72, 18);
         getContentPane().add(caseName);
         
         caseNameField = new JTextField();
-        caseNameField.setBounds(167, 46, 208, 24);
+        caseNameField.setBounds(127, 46, 280, 24);
         getContentPane().add(caseNameField);
         caseNameField.setColumns(10);
         JButton saveButton = new JButton("保存");
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String caseName = caseNameField.getText();
-                String date = datePickerField.getText();
+                if (StringUtils.isBlank(caseName)) {
+                    MainFrame.alert("请填写案件名称");
+                    return;
+                }
+                LocalDateTime startLocalDateTime = dateTimePicker.getDateTimePermissive();
+                if (startLocalDateTime == null) {
+                    MainFrame.alert("请填写开始时间");
+                    return;
+                }
+                String caseTime = startLocalDateTime.toString().replace("T", " ") + ":00";
                 String remark = remarkField.getText();
                 CaseService caseService = new CaseService();
                 ResultDTO resultDTO = new ResultDTO();
                 //新增
                 if (caseId == 0) {
-                    resultDTO = caseService.addCase(caseName, date, remark);
+                    resultDTO = caseService.addCase(caseName, caseTime, remark);
                 } else {
                     //更新
                     LegalCase legalCase = caseService.selectCaseById(caseId);
                     legalCase.setName(caseName);
-                    legalCase.setTime(date);
+                    legalCase.setTime(caseTime);
                     legalCase.setRemark(remark);
                     resultDTO = caseService.updateCase(legalCase);
                 }
@@ -77,23 +93,26 @@ public class CaseDialog extends JDialog {
                 MainFrame.getInstance().updateCaseTable();
             }
         });
-        saveButton.setBounds(90, 254, 113, 27);
+        saveButton.setBounds(100, 254, 113, 27);
         getContentPane().add(saveButton);        
         
         JLabel lblNewLabel = new JLabel("时间");
-        lblNewLabel.setBounds(81, 90, 72, 18);
+        lblNewLabel.setBounds(51, 90, 72, 18);
         getContentPane().add(lblNewLabel);
 
-        datePickerField = DateUtil.getDatePicker(DateUtil.FORMAT_YYYYMMDDHHMMSS);
-        datePickerField.setBounds(167, 90, 181, 24);
-        getContentPane().add(datePickerField);
+        DatePickerSettings dateSettings = new DatePickerSettings();
+        TimePickerSettings timeSettings = new TimePickerSettings();
+        timeSettings.setDisplaySpinnerButtons(true);
+        dateTimePicker = new DateTimePicker(dateSettings, timeSettings);
+        dateTimePicker.setBounds(127, 90, 280, 24);
+        getContentPane().add(dateTimePicker);
         
         JLabel label = new JLabel("备注");
-        label.setBounds(81, 136, 72, 18);
+        label.setBounds(51, 136, 72, 18);
         getContentPane().add(label);
         
         remarkField = new JTextField();
-        remarkField.setBounds(167, 133, 208, 82);
+        remarkField.setBounds(127, 133, 280, 82);
         getContentPane().add(remarkField);
         remarkField.setColumns(10);
         
@@ -104,7 +123,7 @@ public class CaseDialog extends JDialog {
                 getInstance().setVisible(false);
             }
         });
-        cancelButton.setBounds(248, 254, 113, 27);
+        cancelButton.setBounds(300, 254, 113, 27);
         getContentPane().add(cancelButton);
 
     }
