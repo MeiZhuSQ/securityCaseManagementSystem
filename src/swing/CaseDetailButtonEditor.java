@@ -7,9 +7,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
+import javax.swing.AbstractButton;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -18,6 +21,7 @@ import javax.swing.table.TableCellEditor;
 
 import constant.CommonConstant;
 import dto.ResultDTO;
+import entity.AskedPerson;
 import entity.Clock;
 import entity.Note;
 import entity.Procedure;
@@ -70,7 +74,8 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                 String caseItemType = ViewCasePanel.getInstance().caseDetailTableModel.getValueAt(i, 3).toString();
                 //选择的是笔录
                 if ("笔录".equals(caseItemType)) {
-                    Note note = new CaseService().selectNoteById(caseItemId);
+                    CaseService caseService = new CaseService();
+                    Note note = caseService.selectNoteById(caseItemId);
                     NotePanel notePanel = NotePanel.getInstance();
                     notePanel.noteId = note.getId();
                     notePanel.policeTableModel.setList(note.getId());
@@ -78,18 +83,64 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                     //编辑时，传入caseId
                     notePanel.setCaseId(note.getCaseId());
                     notePanel.getNoteNameField().setText(note.getName());
-                    notePanel.startTime = DateUtil.getDatePicker2(DateUtil.FORMAT_YYYYMMDD);
+                    String startTime = note.getStartTime();
+                    String endTime = note.getEndTime();
+                    notePanel.startDateTimePiker.setDateTimePermissive(LocalDateTime.parse(startTime.substring(0, 10)+ "T" + startTime.substring(11, 16)));
+                    notePanel.endDateTimePiker.setDateTimePermissive(LocalDateTime.parse(endTime.substring(0, 10)+ "T" + endTime.substring(11, 16)));
+                    //notePanel.startTime = DateUtil.getDatePicker2(DateUtil.FORMAT_YYYYMMDD);
                     notePanel.getPlaceField().setText(note.getPlace());
                     notePanel.fileNameField.setText(note.getFileName());
                     notePanel.f = new File(note.getFileName());
                     notePanel.getRemarkTextArea().setText(note.getRemark());
                     //回显被询问人 20190109
+                    AskedPerson askedPerson = caseService.selectAskedPersonByNoteId(note.getId());
+                    if (askedPerson != null) {
+                        notePanel.askedNameField.setText(askedPerson.getName());
+                        notePanel.askedIdCardField.setText(askedPerson.getIdCard());
+                        notePanel.askedSexComboBox.setSelectedIndex(Integer.parseInt(askedPerson.getSex()));
+                        String askedType = askedPerson.getType();
+                        String askedAdultType = askedPerson.getAdultFlag();
+                        String askedAbleType = askedPerson.getDisabledFlag();
+                        Enumeration<AbstractButton> radioBtns = notePanel.askedTypeGroup.getElements();  
+                        while (radioBtns.hasMoreElements()) {  
+                            AbstractButton btn = radioBtns.nextElement();  
+                            if(btn.getActionCommand().equals(askedType)){  
+                                btn.setSelected(true);;
+                                break;  
+                            }  
+                        } 
+                        Enumeration<AbstractButton> askedAdultRadioBtns = notePanel.askedAdultTypeGroup.getElements();  
+                        while (askedAdultRadioBtns.hasMoreElements()) {  
+                            AbstractButton btn = askedAdultRadioBtns.nextElement();  
+                            if(btn.getActionCommand().equals(askedAdultType)){  
+                                btn.setSelected(true);;
+                                break;  
+                            }  
+                        } 
+                        Enumeration<AbstractButton> askedAbleRadioBtns = notePanel.askedAbleTypeGroup.getElements();  
+                        while (askedAbleRadioBtns.hasMoreElements()) {  
+                            AbstractButton btn = askedAbleRadioBtns.nextElement();  
+                            if(btn.getActionCommand().equals(askedAbleType)){  
+                                btn.setSelected(true);;
+                                break;  
+                            }  
+                        } 
+                    } else {
+                        //考虑有可能无询问人的情况
+                        notePanel.askedNameField.setText("");
+                        notePanel.askedIdCardField.setText("");
+                        notePanel.askedSexComboBox.setSelectedIndex(0);
+                        notePanel.askedTypeGroup.getElements().nextElement().setSelected(true);
+                        notePanel.askedAdultTypeGroup.getElements().nextElement().setSelected(true);
+                        notePanel.askedAbleTypeGroup.getElements().nextElement().setSelected(true);
+                    }
                     MainFrame.tabbedPane.addTab("编辑笔录", notePanel, null);
                     MainFrame.tabbedPane.setSelectedComponent(notePanel);
                     //选择的是手续
                 } else if ("法律手续".equals(caseItemType)) {
                     Procedure procedure = new CaseService().selectProceduresById(caseItemId);
                     ProcedureDialog procedureDialog = ProcedureDialog.getInstance();
+                    procedureDialog.setTitle("编辑法律手续");
                     procedureDialog.setSize(new Dimension(500, 400));
                     GUIUtil.setCenter(procedureDialog);
                     procedureDialog.setCaseId(ViewCasePanel.getInstance().getCaseId());
@@ -100,6 +151,7 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                 } else {
                     //选择的是闹钟
                     ClockDialog clockDialog = ClockDialog.getInstance();
+                    clockDialog.setTitle("编辑闹钟");
                     clockDialog.setSize(new Dimension(500, 400));
                     GUIUtil.setCenter(clockDialog);
                     Clock clock = new CaseService().getClockById(caseItemId);
@@ -122,7 +174,7 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                     ResultDTO resultDTO = new ResultDTO();
                     //选择的是笔录
                     if ("笔录".equals(caseItemType)) {
-                        caseService.delNote(caseItemId);
+                        resultDTO = caseService.delNote(caseItemId);
                     } else if ("法律手续".equals(caseItemType)) {
                         resultDTO = caseService.delProcedure(caseItemId);
                     } else {
@@ -133,7 +185,7 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                         return;
                     }
                     MainFrame.alert("删除成功");
-                    MainFrame.getInstance().updateCaseTable();
+                    ViewCasePanel.getInstance().updateCaseDetailTable();
                 }
                 fireEditingStopped();
             }

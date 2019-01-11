@@ -53,9 +53,9 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
 
     private void initButton() {
 
-        button = new ImageButton("view.png","详情1");
-        button1 = new ImageButton("edit.png","修改1");
-        button2 = new ImageButton("delete.png","删除1");
+        button = new ImageButton("view.png","详情");
+        button1 = new ImageButton("edit.png","修改");
+        button2 = new ImageButton("delete.png","删除");
         button.setSize(new Dimension(16, 16));
         button1.setSize(new Dimension(50, 25));
         button2.setSize(new Dimension(50, 25));
@@ -87,6 +87,7 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
 
             public void actionPerformed(ActionEvent e) {
                 CaseDialog caseDialog = CaseDialog.getInstance();
+                caseDialog.setTitle("编辑案件");
                 caseDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(caseDialog);
                 int i = MainFrame.getInstance().caseTable.getSelectedRow();

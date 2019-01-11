@@ -104,7 +104,7 @@ public class MainFrame extends BaseFrame {
     }
 
     private void initialize() {
-        this.setTitle("案件管理系统 V1.0");
+        this.setTitle("案件管理系统 V2.0");
         this.setBounds(100, 100, 1200, 750);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -282,6 +282,7 @@ public class MainFrame extends BaseFrame {
         caseMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 CaseDialog caseDialog = CaseDialog.getInstance();
+                caseDialog.setTitle("新建案件");
                 caseDialog.setSize(new Dimension(500, 400));
                 caseDialog.caseNameField.setText("");
                 caseDialog.remarkField.setText("");

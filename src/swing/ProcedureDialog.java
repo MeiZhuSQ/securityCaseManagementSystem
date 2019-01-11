@@ -76,7 +76,7 @@ public class ProcedureDialog extends JDialog {
                 }
                 MainFrame.alert("保存成功");
                 getInstance().setVisible(false);
-                MainFrame.getInstance().updateCaseTable();
+                ViewCasePanel.getInstance().updateCaseDetailTable();
             }
         });
         saveButton.setBounds(90, 254, 113, 27);

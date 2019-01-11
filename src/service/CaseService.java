@@ -803,8 +803,8 @@ public class CaseService extends BaseService {
 		}
 
 		try {
-			askedPersonDAO.add(askedPerson);
-			return requestSuccess();
+			int id = askedPersonDAO.add(askedPerson);
+			return requestSuccess(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

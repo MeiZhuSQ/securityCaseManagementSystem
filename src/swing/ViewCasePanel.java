@@ -164,15 +164,24 @@ public class ViewCasePanel extends JPanel {
                 notePanel.setCaseId(caseId);
                 //重置noteId
                 notePanel.noteId = 0;
+                //给两表格置空
                 notePanel.policeTableModel.setList(0);
                 notePanel.otherPersonTableModel.setList(0);
-                //给两表格置空
                 //notePanel.askedPersonTableModel.setList(0);
                 //notePanel.otherPersonTableModel.setList(0);
                 notePanel.getNoteNameField().setText("");;
                 notePanel.getPlaceField().setText("");
+                notePanel.startDateTimePiker.clear();
+                notePanel.endDateTimePiker.clear();
                 notePanel.fileNameField.setText("");
                 notePanel.getRemarkTextArea().setText("");
+                //被询问人置空
+                notePanel.askedNameField.setText("");
+                notePanel.askedIdCardField.setText("");
+                notePanel.askedSexComboBox.setSelectedIndex(0);
+                notePanel.askedTypeGroup.getElements().nextElement().setSelected(true);
+                notePanel.askedAdultTypeGroup.getElements().nextElement().setSelected(true);
+                notePanel.askedAbleTypeGroup.getElements().nextElement().setSelected(true);
                 //List<String> policeList = new ArrayList<>();
                 //Object[] defaultValue = new Object[] {};
                 /*CaseService caseService = new CaseService();
@@ -193,6 +202,7 @@ public class ViewCasePanel extends JPanel {
         createProcedureButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ProcedureDialog procedureDialog = ProcedureDialog.getInstance();
+                procedureDialog.setTitle("新建法律手续");
                 procedureDialog.setSize(new Dimension(500, 400));
                 procedureDialog.procedureNameField.setText("");
                 procedureDialog.remarkField.setText("");
@@ -206,6 +216,7 @@ public class ViewCasePanel extends JPanel {
         createClockButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ClockDialog clockDialog = ClockDialog.getInstance();
+                clockDialog.setTitle("新建闹钟");
                 clockDialog.setSize(new Dimension(500, 400));
                 clockDialog.clockNameField.setText("");
                 clockDialog.remarkField.setText("");

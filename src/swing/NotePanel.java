@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -28,7 +29,15 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import com.eltima.components.ui.DatePicker;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.components.DateTimePicker;
+import com.github.lgooddatepicker.components.TimePicker;
+import com.github.lgooddatepicker.components.TimePickerSettings;
+
 import constant.CommonConstant;
 import dto.ResultDTO;
 import entity.AskedPerson;
@@ -41,8 +50,12 @@ public class NotePanel extends JPanel {
 
     private static final long serialVersionUID = 5820832059732422488L;
     private JTextField noteNameField;
-    public DatePicker startTime;
-    public DatePicker endTime;
+    //public DatePicker startTime;
+    //public DatePicker endTime;
+    //使用新的时间 2019-01-11 更正
+    public DateTimePicker startDateTimePiker;
+    public DateTimePicker endDateTimePiker;
+    
     private JTextField placeField;
     private JTextArea remarkTextArea;
     private int caseId;
@@ -69,8 +82,9 @@ public class NotePanel extends JPanel {
     public ButtonGroup askedTypeGroup;
     
     String[] values = new String[] { "1", "2", "3" };
-    private JTextField nameField;
-    private JTextField idCardField;
+    public JTextField askedNameField;
+    public JTextField askedIdCardField;
+    public JComboBox<String> askedSexComboBox;
     
     public static NotePanel getInstance() {
         if (instance == null) {
@@ -100,31 +114,41 @@ public class NotePanel extends JPanel {
         noteNameField.setColumns(10);
 
         JLabel startTimeLabel = new JLabel("开始时间");
-        startTimeLabel.setBounds(24, 113, 72, 18);
+        startTimeLabel.setBounds(24, 110, 72, 18);
         notePanel.add(startTimeLabel);
 
-        startTime = DateUtil.getDatePicker(DateUtil.FORMAT_YYYYMMDDHHMMSS);
-        JPanel startTimePanel = new JPanel();
-        startTimePanel.setBounds(102, 100, 177, 30);
-        startTimePanel.add(startTime);
-        notePanel.add(startTimePanel);
+        DatePickerSettings dateSettings_1 = new DatePickerSettings();
+        TimePickerSettings timeSettings_1 = new TimePickerSettings();
+        //dateSettings_1.setAllowEmptyDates(false);
+        //timeSettings_1.setAllowEmptyTimes(false);
+        timeSettings_1.setDisplaySpinnerButtons(true);
+        startDateTimePiker = new DateTimePicker(dateSettings_1, timeSettings_1);
+        //panel.panel1.add(datePicker1, getConstraints(1, (row * rowMultiplier), 1));
+        //startTime = DateUtil.getDatePicker(DateUtil.FORMAT_YYYYMMDDHHMMSS);
+        //JPanel startTimePanel = new JPanel();
+        startDateTimePiker.setBounds(102, 106, 300, 24);
+        //startTimePanel.add(startTime);
+        notePanel.add(startDateTimePiker);
 
         JLabel endTimelabel = new JLabel("结束时间");
         endTimelabel.setBounds(24, 154, 72, 18);
         notePanel.add(endTimelabel);
 
-        JPanel endTimePanel = new JPanel();
-        endTimePanel.setBounds(102, 143, 177, 34);
-        endTime = DateUtil.getDatePicker(DateUtil.FORMAT_YYYYMMDDHHMMSS);
-        endTimePanel.add(endTime);
-        notePanel.add(endTimePanel);
+        DatePickerSettings dateSettings_2 = new DatePickerSettings();
+        TimePickerSettings timeSettings_2 = new TimePickerSettings();
+//        dateSettings_2.setAllowEmptyDates(false);
+//        timeSettings_2.setAllowEmptyTimes(false);
+        timeSettings_2.setDisplaySpinnerButtons(true);
+        endDateTimePiker = new DateTimePicker(dateSettings_2, timeSettings_2);
+        endDateTimePiker.setBounds(102, 143, 300, 24);
+        notePanel.add(endDateTimePiker);
 
         JLabel placeLabel = new JLabel("地点");
-        placeLabel.setBounds(24, 66, 72, 18);
+        placeLabel.setBounds(24, 68, 72, 18);
         notePanel.add(placeLabel);
 
         placeField = new JTextField();
-        placeField.setBounds(102, 63, 279, 24);
+        placeField.setBounds(102, 65, 279, 24);
         notePanel.add(placeField);
         placeField.setColumns(10);
 
@@ -221,9 +245,28 @@ public class NotePanel extends JPanel {
         noteSaveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String noteName = noteNameField.getText();
+                if (StringUtils.isBlank(noteName)) {
+                    MainFrame.alert("请填写笔录名称");
+                    return;
+                }
                 String place = placeField.getText();
-                String startTimeStr = startTime.getText();
-                String endTimeStr = endTime.getText();
+                if (StringUtils.isBlank(place)) {
+                    MainFrame.alert("请填写地点");
+                    return;
+                }
+                //处理时间 2019-01-11
+                LocalDateTime startLocalDateTime = startDateTimePiker.getDateTimePermissive();
+                if (startLocalDateTime == null) {
+                    MainFrame.alert("请填写开始时间");
+                    return;
+                }
+                String startTimeStr = startLocalDateTime.toString().replace("T", " ") + ":00";
+                LocalDateTime endLocalDateTime = endDateTimePiker.getDateTimePermissive();
+                if (endLocalDateTime == null) {
+                    MainFrame.alert("请填写结束时间");
+                    return;
+                }
+                String endTimeStr = endLocalDateTime.toString().replace("T", " ") + ":00";
                 String fileName = fileNameField.getText();
                 String remark = remarkTextArea.getText();
                 CaseService caseService = new CaseService();
@@ -231,15 +274,19 @@ public class NotePanel extends JPanel {
                 if (noteId == 0) {
                     // 新增笔录信息
                     resultDTO = caseService.addNote(caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, 0);
+                    if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                        MainFrame.alert(resultDTO.getMessage());
+                        return;
+                    }
                     //获取新增的笔录ID
                     newNoteId = Integer.parseInt(resultDTO.getData().toString());
                 } else {
                     Note note = new Note(noteId, caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, 0);
                     resultDTO = caseService.updateNote(note);
-                }
-                if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
-                    MainFrame.alert(resultDTO.getMessage());
-                    return;
+                    if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                        MainFrame.alert(resultDTO.getMessage());
+                        return;
+                    }
                 }
                 MainFrame.alert("保存成功");
                 ViewCasePanel.getInstance().updateCaseDetailTable();
@@ -512,19 +559,19 @@ public class NotePanel extends JPanel {
         label.setBounds(31, 27, 54, 19);
         askedPanel.add(label);
         
-        nameField = new JTextField();
-        nameField.setColumns(10);
-        nameField.setBounds(82, 27, 176, 21);
-        askedPanel.add(nameField);
+        askedNameField = new JTextField();
+        askedNameField.setColumns(10);
+        askedNameField.setBounds(82, 27, 176, 21);
+        askedPanel.add(askedNameField);
         
         JLabel label_1 = new JLabel("性别：");
         label_1.setBounds(289, 25, 66, 19);
         askedPanel.add(label_1);
         
-        JComboBox<String> sexComboBox = new JComboBox<String>();
-        sexComboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"男", "女"}));
-        sexComboBox.setBounds(366, 25, 77, 21);
-        askedPanel.add(sexComboBox);
+        askedSexComboBox = new JComboBox<String>();
+        askedSexComboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"男", "女"}));
+        askedSexComboBox.setBounds(366, 25, 77, 21);
+        askedPanel.add(askedSexComboBox);
         
         JButton askedSaveButton = new JButton("保存");
         askedSaveButton.setBounds(831, 146, 113, 27);
@@ -534,10 +581,10 @@ public class NotePanel extends JPanel {
         label_2.setBounds(31, 60, 77, 22);
         askedPanel.add(label_2);
         
-        idCardField = new JTextField();
-        idCardField.setColumns(10);
-        idCardField.setBounds(114, 61, 259, 22);
-        askedPanel.add(idCardField);
+        askedIdCardField = new JTextField();
+        askedIdCardField.setColumns(10);
+        askedIdCardField.setBounds(114, 61, 259, 22);
+        askedPanel.add(askedIdCardField);
         
         askedAdultTypeGroup = new ButtonGroup();
         askedAbleTypeGroup = new ButtonGroup();
@@ -602,9 +649,9 @@ public class NotePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 CaseService caseService = new CaseService();
                 ResultDTO resultDTO = new ResultDTO();
-                String askedName = nameField.getText();
-                Integer askedSex = sexComboBox.getSelectedIndex();
-                String idCard = idCardField.getText();
+                String askedName = askedNameField.getText();
+                Integer askedSex = askedSexComboBox.getSelectedIndex();
+                String idCard = askedIdCardField.getText();
                 
                 String selectedAskedType = askedTypeGroup.getSelection().getActionCommand();;
                 String selectedAskedAudlt = askedAdultTypeGroup.getSelection().getActionCommand();
@@ -612,13 +659,21 @@ public class NotePanel extends JPanel {
                 //新增
                 if (noteId == 0) {
                     resultDTO = caseService.addAskedPerson(newNoteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
+                    //获取新增的被询问人ID
+                    int askedId = Integer.parseInt(resultDTO.getData().toString());
+                    //更新对应笔录表
+                    Note note = caseService.selectNoteById(newNoteId);
+                    note.setAskedPersonId(askedId);
+                    resultDTO = caseService.updateNote(note);
                 } else {
                     //更新
                     //Note note = caseService.selectNoteById(noteId);
-                    List<AskedPerson> askedPersons = caseService.selectAskedPersonByNoteId(noteId);
+                    //List<AskedPerson> askedPersons = caseService.selectAskedPersonByNoteId(noteId);
+                    //noteId放在笔录表
+                    Note note = caseService.selectNoteById(noteId);
                     //如果存在被询问人更新  反之添加（存在之前只保存笔录后就中断操作的情况）
-                    if (askedPersons != null && askedPersons.size() > 0) {
-                        AskedPerson askedPerson  = askedPersons.get(0);
+                    if (note.getAskedPersonId() != 0) {
+                        AskedPerson askedPerson = caseService.selectAskedPersonById(note.getAskedPersonId());
                         askedPerson.setName(askedName);
                         askedPerson.setSex(String.valueOf(askedSex));
                         askedPerson.setIdCard(idCard);
@@ -628,6 +683,12 @@ public class NotePanel extends JPanel {
                         resultDTO = caseService.updateAskedPerson(askedPerson, noteId);
                     } else {
                         resultDTO = caseService.addAskedPerson(noteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
+                        //获取新增的被询问人ID
+                        int askedId = Integer.parseInt(resultDTO.getData().toString());
+                        //更新对应笔录表
+                        //Note note = caseService.selectNoteById(noteId);
+                        note.setAskedPersonId(askedId);
+                        resultDTO = caseService.updateNote(note);
                     }
                 }
                 if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
