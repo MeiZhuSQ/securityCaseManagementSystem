@@ -41,7 +41,7 @@ public class LoginFrame extends BaseFrame {
         this.setAlwaysOnTop(true);
         this.setAutoRequestFocus(false);
         this.setResizable(false);
-        this.setIconImage(Toolkit.getDefaultToolkit().createImage("D:/download/tipEg.png"));
+        this.setIconImage(Toolkit.getDefaultToolkit().createImage("resources/img/person.png"));
         Font font = new Font("宋体", Font.BOLD, 24);
 
         font = new Font("宋体", Font.PLAIN, 12);

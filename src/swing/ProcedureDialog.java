@@ -61,7 +61,7 @@ public class ProcedureDialog extends JDialog {
                 ResultDTO resultDTO = new ResultDTO();
                 //新增
                 if (procedureId == 0) {
-                    resultDTO = caseService.addProcedure(caseId, caseName, date, remark);
+                    resultDTO = caseService.addProcedure(ViewCasePanel.getInstance().getCaseId(), caseName, date, remark);
                 } else {
                     //更新
                 	Procedure procedure = caseService.selectProceduresById(procedureId);
@@ -76,7 +76,7 @@ public class ProcedureDialog extends JDialog {
                 }
                 MainFrame.alert("保存成功");
                 getInstance().setVisible(false);
-                MainFrame.getInstance().updateCaseTable();
+                ViewCasePanel.getInstance().updateCaseDetailTable();
             }
         });
         saveButton.setBounds(90, 254, 113, 27);
@@ -102,7 +102,6 @@ public class ProcedureDialog extends JDialog {
         JButton cancelButton = new JButton("取消");
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MainFrame.frame.setEnabled(true);
                 getInstance().setVisible(false);
             }
         });

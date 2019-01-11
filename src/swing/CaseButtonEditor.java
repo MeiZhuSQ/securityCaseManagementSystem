@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import javax.swing.AbstractCellEditor;
@@ -53,9 +54,9 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
 
     private void initButton() {
 
-        button = new ImageButton("view.png","详情1");
-        button1 = new ImageButton("edit.png","修改1");
-        button2 = new ImageButton("delete.png","删除1");
+        button = new ImageButton("view.png","详情");
+        button1 = new ImageButton("edit.png","修改");
+        button2 = new ImageButton("delete.png","删除");
         button.setSize(new Dimension(16, 16));
         button1.setSize(new Dimension(50, 25));
         button2.setSize(new Dimension(50, 25));
@@ -87,13 +88,15 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
 
             public void actionPerformed(ActionEvent e) {
                 CaseDialog caseDialog = CaseDialog.getInstance();
+                caseDialog.setTitle("编辑案件");
                 caseDialog.setSize(new Dimension(500, 400));
                 GUIUtil.setCenter(caseDialog);
                 int i = MainFrame.getInstance().caseTable.getSelectedRow();
                 caseDialog.setCaseId(Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + ""));
                 caseDialog.caseNameField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 2) + "");
                 //caseDialog.datePickerField = DateUtil.setDatePicker(MainFrame.getInstance().caseTableModel.getValueAt(i, 3) + "");
-                caseDialog.datePickerField.updateUI();
+                String caseTime = MainFrame.getInstance().caseTableModel.getValueAt(i, 3) + "";
+                caseDialog.dateTimePicker.setDateTimePermissive(LocalDateTime.parse(caseTime.substring(0, 10)+ "T" + caseTime.substring(11, 16)));
                 caseDialog.remarkField.setText(MainFrame.getInstance().caseTableModel.getValueAt(i, 4) + "");
                 //注意：必须放在最后，否则无效
                 caseDialog.setVisible(true);

@@ -5,7 +5,11 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import entity.AskedPerson;
 import service.CaseService;
-
+/**
+ * 弃用2019-01-11
+ * @author lpf
+ *
+ */
 public class AskedPersonTableModel extends AbstractTableModel {
 
     private static final long serialVersionUID = 5172529856464610326L;
@@ -13,7 +17,7 @@ public class AskedPersonTableModel extends AbstractTableModel {
     public List<AskedPerson> list = new ArrayList<>();
 
     public void setList(int noteId) {
-        list = new CaseService().selectAskedPersonByNoteId(noteId);
+        //list = new CaseService().selectAskedPersonByNoteId(noteId);
     }
 
     @Override

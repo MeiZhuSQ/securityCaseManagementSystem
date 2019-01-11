@@ -45,15 +45,18 @@ public class NoteDAO {
 	}
 
 	public int update(Note note) {
-		String sql = "update note set case_id = ? ,name = ?,start_time = ? ,`end_time` = ?,remark = ? where id = ?";
+		String sql = "update note set case_id = ? ,name = ?, place = ?, start_time = ? ,`end_time` = ?, file_name = ?, remark = ? , asked_person_id = ? where id = ?";
 		int result = 0;
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, note.getCaseId());
 			ps.setString(2, note.getName());
-			ps.setString(3, note.getStartTime());
-			ps.setString(4, note.getEndTime());
-			ps.setString(5, note.getRemark());
-			ps.setInt(6, note.getId());
+			ps.setString(3, note.getPlace());
+			ps.setString(4, note.getStartTime());
+			ps.setString(5, note.getEndTime());
+			ps.setString(6, note.getFileName());
+			ps.setString(7, note.getRemark());
+			ps.setInt(8, note.getAskedPersonId());
+			ps.setInt(9, note.getId());
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
