@@ -359,32 +359,14 @@ public class CaseService extends BaseService {
 			return result;
 		}
 
-		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId()).get(0);
-
-		// 校验被询问人
-		result = checkAskedPerson(askedPerson, note, false);
-		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-			return result;
+		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId());
+		if (null != askedPerson) {
+			// 校验被询问人
+			result = checkAskedPerson(askedPerson, note, false);
+			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+				return result;
+			}
 		}
-
-		// 校验警员
-		// List<Police> polices = policeDAO.listByNoteId(note.getId());
-		// for (Police police : polices) {
-		// result = checkPolic(note, police.getName(), false);
-		// if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-		// return result;
-		// }
-		// }
-
-		// 校验其他工作人员
-		// List<OtherPerson> otherPersons =
-		// otherPersonDAO.selectByNoteId(note.getId());
-		// for (OtherPerson otherPerson : otherPersons) {
-		// result = checkOtherPerson(note, otherPerson.getIdCard(), false);
-		// if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-		// return result;
-		// }
-		// }
 
 		// 更新笔录
 		if (1 == noteDAO.update(note)) {
@@ -537,8 +519,8 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public ResultDTO delNote(int noteId) {
-		List<AskedPerson> askedPersons = askedPersonDAO.selectByNoteId(noteId);
-		if (askedPersons.size() > 0) {
+		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(noteId);
+		if (null != askedPerson) {
 			return requestFail("请先删除笔录关联的被询问人");
 		}
 		List<Police> polices = policeDAO.listByNoteId(noteId);
@@ -654,9 +636,9 @@ public class CaseService extends BaseService {
 	public ResultDTO delPolice(int id) {
 		Police police = selectPoliceById(id);
 		Note note = noteDAO.selectById(police.getNoteId());
-		List<AskedPerson> askedPersons = askedPersonDAO.selectByNoteId(note.getId());
-		if (askedPersons.size() > 0) {
-			ResultDTO resultDTO = checkAskedPerson(askedPersons.get(0), noteDAO.selectById(police.getNoteId()), false);
+		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId());
+		if (null != askedPerson) {
+			ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(police.getNoteId()), false);
 			if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
 				return requestFail();
 			}
@@ -753,9 +735,9 @@ public class CaseService extends BaseService {
 
 		OtherPerson otherPerson = otherPersonDAO.selectById(id);
 		Note note = noteDAO.selectById(otherPerson.getNoteId());
-		List<AskedPerson> askedPersons = askedPersonDAO.selectByNoteId(note.getId());
-		if (askedPersons.size() > 0) {
-			ResultDTO resultDTO = checkAskedPerson(askedPersons.get(0), noteDAO.selectById(otherPerson.getNoteId()), false);
+		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId());
+		if (null != askedPerson) {
+			ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(otherPerson.getNoteId()), false);
 			if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
 				return requestFail();
 			}	
@@ -863,7 +845,7 @@ public class CaseService extends BaseService {
 	 * @param noteId
 	 * @return
 	 */
-	public List<AskedPerson> selectAskedPersonByNoteId(int noteId) {
+	public AskedPerson selectAskedPersonByNoteId(int noteId) {
 		return askedPersonDAO.selectByNoteId(noteId);
 	}
 
