@@ -88,23 +88,6 @@ public class AskedPersonDAO {
 		return list(0, Short.MAX_VALUE);
 	}
 
-	public AskedPerson selectByNoteId(int noteId) {
-		String sql = "select * from note left join asked_person on note.asked_person_id = asked_person.id where note_id = ?";
-		AskedPerson askedPerson = null;
-		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
-			ps.setInt(1, noteId);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				askedPerson = new AskedPerson(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
-						rs.getString("type"), rs.getString("adult_flag"), rs.getString("id_card"),
-						rs.getString("disabled_flag"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return askedPerson;
-	}
-
 	public AskedPerson selectById(int id) {
 		String sql = "select * from asked_person where id = ?";
 		AskedPerson askedPerson = null;

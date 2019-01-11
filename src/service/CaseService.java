@@ -359,7 +359,7 @@ public class CaseService extends BaseService {
 			return result;
 		}
 
-		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId());
+		AskedPerson askedPerson = askedPersonDAO.selectById(note.getAskedPersonId());
 		if (null != askedPerson) {
 			// 校验被询问人
 			result = checkAskedPerson(askedPerson, note, false);
@@ -519,7 +519,8 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public ResultDTO delNote(int noteId) {
-		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(noteId);
+		Note note = noteDAO.selectById(noteId);
+		AskedPerson askedPerson = askedPersonDAO.selectById(note.getAskedPersonId());
 		if (null != askedPerson) {
 			return requestFail("请先删除笔录关联的被询问人");
 		}
@@ -636,7 +637,7 @@ public class CaseService extends BaseService {
 	public ResultDTO delPolice(int id) {
 		Police police = selectPoliceById(id);
 		Note note = noteDAO.selectById(police.getNoteId());
-		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId());
+		AskedPerson askedPerson = askedPersonDAO.selectById(note.getAskedPersonId());
 		if (null != askedPerson) {
 			ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(police.getNoteId()), false);
 			if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
@@ -735,7 +736,7 @@ public class CaseService extends BaseService {
 
 		OtherPerson otherPerson = otherPersonDAO.selectById(id);
 		Note note = noteDAO.selectById(otherPerson.getNoteId());
-		AskedPerson askedPerson = askedPersonDAO.selectByNoteId(note.getId());
+		AskedPerson askedPerson = askedPersonDAO.selectById(note.getAskedPersonId());
 		if (null != askedPerson) {
 			ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(otherPerson.getNoteId()), false);
 			if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
@@ -846,7 +847,8 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public AskedPerson selectAskedPersonByNoteId(int noteId) {
-		return askedPersonDAO.selectByNoteId(noteId);
+		Note note = noteDAO.selectById(noteId);
+		return askedPersonDAO.selectById(note.getAskedPersonId());
 	}
 
 	/**
