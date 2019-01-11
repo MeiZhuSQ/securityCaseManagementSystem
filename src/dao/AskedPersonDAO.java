@@ -89,7 +89,7 @@ public class AskedPersonDAO {
 	}
 
 	public List<AskedPerson> selectByNoteId(int noteId) {
-		String sql = "select * from asked_person where note_id = ?";
+		String sql = "select * from note left join asked_person on note.asked_person_id = asked_person.id where note_id = ?";
 		List<AskedPerson> askedPersons = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, noteId);
