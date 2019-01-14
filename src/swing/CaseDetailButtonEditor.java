@@ -147,6 +147,8 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                     procedureDialog.setProcedureId(caseItemId);
                     procedureDialog.procedureNameField.setText(procedure.getName());
                     procedureDialog.remarkField.setText(procedure.getRemark());
+                    String procedureTime = procedure.getTime();
+                    procedureDialog.dateTimePicker.setDateTimePermissive(LocalDateTime.parse(procedureTime.substring(0, 10)+ "T" + procedureTime.substring(11, 16)));
                     procedureDialog.setVisible(true);
                 } else {
                     //选择的是闹钟
@@ -158,6 +160,8 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                     clockDialog.setClockId(clock.getId());
                     clockDialog.clockNameField.setText(clock.getName());
                     clockDialog.remarkField.setText(clock.getRemark());
+                    String clockTime = clock.getTime();
+                    clockDialog.dateTimePicker.setDateTimePermissive(LocalDateTime.parse(clockTime.substring(0, 10)+ "T" + clockTime.substring(11, 16)));
                     clockDialog.setVisible(true);
                 }
                 fireEditingStopped();

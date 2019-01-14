@@ -29,6 +29,7 @@ import javax.swing.JButton;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -204,8 +205,10 @@ public class ViewCasePanel extends JPanel {
                 ProcedureDialog procedureDialog = ProcedureDialog.getInstance();
                 procedureDialog.setTitle("新建法律手续");
                 procedureDialog.setSize(new Dimension(500, 400));
+                procedureDialog.setProcedureId(0);
                 procedureDialog.procedureNameField.setText("");
                 procedureDialog.remarkField.setText("");
+                procedureDialog.dateTimePicker.clear();
                 GUIUtil.setCenter(procedureDialog);
                 procedureDialog.setVisible(true);
             }
@@ -218,8 +221,10 @@ public class ViewCasePanel extends JPanel {
                 ClockDialog clockDialog = ClockDialog.getInstance();
                 clockDialog.setTitle("新建闹钟");
                 clockDialog.setSize(new Dimension(500, 400));
+                clockDialog.setClockId(0);
                 clockDialog.clockNameField.setText("");
                 clockDialog.remarkField.setText("");
+                clockDialog.dateTimePicker.clear();
                 GUIUtil.setCenter(clockDialog);
                 clockDialog.setVisible(true);
             }

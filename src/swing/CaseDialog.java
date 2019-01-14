@@ -64,12 +64,12 @@ public class CaseDialog extends JDialog {
                     MainFrame.alert("请填写案件名称");
                     return;
                 }
-                LocalDateTime startLocalDateTime = dateTimePicker.getDateTimePermissive();
-                if (startLocalDateTime == null) {
+                LocalDateTime localDateTime = dateTimePicker.getDateTimePermissive();
+                if (localDateTime == null) {
                     MainFrame.alert("请填写开始时间");
                     return;
                 }
-                String caseTime = startLocalDateTime.toString().replace("T", " ") + ":00";
+                String caseTime = localDateTime.toString().replace("T", " ") + ":00";
                 String remark = remarkField.getText();
                 CaseService caseService = new CaseService();
                 ResultDTO resultDTO = new ResultDTO();
