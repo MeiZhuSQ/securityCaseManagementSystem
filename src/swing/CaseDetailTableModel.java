@@ -12,7 +12,7 @@ import vo.CaseItemVO;
 public class CaseDetailTableModel extends AbstractTableModel {
 
     private static final long serialVersionUID = 5172529856464610326L;
-    private String[] columnNames = new String[] {"ID" ,"序号", "名称", "类型", "时间", "备注", "操作" };
+    private String[] columnNames = new String[] {"ID" ,"序号", "名称", "类型", "开始时间", "结束时间", "备注", "操作" };
     public List<CaseItemVO> list = new ArrayList<>();
 
     public void setList(int caseId) {

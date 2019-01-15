@@ -607,7 +607,7 @@ public class NotePanel extends JPanel {
         
         JRadioButton radioButton_6 = new JRadioButton("健全");
         askedAbleTypeGroup.add(radioButton_6);
-        radioButton_6.setActionCommand("1");
+        radioButton_6.setActionCommand("0");
         radioButton_6.setBounds(139, 169, 90, 23);
         askedPanel.add(radioButton_6);
         
@@ -637,13 +637,13 @@ public class NotePanel extends JPanel {
         
         JRadioButton radioButton_5 = new JRadioButton("未成年");
         askedAdultTypeGroup.add(radioButton_5);
-        radioButton_5.setActionCommand("2");
+        radioButton_5.setActionCommand("0");
         radioButton_5.setBounds(216, 130, 90, 23);
         askedPanel.add(radioButton_5);
         
         JRadioButton radioButton_7 = new JRadioButton("非健全");
         askedAbleTypeGroup.add(radioButton_7);
-        radioButton_7.setActionCommand("2");
+        radioButton_7.setActionCommand("1");
         radioButton_7.setBounds(231, 169, 121, 23);
         askedPanel.add(radioButton_7);
         
