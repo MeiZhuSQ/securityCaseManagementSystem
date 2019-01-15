@@ -114,6 +114,7 @@ public class ClockDialog extends JDialog {
         DatePickerSettings dateSettings = new DatePickerSettings();
         TimePickerSettings timeSettings = new TimePickerSettings();
         timeSettings.setDisplaySpinnerButtons(true);
+        timeSettings.use24HourClockFormat();
         dateTimePicker = new DateTimePicker(dateSettings, timeSettings);
         dateTimePicker.setBounds(127, 90, 280, 24);
         getContentPane().add(dateTimePicker);

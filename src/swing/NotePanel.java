@@ -122,6 +122,7 @@ public class NotePanel extends JPanel {
         //dateSettings_1.setAllowEmptyDates(false);
         //timeSettings_1.setAllowEmptyTimes(false);
         timeSettings_1.setDisplaySpinnerButtons(true);
+        timeSettings_1.use24HourClockFormat();
         startDateTimePiker = new DateTimePicker(dateSettings_1, timeSettings_1);
         //panel.panel1.add(datePicker1, getConstraints(1, (row * rowMultiplier), 1));
         //startTime = DateUtil.getDatePicker(DateUtil.FORMAT_YYYYMMDDHHMMSS);
@@ -139,6 +140,7 @@ public class NotePanel extends JPanel {
 //        dateSettings_2.setAllowEmptyDates(false);
 //        timeSettings_2.setAllowEmptyTimes(false);
         timeSettings_2.setDisplaySpinnerButtons(true);
+        timeSettings_2.use24HourClockFormat();
         endDateTimePiker = new DateTimePicker(dateSettings_2, timeSettings_2);
         endDateTimePiker.setBounds(102, 143, 300, 24);
         notePanel.add(endDateTimePiker);
@@ -281,7 +283,8 @@ public class NotePanel extends JPanel {
                     //获取新增的笔录ID
                     newNoteId = Integer.parseInt(resultDTO.getData().toString());
                 } else {
-                    Note note = new Note(noteId, caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, 0);
+                    //Note note = new Note(noteId, caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, askedId);
+                    Note note = caseService.selectNoteById(noteId);
                     resultDTO = caseService.updateNote(note);
                     if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                         MainFrame.alert(resultDTO.getMessage());
