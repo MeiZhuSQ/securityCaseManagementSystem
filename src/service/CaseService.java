@@ -34,6 +34,17 @@ public class CaseService extends BaseService {
 	private OtherPersonDAO otherPersonDAO = new OtherPersonDAO();
 	private AskedPersonDAO askedPersonDAO = new AskedPersonDAO();
 	private ClockDAO clockDAO = new ClockDAO();
+	
+	/**
+	 * 判断起始时间是否早于结束时间
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean checkTime(String startTime, String endTime) throws Exception{
+		return DateUtil.checkTime(startTime, endTime);
+	}
 
 	/**
 	 * 校验参数：名称不能为空，不能超过20个字符；时间不能为空；备注不能超过50个字符
@@ -174,13 +185,19 @@ public class CaseService extends BaseService {
 	}
 
 	/**
-	 * 根据关键字模糊查询案件细则列表
+	 * 根据类别和关键字模糊查询案件细则列表
 	 * 
-	 * @param caseId
+	 * @param caseId 案件id
+	 * @param keyWord 关键字
+	 * @param itemType 案件细则种类：0全部；1笔录；2法律手续；3闹钟
 	 * @return
 	 */
-	public List<CaseItemVO> getCaseItemsByKeyWord(int caseId, String keyWord) {
-		return caseDAO.getCaseItemsByKeyWord(caseId, keyWord);
+	public List<CaseItemVO> getCaseItemsByKeyWord(int caseId, String keyWord, String itemType) {
+		if (CommonConstant.CASE_ITEM_TYPE_ALL.equals(itemType)) {
+			return caseDAO.getCaseItemsByKeyWord(caseId, keyWord);
+		}else {
+			return caseDAO.getCaseItemsByKeyWord(caseId, keyWord, itemType);
+		}
 	}
 
 	/**
@@ -803,7 +820,9 @@ public class CaseService extends BaseService {
 		}
 
 		try {
-			askedPersonDAO.add(askedPerson);
+			int askedPersonId = askedPersonDAO.add(askedPerson);
+			note.setAskedPersonId(askedPersonId);
+			noteDAO.update(note);
 			return requestSuccess();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -978,23 +997,25 @@ public class CaseService extends BaseService {
 	public static void main(String[] args) {
 		CaseService caseService = new CaseService();
 		ResultDTO resultDTO = new ResultDTO();
-		resultDTO = caseService.addCase("案件1", "2019-01-01 00:00:00", "备注1");
-		System.out.println(resultDTO);
+//		resultDTO = caseService.addCase("案件1", "2019-01-01 00:00:00", "备注1");
+//		System.out.println(resultDTO);
 //		resultDTO = caseService.addClock("闹钟1", "2019-01-01 00:00:00", "备注1");
 //		System.out.println(resultDTO);
 //		resultDTO = caseService.addClock("闹钟2", "2019-01-01 00:00:00", "备注2", 1);
 //		System.out.println(resultDTO);
 //		resultDTO = caseService.addProcedure(1, "法律手续1", "2019-01-01 00:00:00", "备注1");
 //		System.out.println(resultDTO);
-		resultDTO = caseService.addNote(1, "笔录1", "2019-01-01 00:00:00", "2019-01-01 00:10:00", 
-				"备注1", "地点2", "文件1", 0);
-		System.out.println(resultDTO);
+//		resultDTO = caseService.addNote(1, "笔录1", "2019-01-01 00:00:00", "2019-01-01 00:10:00", 
+//				"备注1", "地点2", "文件1", 0);
+//		System.out.println(resultDTO);
 //		resultDTO = caseService.addPolice("警员1", "1", 1);
 //		System.out.println(resultDTO);
-		resultDTO = caseService.addOtherPerson(2, "其他1", "1", "110111198612101112", CommonConstant.OTHER_PERSON_TYPE_1);
-		System.out.println(resultDTO);
-//		resultDTO = caseService.addAskedPerson(1, "被询问人1", "1", CommonConstant.ASKED_PERSON_TYPE_1, "0", "110111198612101111", "0");
+//		resultDTO = caseService.addOtherPerson(1, "其他1", "1", "110111198612101112", CommonConstant.OTHER_PERSON_TYPE_1);
 //		System.out.println(resultDTO);
+//		resultDTO = caseService.addOtherPerson(1, "其他2", "1", "110111198612101112", CommonConstant.OTHER_PERSON_TYPE_1);
+//		System.out.println(resultDTO);
+		resultDTO = caseService.addAskedPerson(1, "被询问人1", "1", CommonConstant.ASKED_PERSON_TYPE_1, "0", "110111198612101111", "0");
+		System.out.println(resultDTO);
 		
 	}
 }

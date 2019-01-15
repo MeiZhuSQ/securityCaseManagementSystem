@@ -13,6 +13,11 @@ public class CommonConstant {
 	public final static String NO = "0";
 
 	/**
+	 * 案件细则类型：全部
+	 */
+	public final static String CASE_ITEM_TYPE_ALL = "0";
+
+	/**
 	 * 案件细则类型：笔录
 	 */
 	public final static String CASE_ITEM_TYPE_NOTE = "1";

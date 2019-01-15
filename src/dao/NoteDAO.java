@@ -45,7 +45,7 @@ public class NoteDAO {
 	}
 
 	public int update(Note note) {
-		String sql = "update note set case_id = ? ,name = ?,start_time = ? ,`end_time` = ?,remark = ? where id = ?";
+		String sql = "update note set case_id = ? ,name = ?,start_time = ? ,`end_time` = ?,remark = ?,asked_person_id = ? where id = ?";
 		int result = 0;
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, note.getCaseId());
@@ -53,7 +53,8 @@ public class NoteDAO {
 			ps.setString(3, note.getStartTime());
 			ps.setString(4, note.getEndTime());
 			ps.setString(5, note.getRemark());
-			ps.setInt(6, note.getId());
+			ps.setInt(6, note.getAskedPersonId());
+			ps.setInt(7, note.getId());
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -189,7 +190,7 @@ public class NoteDAO {
 		int askedPersonId = note.getAskedPersonId();
 		String startTime = note.getStartTime();
 		String endTime = note.getEndTime();
-		String sql = "select * from asked_person LEFT JOIN  note on note.asked_person_id = asked_person.id "
+		String sql = "select * from note LEFT JOIN asked_person  on note.asked_person_id = asked_person.id "
 				+ "WHERE start_time < ? and  end_time > ? and asked_person.id_card = ? and case_id = ?";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
