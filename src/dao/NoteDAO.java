@@ -192,7 +192,7 @@ public class NoteDAO {
 		int askedPersonId = note.getAskedPersonId();
 		String startTime = note.getStartTime();
 		String endTime = note.getEndTime();
-		String sql = "select * from asked_person LEFT JOIN  note on note.asked_person_id = asked_person.id "
+		String sql = "select * from note LEFT JOIN asked_person  on note.asked_person_id = asked_person.id "
 				+ "WHERE start_time < ? and  end_time > ? and asked_person.id_card = ? and case_id = ?";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {

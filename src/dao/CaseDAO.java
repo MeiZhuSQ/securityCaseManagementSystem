@@ -146,9 +146,9 @@ public class CaseDAO {
 	}
 
 	public List<CaseItemVO> getCaseItems(int caseId) {
-		String sql = "SELECT id,name,start_time as time,remark ,'1' as type FROM note where case_id = ?" + "UNION "
-				+ "SELECT id,name,time,remark ,'2' as type FROM procedure where case_id = ?" + "UNION "
-				+ "SELECT id,name,time,remark ,'3' as type FROM clock where case_id = ?" + "ORDER BY time desc";
+		String sql = "SELECT id,name,start_time ,end_time,remark ,'1' as type FROM note where case_id = ?" + "UNION "
+				+ "SELECT id,name,time as start_time,'' as end_time,remark ,'2' as type FROM procedure where case_id = ?" + "UNION "
+				+ "SELECT id,name,time as start_time,'' as end_time,remark ,'3' as type FROM clock where case_id = ?" + "ORDER BY time desc";
 		List<CaseItemVO> caseItems = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, caseId);
@@ -156,7 +156,7 @@ public class CaseDAO {
 			ps.setInt(3, caseId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				CaseItemVO caseItemVO = new CaseItemVO(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
+				CaseItemVO caseItemVO = new CaseItemVO(rs.getInt("id"), rs.getString("name"), rs.getString("start_time"), rs.getString("end_time"),
 						rs.getString("remark"), rs.getString("type"));
 				caseItems.add(caseItemVO);
 			}
@@ -168,10 +168,10 @@ public class CaseDAO {
 	}
 
 	public List<CaseItemVO> getCaseItemsByKeyWord(int caseId, String keyWord) {
-		String sql = "select id,name,time,remark,type from "
-				+ "(SELECT id,name,start_time as time,remark ,'1' as type FROM note where case_id = ?" + "UNION "
-				+ "SELECT id,name,time,remark ,'2' as type FROM procedure where case_id = ?" + "UNION "
-				+ "SELECT id,name,time,remark ,'3' as type FROM clock where case_id = ?) a "
+		String sql = "select id,name,start_time,end_time,remark,type from "
+				+ "(SELECT id,name,start_time,end_time,remark ,'1' as type FROM note where case_id = ?" + "UNION "
+				+ "SELECT id,name,time as start_time,'' as end_time , remark ,'2' as type FROM procedure where case_id = ?" + "UNION "
+				+ "SELECT id,name,time as start_time,'' as end_time , remark ,'3' as type FROM clock where case_id = ?) a "
 				+ "WHERE a.name LIKE ?  ORDER BY time desc";
 		List<CaseItemVO> caseItems = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -181,7 +181,32 @@ public class CaseDAO {
 			ps.setString(4, "%" + keyWord + "%");
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				CaseItemVO caseItemVO = new CaseItemVO(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
+				CaseItemVO caseItemVO = new CaseItemVO(rs.getInt("id"), rs.getString("name"), rs.getString("start_time"), rs.getString("end_time"),
+						rs.getString("remark"), rs.getString("type"));
+				caseItems.add(caseItemVO);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return caseItems;
+	}
+
+	public List<CaseItemVO> getCaseItemsByKeyWord(int caseId, String keyWord, String itemType) {
+		String sql = "select id,name,start_time,end_time,remark,type from "
+				+ "(SELECT id,name,start_time,end_time,remark ,'1' as type FROM note where case_id = ?" + "UNION "
+				+ "SELECT id,name,time as start_time,'' as end_time , remark ,'2' as type FROM procedure where case_id = ?" + "UNION "
+				+ "SELECT id,name,time as start_time,'' as end_time , remark ,'3' as type FROM clock where case_id = ?) a "
+				+ "WHERE a.name LIKE ? and a.type = ? ORDER BY time desc";
+		List<CaseItemVO> caseItems = new ArrayList<>();
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setInt(1, caseId);
+			ps.setInt(2, caseId);
+			ps.setInt(3, caseId);
+			ps.setString(4, "%" + keyWord + "%");
+			ps.setString(5, itemType);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				CaseItemVO caseItemVO = new CaseItemVO(rs.getInt("id"), rs.getString("name"), rs.getString("start_time"), rs.getString("end_time"),
 						rs.getString("remark"), rs.getString("type"));
 				caseItems.add(caseItemVO);
 			}
