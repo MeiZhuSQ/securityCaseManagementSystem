@@ -4,13 +4,15 @@ public class CaseItemVO {
 	private int id;
 	private String name;
 	private String time;
+	private String endTime;
 	private String remark;
 	private String type;
 
-	public CaseItemVO(int id, String name, String time, String remark, String type) {
+	public CaseItemVO(int id, String name, String startTime, String endTime, String remark, String type) {
 		this.setId(id);
 		this.setName(name);
-		this.setTime(time);
+		this.setTime(startTime);
+		this.setEndTime(endTime);
 		this.setRemark(remark);
 		this.setType(type);
 	}
@@ -53,6 +55,14 @@ public class CaseItemVO {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 
 }
