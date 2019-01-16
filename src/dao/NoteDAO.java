@@ -187,9 +187,8 @@ public class NoteDAO {
 		return notes;
 	}
 
-	public List<Note> selectConflictingNotesForAskedPerson(Note note) {
+	public List<Note> selectConflictingNotesForAskedPerson(Note note, String askedPersonIdCard) {
 		int caseId = note.getCaseId();
-		int askedPersonId = note.getAskedPersonId();
 		String startTime = note.getStartTime();
 		String endTime = note.getEndTime();
 		String sql = "select * from note LEFT JOIN asked_person  on note.asked_person_id = asked_person.id "
@@ -198,7 +197,7 @@ public class NoteDAO {
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, endTime);
 			ps.setString(2, startTime);
-			ps.setInt(3, askedPersonId);
+			ps.setString(3, askedPersonIdCard);
 			ps.setInt(4, caseId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
