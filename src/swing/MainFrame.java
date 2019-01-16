@@ -371,7 +371,6 @@ public class MainFrame extends BaseFrame {
 			        	f.setVisible(true);*/
 					    clock.setOverFlag("1");
 					    new CaseService().updateClock(clock);
-					    alert("闹钟提示", "闹钟【" + clock.getName()+ "】时间已到！");
 					    clockListModel.removeAllElements();
 		                List<Clock> clocks = new CaseService().getClocksInThreeDaysAndLastDay();
 		                for (Clock c : clocks) {
@@ -384,6 +383,7 @@ public class MainFrame extends BaseFrame {
 							Clip clip = AudioSystem.getClip();
 							clip.open(audioIn);
 							clip.start();
+							alert("闹钟提示", "闹钟【" + clock.getName()+ "】时间已到！");
 						} catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
 							e.printStackTrace();
 						}
