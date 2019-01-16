@@ -516,7 +516,7 @@ public class CaseService extends BaseService {
 		}
 
 		// 校验同一案件内所有笔录被询问人是否冲突
-		List<Note> notes = noteDAO.selectConflictingNotesForAskedPerson(note);
+		List<Note> notes = noteDAO.selectConflictingNotesForAskedPerson(note, askedPerson.getIdCard());
 		if (addFlag) {
 			if (notes.size() > 0) {
 				return requestFail("被询问人、时间、地点与同案件下其他笔录冲突", notes);
@@ -819,10 +819,16 @@ public class CaseService extends BaseService {
 			return result;
 		}
 
-		try {
-			int askedPersonId = askedPersonDAO.add(askedPerson);
-			note.setAskedPersonId(askedPersonId);
-			noteDAO.update(note);
+		try {		
+			AskedPerson askedPersonOld = askedPersonDAO.selectById(note.getAskedPersonId());
+			if (null == askedPersonOld) {
+				int askedPersonId = askedPersonDAO.add(askedPerson);
+				note.setAskedPersonId(askedPersonId);
+				noteDAO.update(note);
+			}else {
+				askedPerson.setId(askedPersonOld.getId());
+				noteDAO.update(note);
+			}
 			return requestSuccess();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1005,16 +1011,21 @@ public class CaseService extends BaseService {
 //		System.out.println(resultDTO);
 //		resultDTO = caseService.addProcedure(1, "法律手续1", "2019-01-01 00:00:00", "备注1");
 //		System.out.println(resultDTO);
-//		resultDTO = caseService.addNote(1, "笔录1", "2019-01-01 00:00:00", "2019-01-01 00:10:00", 
+//		resultDTO = caseService.addNote(2, "笔录1", "2019-01-01 00:00:00", "2019-01-01 00:10:00", 
 //				"备注1", "地点2", "文件1", 0);
 //		System.out.println(resultDTO);
-//		resultDTO = caseService.addPolice("警员1", "1", 1);
+		resultDTO = caseService.addNote(2, "笔录1", "2019-01-01 00:00:00", "2019-01-01 00:10:00", 
+				"备注1", "地点1", "文件1", 0);
+		System.out.println(resultDTO);
+//		resultDTO = caseService.addPolice("警员1", "0", 16);
 //		System.out.println(resultDTO);
-//		resultDTO = caseService.addOtherPerson(1, "其他1", "1", "110111198612101112", CommonConstant.OTHER_PERSON_TYPE_1);
+//		resultDTO = caseService.addOtherPerson(16, "其他1", "1", "110111198612101112", CommonConstant.OTHER_PERSON_TYPE_1);
 //		System.out.println(resultDTO);
 //		resultDTO = caseService.addOtherPerson(1, "其他2", "1", "110111198612101112", CommonConstant.OTHER_PERSON_TYPE_1);
 //		System.out.println(resultDTO);
-		resultDTO = caseService.addAskedPerson(1, "被询问人1", "1", CommonConstant.ASKED_PERSON_TYPE_1, "0", "110111198612101111", "0");
+		resultDTO = caseService.addAskedPerson(1, "被询问人1", "0", CommonConstant.ASKED_PERSON_TYPE_1, "1", "110111198612101111", "0");
+		System.out.println(resultDTO);
+		resultDTO = caseService.addAskedPerson(2, "被询问人1", "0", CommonConstant.ASKED_PERSON_TYPE_1, "1", "110111198612101111", "0");
 		System.out.println(resultDTO);
 		
 	}
