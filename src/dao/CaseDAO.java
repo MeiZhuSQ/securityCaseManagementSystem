@@ -172,7 +172,7 @@ public class CaseDAO {
 				+ "(SELECT id,name,start_time,end_time,remark ,'1' as type FROM note where case_id = ?" + "UNION "
 				+ "SELECT id,name,time as start_time,'' as end_time , remark ,'2' as type FROM procedure where case_id = ?" + "UNION "
 				+ "SELECT id,name,time as start_time,'' as end_time , remark ,'3' as type FROM clock where case_id = ?) a "
-				+ "WHERE a.name LIKE ?  ORDER BY time desc";
+				+ "WHERE a.name LIKE ?  ORDER BY a.start_time desc";
 		List<CaseItemVO> caseItems = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, caseId);
@@ -196,7 +196,7 @@ public class CaseDAO {
 				+ "(SELECT id,name,start_time,end_time,remark ,'1' as type FROM note where case_id = ?" + "UNION "
 				+ "SELECT id,name,time as start_time,'' as end_time , remark ,'2' as type FROM procedure where case_id = ?" + "UNION "
 				+ "SELECT id,name,time as start_time,'' as end_time , remark ,'3' as type FROM clock where case_id = ?) a "
-				+ "WHERE a.name LIKE ? and a.type = ? ORDER BY time desc";
+				+ "WHERE a.name LIKE ? and a.type = ? ORDER BY a.start_time desc";
 		List<CaseItemVO> caseItems = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, caseId);
