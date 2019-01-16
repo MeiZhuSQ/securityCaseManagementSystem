@@ -3,6 +3,7 @@ package swing;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -29,9 +30,12 @@ import javax.swing.JButton;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import javax.swing.JSlider;
+import javax.swing.JComboBox;
 
 public class ViewCasePanel extends JPanel {
 
@@ -47,6 +51,8 @@ public class ViewCasePanel extends JPanel {
     // 记录案子ID
     private int caseId;
     private static ViewCasePanel instance;
+    public JTextField searchNametextField;
+    public JComboBox<String> searchTypeComboBox;
     
     public static ViewCasePanel getInstance() {
         if (instance == null) {
@@ -59,7 +65,7 @@ public class ViewCasePanel extends JPanel {
         setLayout(null);
 
         JPanel casePanel = new JPanel();
-        casePanel.setBounds(15, 15, 1150, 77);
+        casePanel.setBounds(15, 15, 1150, 65);
         add(casePanel);
         casePanel.setLayout(null);
 
@@ -100,7 +106,7 @@ public class ViewCasePanel extends JPanel {
         casePanel.add(label);
 
         JScrollPane noteScrollPane = new JScrollPane();
-        noteScrollPane.setBounds(15, 107, 1150, 475);
+        noteScrollPane.setBounds(15, 125, 1150, 485);
         add(noteScrollPane);
 
         Border noteTitleBorder, noteLineBorder;
@@ -116,7 +122,7 @@ public class ViewCasePanel extends JPanel {
         JTableHeader head = caseDetailTable.getTableHeader();
         head.setPreferredSize(new Dimension(head.getWidth(), 30));
         GUIUtil.hideColumn(caseDetailTable, 0);
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 8; i++) {
             TableColumn column = caseDetailTable.getColumnModel().getColumn(i);
             if (i == 1) {
                 column.setPreferredWidth(50);
@@ -133,12 +139,12 @@ public class ViewCasePanel extends JPanel {
                 column.setMaxWidth(80);
                 column.setMinWidth(80);
             }
-            if (i == 4) {
+            if (i == 4 || i == 5) {
                 column.setPreferredWidth(150);
                 column.setMaxWidth(150);
                 column.setMinWidth(150);
             }
-            if (i == 6) {
+            if (i == 7) {
                 column.setPreferredWidth(80);
                 column.setMaxWidth(80);
                 column.setMinWidth(80);
@@ -147,13 +153,16 @@ public class ViewCasePanel extends JPanel {
         
         btnName.add("修改");
         btnName.add("删除");
-        TableColumn column = caseDetailTable.getColumnModel().getColumn(6);
+        TableColumn column = caseDetailTable.getColumnModel().getColumn(7);
         column.setCellRenderer(new CaseDetailButtonRenderer());
         column.setCellEditor(new CaseDetailButtonEditor());
         noteScrollPane.setViewportView(caseDetailTable);
+        
+        JLabel lblNewLabel_1 = new JLabel("New label");
+        noteScrollPane.setColumnHeaderView(lblNewLabel_1);
 
         JPanel panel = new JPanel();
-        panel.setBounds(15, 595, 1150, 36);
+        panel.setBounds(15, 615, 1150, 36);
         add(panel);
 
         JButton createNoteButton = new JButton("新建笔录");
@@ -204,8 +213,10 @@ public class ViewCasePanel extends JPanel {
                 ProcedureDialog procedureDialog = ProcedureDialog.getInstance();
                 procedureDialog.setTitle("新建法律手续");
                 procedureDialog.setSize(new Dimension(500, 400));
+                procedureDialog.setProcedureId(0);
                 procedureDialog.procedureNameField.setText("");
                 procedureDialog.remarkField.setText("");
+                procedureDialog.dateTimePicker.clear();
                 GUIUtil.setCenter(procedureDialog);
                 procedureDialog.setVisible(true);
             }
@@ -218,14 +229,47 @@ public class ViewCasePanel extends JPanel {
                 ClockDialog clockDialog = ClockDialog.getInstance();
                 clockDialog.setTitle("新建闹钟");
                 clockDialog.setSize(new Dimension(500, 400));
+                clockDialog.setClockId(0);
                 clockDialog.clockNameField.setText("");
                 clockDialog.remarkField.setText("");
+                clockDialog.dateTimePicker.clear();
                 GUIUtil.setCenter(clockDialog);
                 clockDialog.setVisible(true);
             }
         });
         panel.add(createClockButton);
+        
+        JPanel searchPanel = new JPanel();
+        searchPanel.setBounds(25, 85, 661, 30);
+        add(searchPanel);
+        searchPanel.setLayout(null);
+        
+        searchNametextField = new JTextField();
+        searchNametextField.setBounds(99, 2, 176, 24);
+        searchPanel.add(searchNametextField);
+        
+        JLabel label_1 = new JLabel("按名称搜索");
+        label_1.setBounds(14, 5, 104, 18);
+        searchPanel.add(label_1);
+        
+        searchTypeComboBox = new JComboBox<String>();
+        searchTypeComboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"全部", "笔录", "法律手续", "闹钟"}));
+        searchTypeComboBox.setBounds(403, 2, 163, 24);
+        searchPanel.add(searchTypeComboBox);
+        
+        JLabel lblNewLabel = new JLabel("按类型搜索");
+        lblNewLabel.setBounds(315, 5, 96, 18);
+        searchPanel.add(lblNewLabel);
 
+        ImageButton searchButton = new ImageButton("search.png","案件搜索");
+        searchButton.setLocation(580, 5);
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCaseDetailTable();
+            }
+        });
+        searchPanel.add(searchButton);
         /*JButton viewNoteButton = new JButton("详情");
         viewNoteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -367,7 +411,9 @@ public class ViewCasePanel extends JPanel {
      * }
      */
     public void updateCaseDetailTable() {
-        caseDetailTableModel.setList(caseId);
+        String searchName = searchNametextField.getText();
+        int selectedIndex = searchTypeComboBox.getSelectedIndex();
+        caseDetailTableModel.setList(caseId, searchName, String.valueOf(selectedIndex));
         caseDetailTable.updateUI();
         caseDetailTable.setRowHeight(30);
         JTableHeader head = caseDetailTable.getTableHeader();

@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -286,6 +287,7 @@ public class MainFrame extends BaseFrame {
                 caseDialog.setSize(new Dimension(500, 400));
                 caseDialog.caseNameField.setText("");
                 caseDialog.remarkField.setText("");
+                caseDialog.dateTimePicker.clear();
                 GUIUtil.setCenter(caseDialog);
                 caseDialog.setVisible(true);
             }

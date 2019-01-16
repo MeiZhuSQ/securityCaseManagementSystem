@@ -122,6 +122,7 @@ public class NotePanel extends JPanel {
         //dateSettings_1.setAllowEmptyDates(false);
         //timeSettings_1.setAllowEmptyTimes(false);
         timeSettings_1.setDisplaySpinnerButtons(true);
+        timeSettings_1.use24HourClockFormat();
         startDateTimePiker = new DateTimePicker(dateSettings_1, timeSettings_1);
         //panel.panel1.add(datePicker1, getConstraints(1, (row * rowMultiplier), 1));
         //startTime = DateUtil.getDatePicker(DateUtil.FORMAT_YYYYMMDDHHMMSS);
@@ -139,6 +140,7 @@ public class NotePanel extends JPanel {
 //        dateSettings_2.setAllowEmptyDates(false);
 //        timeSettings_2.setAllowEmptyTimes(false);
         timeSettings_2.setDisplaySpinnerButtons(true);
+        timeSettings_2.use24HourClockFormat();
         endDateTimePiker = new DateTimePicker(dateSettings_2, timeSettings_2);
         endDateTimePiker.setBounds(102, 143, 300, 24);
         notePanel.add(endDateTimePiker);
@@ -281,7 +283,8 @@ public class NotePanel extends JPanel {
                     //获取新增的笔录ID
                     newNoteId = Integer.parseInt(resultDTO.getData().toString());
                 } else {
-                    Note note = new Note(noteId, caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, 0);
+                    //Note note = new Note(noteId, caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, askedId);
+                    Note note = caseService.selectNoteById(noteId);
                     resultDTO = caseService.updateNote(note);
                     if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                         MainFrame.alert(resultDTO.getMessage());
@@ -598,13 +601,13 @@ public class NotePanel extends JPanel {
         label_4.setBounds(31, 130, 90, 21);
         askedPanel.add(label_4);
         
-        JLabel label_5 = new JLabel("是否健全");
+        JLabel label_5 = new JLabel("是否需要翻译");
         label_5.setBounds(31, 169, 95, 17);
         askedPanel.add(label_5);
         
-        JRadioButton radioButton_6 = new JRadioButton("健全");
+        JRadioButton radioButton_6 = new JRadioButton("不需要");
         askedAbleTypeGroup.add(radioButton_6);
-        radioButton_6.setActionCommand("1");
+        radioButton_6.setActionCommand("0");
         radioButton_6.setBounds(139, 169, 90, 23);
         askedPanel.add(radioButton_6);
         
@@ -634,13 +637,13 @@ public class NotePanel extends JPanel {
         
         JRadioButton radioButton_5 = new JRadioButton("未成年");
         askedAdultTypeGroup.add(radioButton_5);
-        radioButton_5.setActionCommand("2");
+        radioButton_5.setActionCommand("0");
         radioButton_5.setBounds(216, 130, 90, 23);
         askedPanel.add(radioButton_5);
         
-        JRadioButton radioButton_7 = new JRadioButton("非健全");
+        JRadioButton radioButton_7 = new JRadioButton("需要");
         askedAbleTypeGroup.add(radioButton_7);
-        radioButton_7.setActionCommand("2");
+        radioButton_7.setActionCommand("1");
         radioButton_7.setBounds(231, 169, 121, 23);
         askedPanel.add(radioButton_7);
         
