@@ -120,7 +120,6 @@ public class CaseDialog extends JDialog {
         JButton cancelButton = new JButton("取消");
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MainFrame.frame.setEnabled(true);
                 getInstance().setVisible(false);
             }
         });
