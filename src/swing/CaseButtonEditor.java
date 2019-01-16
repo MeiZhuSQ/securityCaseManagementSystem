@@ -78,7 +78,9 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
                 viewPanel.caseTimeField.setText(caseTime);
                 viewPanel.caseRemarkField.setText(caseRemark);
                 // 定义案件详情下的 综合列表Model，动态给Model赋值
-                viewPanel.caseDetailTableModel.setList(caseId);
+                String searchName = viewPanel.searchNametextField.getText();
+                int selectedIndex = viewPanel.searchTypeComboBox.getSelectedIndex();
+                viewPanel.caseDetailTableModel.setList(caseId, searchName, String.valueOf(selectedIndex));
                 MainFrame.tabbedPane.addTab("案件详情", viewPanel, null);
                 MainFrame.tabbedPane.setSelectedComponent(viewPanel);
                 fireEditingStopped();

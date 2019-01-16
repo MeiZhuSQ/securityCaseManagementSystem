@@ -15,8 +15,8 @@ public class CaseDetailTableModel extends AbstractTableModel {
     private String[] columnNames = new String[] {"ID" ,"序号", "名称", "类型", "开始时间", "结束时间", "备注", "操作" };
     public List<CaseItemVO> list = new ArrayList<>();
 
-    public void setList(int caseId) {
-        list = new CaseService().getCaseItems(caseId);
+    public void setList(int caseId, String name, String itemType) {
+        list = new CaseService().getCaseItemsByKeyWord(caseId, name, itemType);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class CaseDetailTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        if (columnIndex == 6) {
+        if (columnIndex == 7) {
             return true;
         }
         return false;
@@ -65,6 +65,8 @@ public class CaseDetailTableModel extends AbstractTableModel {
         if (columnIndex == 4)
             return caseItemVO.getTime();
         if (columnIndex == 5)
+            return caseItemVO.getEndTime();
+        if (columnIndex == 6)
             return caseItemVO.getRemark();
         return null;
     }

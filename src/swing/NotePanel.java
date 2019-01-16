@@ -601,11 +601,11 @@ public class NotePanel extends JPanel {
         label_4.setBounds(31, 130, 90, 21);
         askedPanel.add(label_4);
         
-        JLabel label_5 = new JLabel("是否健全");
+        JLabel label_5 = new JLabel("是否需要翻译");
         label_5.setBounds(31, 169, 95, 17);
         askedPanel.add(label_5);
         
-        JRadioButton radioButton_6 = new JRadioButton("健全");
+        JRadioButton radioButton_6 = new JRadioButton("不需要");
         askedAbleTypeGroup.add(radioButton_6);
         radioButton_6.setActionCommand("0");
         radioButton_6.setBounds(139, 169, 90, 23);
@@ -641,7 +641,7 @@ public class NotePanel extends JPanel {
         radioButton_5.setBounds(216, 130, 90, 23);
         askedPanel.add(radioButton_5);
         
-        JRadioButton radioButton_7 = new JRadioButton("非健全");
+        JRadioButton radioButton_7 = new JRadioButton("需要");
         askedAbleTypeGroup.add(radioButton_7);
         radioButton_7.setActionCommand("1");
         radioButton_7.setBounds(231, 169, 121, 23);
