@@ -51,6 +51,7 @@ public class UserService extends BaseService {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(Integer.valueOf("jljglajg"));
+		boolean checkPassword = new UserService().checkPassword("666666","534069");
+		System.out.println(checkPassword);
 	}
 }

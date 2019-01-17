@@ -176,6 +176,16 @@ public class MainFrame extends BaseFrame {
             if (i == 0) {
                 GUIUtil.hideColumn(caseTable, 0);
             }
+            if (i == 1) {
+                column.setPreferredWidth(50);
+                column.setMaxWidth(50);
+                column.setMinWidth(50);
+            }
+            if (i == 3) {
+                column.setPreferredWidth(120);
+                column.setMaxWidth(130);
+                column.setMinWidth(130);
+            }
             if (i == 5) {
                 column.setPreferredWidth(100);
                 column.setMaxWidth(100);
