@@ -1,6 +1,7 @@
 package service;
 
 import java.text.ParseException;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -379,7 +380,7 @@ public class CaseService extends BaseService {
 		AskedPerson askedPerson = askedPersonDAO.selectById(note.getAskedPersonId());
 		if (null != askedPerson) {
 			// 校验被询问人
-			result = checkAskedPerson(askedPerson, note, false);
+			result = checkAskedPerson(askedPerson, note, "2", null);
 			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 				return result;
 			}
@@ -448,13 +449,32 @@ public class CaseService extends BaseService {
 	 * 
 	 * @param note
 	 *            笔录
-	 * @param addFlag
-	 *            true:添加;false:更新
+	 * @param checkType 1新增被询问人；2更新被询问人；3删除警员；4删除其他工作人员
 	 * @return
 	 */
-	private ResultDTO checkAskedPerson(AskedPerson askedPerson, Note note, boolean addFlag) {
-		List<OtherPerson> otherPersons = selectOtherPersonByNoteId(note.getId());
+	private ResultDTO checkAskedPerson(AskedPerson askedPerson, Note note, String checkType, Integer policeOrOtherPersonId) {
+		
 		List<Police> polices = selectPoliceForNote(note.getId());
+		if ("3".equals(checkType)) {
+			Iterator<Police> iterator = polices.iterator();
+			while (iterator.hasNext()) {
+				Police police = iterator.next();
+				if (police.getId() == policeOrOtherPersonId) {
+					iterator.remove();
+				}
+			}
+		}
+		
+		List<OtherPerson> otherPersons = selectOtherPersonByNoteId(note.getId());
+		if ("4".equals(checkType)) {
+			Iterator<OtherPerson> iterator = otherPersons.iterator();
+			while (iterator.hasNext()) {
+				OtherPerson otherPerson = iterator.next();
+				if (otherPerson.getId() == policeOrOtherPersonId) {
+					iterator.remove();
+				}
+			}
+		}
 
 		// 翻译标记
 		boolean interpreterFlag = true;
@@ -517,11 +537,11 @@ public class CaseService extends BaseService {
 
 		// 校验同一案件内所有笔录被询问人是否冲突
 		List<Note> notes = noteDAO.selectConflictingNotesForAskedPerson(note, askedPerson.getIdCard());
-		if (addFlag) {
+		if ("1".equals(checkType)) {
 			if (notes.size() > 0) {
 				return requestFail("被询问人、时间与同案件下其他笔录冲突", notes);
 			}
-		} else {
+		} else if("2".equals(checkType)){
 			if (notes.size() > 1) {
 				return requestFail("被询问人、时间与同案件下其他笔录冲突", notes);
 			}
@@ -651,7 +671,7 @@ public class CaseService extends BaseService {
 		Note note = noteDAO.selectById(police.getNoteId());
 		AskedPerson askedPerson = askedPersonDAO.selectById(note.getAskedPersonId());
 		if (null != askedPerson) {
-			ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(police.getNoteId()), false);
+			ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(police.getNoteId()), "3", id);
 			if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
 				return requestFail(resultDTO.getMessage());
 			}
@@ -750,7 +770,7 @@ public class CaseService extends BaseService {
 		Note note = noteDAO.selectById(otherPerson.getNoteId());
 		AskedPerson askedPerson = askedPersonDAO.selectById(note.getAskedPersonId());
 		if (null != askedPerson) {
-			ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(otherPerson.getNoteId()), false);
+			ResultDTO resultDTO = checkAskedPerson(askedPerson, note, "4", id);
 			if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
 				return requestFail(resultDTO.getMessage());
 			}	
@@ -809,7 +829,7 @@ public class CaseService extends BaseService {
 		AskedPerson askedPerson = new AskedPerson(noteId, name, sex, type, adultFlag, idCard, disabledFlag);
 
 		// 校验被询问人
-		ResultDTO result = checkAskedPerson(askedPerson, note, true);
+		ResultDTO result = checkAskedPerson(askedPerson, note, "1", null);
 		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 			return result;
 		}
@@ -839,7 +859,7 @@ public class CaseService extends BaseService {
 	 */
 	public ResultDTO updateAskedPerson(AskedPerson askedPerson, int noteId) {
 		Note note = noteDAO.selectById(noteId);
-		ResultDTO resultDTO = checkAskedPerson(askedPerson, note, false);
+		ResultDTO resultDTO = checkAskedPerson(askedPerson, note, "2", null);
 		if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
 			return resultDTO;
 		}
