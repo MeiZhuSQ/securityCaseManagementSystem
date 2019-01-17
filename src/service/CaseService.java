@@ -536,11 +536,6 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public ResultDTO delNote(int noteId) {
-		Note note = noteDAO.selectById(noteId);
-		AskedPerson askedPerson = askedPersonDAO.selectById(note.getAskedPersonId());
-		if (null != askedPerson) {
-			return requestFail("请先删除笔录关联的被询问人");
-		}
 		List<Police> polices = policeDAO.listByNoteId(noteId);
 		if (polices.size() > 0) {
 			return requestFail("请先删除笔录关联的警员");
