@@ -408,11 +408,11 @@ public class CaseService extends BaseService {
 		List<Note> notes = noteDAO.selectConflictingNotesForOtherPerson(note, otherPersonIdCard);
 		if (addFlag) {
 			if (notes.size() > 0) {
-				return requestFail("其他工作人员、时间、地点与同一案件下其他笔录冲突", notes);
+				return requestFail("其他工作人员、时间与同一案件下其他笔录冲突", notes);
 			}
 		} else {
 			if (notes.size() > 1) {
-				return requestFail("其他工作人员、时间、地点与同一案件下其他笔录冲突", notes);
+				return requestFail("其他工作人员、时间与同一案件下其他笔录冲突", notes);
 			}
 		}
 		return requestSuccess();
@@ -433,11 +433,11 @@ public class CaseService extends BaseService {
 		List<Note> notes = noteDAO.selectConflictingNotesForPolice(note, policeName);
 		if (addFlag) {
 			if (notes.size() > 0) {
-				return requestFail("警员、时间、地点与同一案件下其他笔录冲突", notes);
+				return requestFail("警员、时间与同一案件下其他笔录冲突", notes);
 			}
 		} else {
 			if (notes.size() > 1) {
-				return requestFail("警员、时间、地点与同一案件下其他笔录冲突", notes);
+				return requestFail("警员、时间与同一案件下其他笔录冲突", notes);
 			}
 		}
 		return requestSuccess();
@@ -464,14 +464,14 @@ public class CaseService extends BaseService {
 		boolean policeSexFlag = true;
 
 		// 聋哑人少数民族及外国人需要翻译在场
-		if (askedPerson.getDisabledFlag().equals("1")) {
+		if (askedPerson.getDisabledFlag().equals(CommonConstant.YES)) {
 			interpreterFlag = false;
 		}
 		// 未成年被询问人需有监护人在场
-		if (askedPerson.getAdultFlag().equals("0")) {
+		if (askedPerson.getAdultFlag().equals(CommonConstant.NO)) {
 			guardianFlag = false;
 			// 女性未成年人需要女警员在场
-			if (askedPerson.getSex().equals("0")) {
+			if (askedPerson.getSex().equals(CommonConstant.SEX_FEMALE)) {
 				policeSexFlag = false;
 			}
 		}
@@ -505,7 +505,7 @@ public class CaseService extends BaseService {
 		// 判断是否有女警员
 		if (!policeSexFlag) {
 			for (Police police : polices) {
-				if (police.getSex().equals("0")) {
+				if (police.getSex().equals(CommonConstant.SEX_FEMALE)) {
 					policeSexFlag = true;
 					break;
 				}
@@ -519,11 +519,11 @@ public class CaseService extends BaseService {
 		List<Note> notes = noteDAO.selectConflictingNotesForAskedPerson(note, askedPerson.getIdCard());
 		if (addFlag) {
 			if (notes.size() > 0) {
-				return requestFail("被询问人、时间、地点与同案件下其他笔录冲突", notes);
+				return requestFail("被询问人、时间与同案件下其他笔录冲突", notes);
 			}
 		} else {
 			if (notes.size() > 1) {
-				return requestFail("被询问人、时间、地点与同案件下其他笔录冲突", notes);
+				return requestFail("被询问人、时间与同案件下其他笔录冲突", notes);
 			}
 		}
 		return requestSuccess();
@@ -536,11 +536,6 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public ResultDTO delNote(int noteId) {
-		Note note = noteDAO.selectById(noteId);
-		AskedPerson askedPerson = askedPersonDAO.selectById(note.getAskedPersonId());
-		if (null != askedPerson) {
-			return requestFail("请先删除笔录关联的被询问人");
-		}
 		List<Police> polices = policeDAO.listByNoteId(noteId);
 		if (polices.size() > 0) {
 			return requestFail("请先删除笔录关联的警员");
