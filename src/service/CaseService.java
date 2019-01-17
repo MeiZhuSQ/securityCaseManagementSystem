@@ -658,7 +658,7 @@ public class CaseService extends BaseService {
 		if (null != askedPerson) {
 			ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(police.getNoteId()), false);
 			if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
-				return requestFail();
+				return requestFail(resultDTO.getMessage());
 			}
 		}
 
@@ -757,7 +757,7 @@ public class CaseService extends BaseService {
 		if (null != askedPerson) {
 			ResultDTO resultDTO = checkAskedPerson(askedPerson, noteDAO.selectById(otherPerson.getNoteId()), false);
 			if (resultDTO.getCode() == CommonConstant.RESULT_CODE_FAIL) {
-				return requestFail();
+				return requestFail(resultDTO.getMessage());
 			}	
 		}
 

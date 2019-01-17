@@ -35,7 +35,7 @@ public class RecoverListener extends MouseAdapter {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 SQLUtil.recover(file.getAbsolutePath());
-                JOptionPane.showMessageDialog(p, "恢复成功");
+                JOptionPane.showMessageDialog(p, "恢复成功，请重新登录！");
             } catch (Exception e1) {
                 e1.printStackTrace();
                 JOptionPane.showMessageDialog(p, "恢复失败\r\n,错误:\r\n" + e1.getMessage());

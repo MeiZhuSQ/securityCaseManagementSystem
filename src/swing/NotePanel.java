@@ -285,6 +285,12 @@ public class NotePanel extends JPanel {
                 } else {
                     //Note note = new Note(noteId, caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, askedId);
                     Note note = caseService.selectNoteById(noteId);
+                    note.setName(noteName);
+                    note.setStartTime(startTimeStr);
+                    note.setEndTime(endTimeStr);
+                    note.setPlace(place);
+                    note.setRemark(remark);
+                    note.setFileName(fileName);
                     resultDTO = caseService.updateNote(note);
                     if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                         MainFrame.alert(resultDTO.getMessage());
@@ -661,13 +667,17 @@ public class NotePanel extends JPanel {
                 String selectedAbled = askedAbleTypeGroup.getSelection().getActionCommand();
                 //新增
                 if (noteId == 0) {
+                    if (newNoteId == 0) {
+                        MainFrame.alert("请先保存左侧笔录");
+                        return; 
+                    }
                     resultDTO = caseService.addAskedPerson(newNoteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
-                    //获取新增的被询问人ID
+                    /*//获取新增的被询问人ID   service里已经更新了
                     int askedId = Integer.parseInt(resultDTO.getData().toString());
                     //更新对应笔录表
                     Note note = caseService.selectNoteById(newNoteId);
                     note.setAskedPersonId(askedId);
-                    resultDTO = caseService.updateNote(note);
+                    resultDTO = caseService.updateNote(note);*/
                 } else {
                     //更新
                     //Note note = caseService.selectNoteById(noteId);
