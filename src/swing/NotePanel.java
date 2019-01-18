@@ -671,7 +671,20 @@ public class NotePanel extends JPanel {
                         MainFrame.alert("请先保存左侧笔录");
                         return; 
                     }
-                    resultDTO = caseService.addAskedPerson(newNoteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
+                    //在当前页签  存在新增或修改被询问人
+                    Note note = caseService.selectNoteById(newNoteId);
+                    if (note.getAskedPersonId() == 0) {
+                        resultDTO = caseService.addAskedPerson(newNoteId, askedName, String.valueOf(askedSex), selectedAskedType, selectedAskedAudlt, idCard, selectedAbled);
+                    } else {
+                        AskedPerson askedPerson = caseService.selectAskedPersonById(note.getAskedPersonId());
+                        askedPerson.setName(askedName);
+                        askedPerson.setSex(String.valueOf(askedSex));
+                        askedPerson.setIdCard(idCard);
+                        askedPerson.setType(selectedAskedType);
+                        askedPerson.setAdultFlag(selectedAskedAudlt);
+                        askedPerson.setDisabledFlag(selectedAbled);
+                        resultDTO = caseService.updateAskedPerson(askedPerson, newNoteId);
+                    }
                     /*//获取新增的被询问人ID   service里已经更新了
                     int askedId = Integer.parseInt(resultDTO.getData().toString());
                     //更新对应笔录表
