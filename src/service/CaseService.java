@@ -370,25 +370,34 @@ public class CaseService extends BaseService {
 	 * @return
 	 */
 	public ResultDTO updateNote(Note note) {
+		
+		try {
+			if (!DateUtil.checkTime(note.getStartTime(), note.getEndTime())) {
+				return requestFail("起始时间应小于结束时间");
+			}
 
-		// 校验笔录
-		ResultDTO result = checkNote(note, false);
-		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
-			return result;
-		}
-
-		AskedPerson askedPerson = askedPersonDAO.selectById(note.getAskedPersonId());
-		if (null != askedPerson) {
-			// 校验被询问人
-			result = checkAskedPerson(askedPerson, note, "2", null);
+			// 校验笔录
+			ResultDTO result = checkNote(note, false);
 			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 				return result;
 			}
-		}
-
-		// 更新笔录
-		if (1 == noteDAO.update(note)) {
-			return requestSuccess();
+	
+			AskedPerson askedPerson = askedPersonDAO.selectById(note.getAskedPersonId());
+			if (null != askedPerson) {
+				// 校验被询问人
+				result = checkAskedPerson(askedPerson, note, "2", null);
+				if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
+					return result;
+				}
+			}
+	
+			// 更新笔录
+			if (1 == noteDAO.update(note)) {
+				return requestSuccess();
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return requestFail();
 
