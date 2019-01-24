@@ -1,5 +1,6 @@
 package swing;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
@@ -9,8 +10,11 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.border.LineBorder;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -38,7 +42,7 @@ public class ClockDialog extends JDialog {
     //public DatePicker datePickerField;
     public DateTimePicker dateTimePicker;
     private static ClockDialog instance;
-    public JTextField remarkField;
+    public JTextArea remarkField;
     private int clockId = 0;
     
     public static ClockDialog getInstance () {
@@ -123,10 +127,14 @@ public class ClockDialog extends JDialog {
         label.setBounds(51, 136, 72, 18);
         getContentPane().add(label);
         
-        remarkField = new JTextField();
-        remarkField.setBounds(127, 133, 280, 82);
-        getContentPane().add(remarkField);
-        remarkField.setColumns(10);
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(127, 133, 280, 82);
+        getContentPane().add(scrollPane);
+        remarkField = new JTextArea();
+        remarkField.setBorder(new LineBorder(Color.LIGHT_GRAY));
+        remarkField.setLineWrap(true);        
+        remarkField.setWrapStyleWord(true);
+        scrollPane.setViewportView(remarkField);
         
         JButton cancelButton = new JButton("取消");
         cancelButton.addActionListener(new ActionListener() {

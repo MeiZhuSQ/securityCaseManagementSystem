@@ -274,14 +274,29 @@ public class NotePanel extends JPanel {
                 CaseService caseService = new CaseService();
                 ResultDTO resultDTO = new ResultDTO();
                 if (noteId == 0) {
-                    // 新增笔录信息
-                    resultDTO = caseService.addNote(caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, 0);
-                    if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
-                        MainFrame.alert(resultDTO.getMessage());
-                        return;
+                    if (newNoteId == 0) {
+                        // 新增笔录信息
+                        resultDTO = caseService.addNote(caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, 0);
+                        if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                            MainFrame.alert(resultDTO.getMessage());
+                            return;
+                        }
+                        //获取新增的笔录ID
+                        newNoteId = Integer.parseInt(resultDTO.getData().toString());
+                    } else {
+                        Note note = caseService.selectNoteById(newNoteId);
+                        note.setName(noteName);
+                        note.setStartTime(startTimeStr);
+                        note.setEndTime(endTimeStr);
+                        note.setPlace(place);
+                        note.setRemark(remark);
+                        note.setFileName(fileName);
+                        resultDTO = caseService.updateNote(note);
+                        if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
+                            MainFrame.alert(resultDTO.getMessage());
+                            return;
+                        }
                     }
-                    //获取新增的笔录ID
-                    newNoteId = Integer.parseInt(resultDTO.getData().toString());
                 } else {
                     //Note note = new Note(noteId, caseId, noteName, startTimeStr, endTimeStr, remark, place, fileName, askedId);
                     Note note = caseService.selectNoteById(noteId);
