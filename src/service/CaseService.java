@@ -414,7 +414,7 @@ public class CaseService extends BaseService {
 	 *            true:添加;false:更新
 	 * @return
 	 */
-	private ResultDTO checkOtherPerson(Note note, String otherPersonIdCard, boolean addFlag) {
+	private ResultDTO checkOtherPerson(Note note, String otherPersonIdCard, boolean addFlag, String otherPersonType) {
 		List<Note> notes = noteDAO.selectConflictingNotesForOtherPerson(note, otherPersonIdCard);
 		if (addFlag) {
 			if (notes.size() > 0) {
@@ -425,6 +425,15 @@ public class CaseService extends BaseService {
 				return requestFail("其他工作人员、时间与同一案件下其他笔录冲突", notes);
 			}
 		}
+		
+		// 被询问人不能作为监护人
+		if (CommonConstant.OTHER_PERSON_TYPE_1.equals(otherPersonType)) {
+			AskedPerson askedPerson = askedPersonDAO.selectByIdCardInCase(otherPersonIdCard, note.getCaseId());
+			if (null != askedPerson) {
+				return requestFail("同一案件下被询问人不能作为监护人");
+			}
+		}
+		
 		return requestSuccess();
 	}
 
@@ -542,6 +551,12 @@ public class CaseService extends BaseService {
 		}
 		if (!policeSexFlag) {
 			return requestFail("女性未成年人需要女警员在场");
+		}
+		
+		// 校验此人是否在同一案件下已为监护人
+		OtherPerson otherPerson = otherPersonDAO.selectByIdCardInCase(askedPerson.getIdCard(), note.getCaseId());
+		if (null != otherPerson) {
+			return requestFail("当前被询问人在同一案件下已为监护人");
 		}
 
 		// 校验同一案件内所有笔录被询问人是否冲突
@@ -735,7 +750,7 @@ public class CaseService extends BaseService {
 
 			// 校验其他人员
 			Note note = noteDAO.selectById(noteId);
-			ResultDTO result = checkOtherPerson(note, idCard, true);
+			ResultDTO result = checkOtherPerson(note, idCard, true, type);
 			if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 				return result;
 			}
@@ -758,7 +773,7 @@ public class CaseService extends BaseService {
 
 		// 校验其他人员
 		Note note = noteDAO.selectById(otherPerson.getNoteId());
-		ResultDTO result = checkOtherPerson(note, otherPerson.getIdCard(), false);
+		ResultDTO result = checkOtherPerson(note, otherPerson.getIdCard(), false,otherPerson.getType());
 		if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
 			return result;
 		}

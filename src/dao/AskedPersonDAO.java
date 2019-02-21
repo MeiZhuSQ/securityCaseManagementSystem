@@ -122,6 +122,25 @@ public class AskedPersonDAO {
 		return askedPerson;
 	}
 
+	public AskedPerson selectByIdCardInCase(String idCard, int caseId) {
+		String sql = "select * from note LEFT JOIN asked_person on note.asked_person_id = asked_person.id"
+				+ " where asked_person.id_card = ? and note.case_id = ?";
+		AskedPerson askedPerson = null;
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setString(1, idCard);
+			ps.setInt(2, caseId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				askedPerson = new AskedPerson(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
+						rs.getString("type"), rs.getString("adult_flag"), rs.getString("id_card"),
+						rs.getString("disabled_flag"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return askedPerson;
+	}
+
 	public int getTotal() {
 		String sql = "select count(*) from askedPerson";
 		try (Connection c = JDBCUtil.getConnection(); Statement s = c.createStatement()) {
