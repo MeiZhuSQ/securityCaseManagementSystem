@@ -48,7 +48,7 @@ public class CaseService extends BaseService {
 	}
 
 	/**
-	 * 校验参数：名称不能为空，不能超过20个字符；时间不能为空；备注不能超过50个字符
+	 * 校验参数：名称不能为空，不能超过50个字符；时间不能为空；备注不能超过500个字符
 	 * 
 	 * @param name
 	 * @param time
@@ -59,14 +59,14 @@ public class CaseService extends BaseService {
 		if (StringUtils.isBlank(name)) {
 			return requestFail("名称不能为空");
 		}
-		if (name.length() > 20) {
-			return requestFail("名称不能超过20个字符");
+		if (name.length() > 50) {
+			return requestFail("名称不能超过50个字符");
 		}
 		if (StringUtils.isBlank(time)) {
 			return requestFail("时间不能为空");
 		}
-		if (null != remark && remark.length() > 50) {
-			return requestFail("备注不能超过50个字符");
+		if (null != remark && remark.length() > 500) {
+			return requestFail("备注不能超过500个字符");
 		}
 		return requestSuccess();
 	}
@@ -956,11 +956,11 @@ public class CaseService extends BaseService {
 		if (StringUtils.isBlank(name)) {
 			return requestFail("闹钟名称不能为空");
 		}
-		if (name.length() > 20) {
-			return requestFail("闹钟名称不能超过20个字符");
+		if (name.length() > 50) {
+			return requestFail("闹钟名称不能超过50个字符");
 		}
-		if (remark.length() > 50) {
-			return requestFail("备注不能超过50个字符");
+		if (remark.length() > 500) {
+			return requestFail("备注不能超过500个字符");
 		}
 		try {
 			clockDAO.add(new Clock(name, time, remark, "", 0, caseId, CommonConstant.NO));
