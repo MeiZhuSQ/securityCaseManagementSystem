@@ -141,7 +141,7 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                     Procedure procedure = new CaseService().selectProceduresById(caseItemId);
                     ProcedureDialog procedureDialog = ProcedureDialog.getInstance();
                     procedureDialog.setTitle("编辑法律手续");
-                    procedureDialog.setSize(new Dimension(500, 400));
+                    procedureDialog.setSize(new Dimension(500, 430));
                     GUIUtil.setCenter(procedureDialog);
                     //procedureDialog.setCaseId(ViewCasePanel.getInstance().getCaseId());
                     procedureDialog.setProcedureId(caseItemId);
@@ -154,7 +154,7 @@ public class CaseDetailButtonEditor extends AbstractCellEditor implements TableC
                     //选择的是闹钟
                     ClockDialog clockDialog = ClockDialog.getInstance();
                     clockDialog.setTitle("编辑闹钟");
-                    clockDialog.setSize(new Dimension(500, 400));
+                    clockDialog.setSize(new Dimension(500, 430));
                     GUIUtil.setCenter(clockDialog);
                     Clock clock = new CaseService().getClockById(caseItemId);
                     clockDialog.setClockId(clock.getId());

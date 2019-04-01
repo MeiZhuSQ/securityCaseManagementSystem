@@ -97,7 +97,7 @@ public class CaseDialog extends JDialog {
                 MainFrame.getInstance().updateCaseTable();
             }
         });
-        saveButton.setBounds(100, 254, 113, 27);
+        saveButton.setBounds(107, 339, 113, 27);
         getContentPane().add(saveButton);        
         
         JLabel lblNewLabel = new JLabel("时间");
@@ -117,7 +117,7 @@ public class CaseDialog extends JDialog {
         getContentPane().add(label);
         
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(127, 133, 280, 82);
+        scrollPane.setBounds(127, 133, 280, 180);
         getContentPane().add(scrollPane);
         remarkField = new JTextArea();
         remarkField.setBorder(new LineBorder(Color.LIGHT_GRAY));
@@ -131,7 +131,7 @@ public class CaseDialog extends JDialog {
                 getInstance().setVisible(false);
             }
         });
-        cancelButton.setBounds(300, 254, 113, 27);
+        cancelButton.setBounds(307, 339, 113, 27);
         getContentPane().add(cancelButton);
 
     }

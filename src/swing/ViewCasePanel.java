@@ -213,7 +213,7 @@ public class ViewCasePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 ProcedureDialog procedureDialog = ProcedureDialog.getInstance();
                 procedureDialog.setTitle("新建法律手续");
-                procedureDialog.setSize(new Dimension(500, 400));
+                procedureDialog.setSize(new Dimension(500, 430));
                 procedureDialog.setProcedureId(0);
                 procedureDialog.procedureNameField.setText("");
                 procedureDialog.remarkField.setText("");
@@ -229,7 +229,7 @@ public class ViewCasePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 ClockDialog clockDialog = ClockDialog.getInstance();
                 clockDialog.setTitle("新建闹钟");
-                clockDialog.setSize(new Dimension(500, 400));
+                clockDialog.setSize(new Dimension(500, 430));
                 clockDialog.setClockId(0);
                 clockDialog.clockNameField.setText("");
                 clockDialog.remarkField.setText("");

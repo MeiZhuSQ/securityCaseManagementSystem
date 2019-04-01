@@ -99,7 +99,7 @@ public class ProcedureDialog extends JDialog {
                 ViewCasePanel.getInstance().updateCaseDetailTable();
             }
         });
-        saveButton.setBounds(90, 254, 113, 27);
+        saveButton.setBounds(94, 337, 113, 27);
         getContentPane().add(saveButton);        
         
         JLabel lblNewLabel = new JLabel("时间");
@@ -120,7 +120,7 @@ public class ProcedureDialog extends JDialog {
         getContentPane().add(label);
         
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(127, 133, 280, 82);
+        scrollPane.setBounds(127, 133, 280, 180);
         getContentPane().add(scrollPane);
         remarkField = new JTextArea();
         remarkField.setBorder(new LineBorder(Color.LIGHT_GRAY));
@@ -134,7 +134,7 @@ public class ProcedureDialog extends JDialog {
                 getInstance().setVisible(false);
             }
         });
-        cancelButton.setBounds(248, 254, 113, 27);
+        cancelButton.setBounds(283, 337, 113, 27);
         getContentPane().add(cancelButton);
 
     }

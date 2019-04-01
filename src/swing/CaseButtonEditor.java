@@ -91,7 +91,7 @@ public class CaseButtonEditor extends AbstractCellEditor implements TableCellEdi
             public void actionPerformed(ActionEvent e) {
                 CaseDialog caseDialog = CaseDialog.getInstance();
                 caseDialog.setTitle("编辑案件");
-                caseDialog.setSize(new Dimension(500, 400));
+                caseDialog.setSize(new Dimension(500, 430));
                 GUIUtil.setCenter(caseDialog);
                 int i = MainFrame.getInstance().caseTable.getSelectedRow();
                 caseDialog.setCaseId(Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + ""));

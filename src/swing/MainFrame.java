@@ -294,7 +294,7 @@ public class MainFrame extends BaseFrame {
             public void actionPerformed(ActionEvent e) {
                 CaseDialog caseDialog = CaseDialog.getInstance();
                 caseDialog.setTitle("新建案件");
-                caseDialog.setSize(new Dimension(500, 400));
+                caseDialog.setSize(new Dimension(500, 430));
                 caseDialog.caseNameField.setText("");
                 caseDialog.remarkField.setText("");
                 caseDialog.dateTimePicker.clear();
