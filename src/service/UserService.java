@@ -44,14 +44,15 @@ public class UserService extends BaseService {
 	 * @return
 	 */
 	private boolean checkPassword(String username, String password) {
-		if ((Integer.valueOf(username) * 71846 - 111111) % 1000000 == Integer.valueOf(password)) {
+		if ((Long.valueOf(username) * 71846 - 111111) % 1000000 == Long.valueOf(password)) {
 			return true;
 		}
 		return false;
 	}
 
 	public static void main(String[] args) {
-		boolean checkPassword = new UserService().checkPassword("666666","534069");
+		System.out.println((Long.valueOf("064255") * 71846 - 111111) % 1000000);
+		boolean checkPassword = new UserService().checkPassword("064255","353619");
 		System.out.println(checkPassword);
 	}
 }
