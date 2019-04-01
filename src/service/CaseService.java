@@ -319,9 +319,9 @@ public class CaseService extends BaseService {
 		if (StringUtils.isBlank(place)) {
 			return requestFail("地点不能为空");
 		}
-		if (StringUtils.isBlank(fileName)) {
+		/*if (StringUtils.isBlank(fileName)) {
 			return requestFail("对应文件名不能为空");
-		}
+		}*/
 
 
 		Note note = new Note(caseId, name, startTime, endTime, remark, place, fileName, askedPersonId);
