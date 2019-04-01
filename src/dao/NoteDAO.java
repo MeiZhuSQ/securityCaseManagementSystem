@@ -116,7 +116,7 @@ public class NoteDAO {
 		String startTime = note.getStartTime();
 		String endTime = note.getEndTime();
 		String sql = "select * from other_person LEFT JOIN note on other_person.note_id = note.id "
-				+ "WHERE start_time < ? and  end_time > ? and other_person.id_card = ? and case_id = ?";
+				+ "WHERE start_time <= ? and  end_time >= ? and other_person.id_card = ? and case_id = ?";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, endTime);
@@ -141,7 +141,7 @@ public class NoteDAO {
 		String startTime = note.getStartTime();
 		String endTime = note.getEndTime();
 		String sql = "select * from  police LEFT JOIN note on police.note_id = note.id "
-				+ "WHERE start_time < ? and  end_time > ? and  police.name = ? and case_id = ?";
+				+ "WHERE start_time <= ? and  end_time >= ? and  police.name = ? and case_id = ?";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, endTime);
@@ -167,7 +167,7 @@ public class NoteDAO {
 		String endTime = note.getEndTime();
 		String place = note.getPlace();
 		String sql = "select * from note  "
-				+ "WHERE start_time < ? and  end_time > ? and  place = ?  and case_id = ?";
+				+ "WHERE start_time <= ? and  end_time >= ? and  place = ?  and case_id = ?";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, endTime);
@@ -192,7 +192,7 @@ public class NoteDAO {
 		String startTime = note.getStartTime();
 		String endTime = note.getEndTime();
 		String sql = "select * from note LEFT JOIN asked_person  on note.asked_person_id = asked_person.id "
-				+ "WHERE start_time < ? and  end_time > ? and asked_person.id_card = ? and case_id = ?";
+				+ "WHERE start_time <= ? and  end_time >= ? and asked_person.id_card = ? and case_id = ?";
 		List<Note> notes = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, endTime);
