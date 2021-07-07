@@ -47,7 +47,7 @@ public class CaseDAO {
 		return result;
 	}
 
-	public int delete(int id) throws Exception{
+	public int delete(int id) throws Exception {
 		String sql = "delete from legal_case where id = ?";
 		int result = 0;
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -75,7 +75,7 @@ public class CaseDAO {
 		}
 		return null;
 	}
-	
+
 	public LegalCase selectByName(String name) throws Exception {
 		String sql = "select * from legal_case where name = ?";
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -90,10 +90,10 @@ public class CaseDAO {
 			throw e;
 		}
 		return null;
-		
+
 	}
 
-	public List<LegalCase> list(int start, int count){
+	public List<LegalCase> list(int start, int count) {
 		String sql = "select * from legal_case order by time desc limit ?,?";
 		List<LegalCase> legalCases = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -111,8 +111,25 @@ public class CaseDAO {
 		return legalCases;
 	}
 
-	public List<LegalCase> list(){
+	public List<LegalCase> list() {
 		return list(0, Short.MAX_VALUE);
+	}
+	
+	public List<LegalCase> listCaseByKeyWord(String keyWord) {
+		String sql = "select * from legal_case where name like ?  order by time desc ";
+		List<LegalCase> legalCases = new ArrayList<>();
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setString(1, "%" + keyWord + "%");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				LegalCase legalCase = new LegalCase(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
+						rs.getString("remark"));
+				legalCases.add(legalCase);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return legalCases;
 	}
 
 	public int getTotal() {
@@ -129,12 +146,9 @@ public class CaseDAO {
 	}
 
 	public List<CaseItemVO> getCaseItems(int caseId) {
-		String sql = "SELECT id,name,start_time as time,remark ,'1' as type FROM note where case_id = ?"
-				+ "UNION "
-				+ "SELECT id,name,time,remark ,'2' as type FROM procedure where case_id = ?"
-				+ "UNION "
-				+ "SELECT id,name,time,remark ,'3' as type FROM clock where case_id = ?"
-				+ "ORDER BY time desc";
+		String sql = "SELECT id,name,start_time ,end_time,remark ,'1' as type FROM note where case_id = ?" + "UNION "
+				+ "SELECT id,name,time as start_time,'' as end_time,remark ,'2' as type FROM procedure where case_id = ?" + "UNION "
+				+ "SELECT id,name,time as start_time,'' as end_time,remark ,'3' as type FROM clock where case_id = ?" + "ORDER BY time desc";
 		List<CaseItemVO> caseItems = new ArrayList<>();
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, caseId);
@@ -142,16 +156,68 @@ public class CaseDAO {
 			ps.setInt(3, caseId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				CaseItemVO caseItemVO = new CaseItemVO(rs.getInt("id"), rs.getString("name"), rs.getString("time"),
-						rs.getString("remark"),rs.getString("type"));
+				CaseItemVO caseItemVO = new CaseItemVO(rs.getInt("id"), rs.getString("name"), rs.getString("start_time"), rs.getString("end_time"),
+						rs.getString("remark"), rs.getString("type"));
 				caseItems.add(caseItemVO);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return caseItems;
-		
+
 	}
 
+	public List<CaseItemVO> getCaseItemsByKeyWord(int caseId, String keyWord) {
+		String sql = "select id,name,start_time,end_time,remark,type from "
+				+ "(SELECT id,name,start_time,end_time,remark ,'1' as type FROM note where case_id = ?" + "UNION "
+				+ "SELECT id,name,time as start_time,'' as end_time , remark ,'2' as type FROM procedure where case_id = ?" + "UNION "
+				+ "SELECT id,name,time as start_time,'' as end_time , remark ,'3' as type FROM clock where case_id = ?) a "
+				+ "WHERE a.name LIKE ?  ORDER BY a.start_time desc";
+		List<CaseItemVO> caseItems = new ArrayList<>();
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setInt(1, caseId);
+			ps.setInt(2, caseId);
+			ps.setInt(3, caseId);
+			ps.setString(4, "%" + keyWord + "%");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				CaseItemVO caseItemVO = new CaseItemVO(rs.getInt("id"), rs.getString("name"), rs.getString("start_time"), rs.getString("end_time"),
+						rs.getString("remark"), rs.getString("type"));
+				caseItems.add(caseItemVO);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return caseItems;
+	}
+
+	public List<CaseItemVO> getCaseItemsByKeyWord(int caseId, String keyWord, String itemType) {
+		String sql = "select id,name,start_time,end_time,remark,type from "
+				+ "(SELECT id,name,start_time,end_time,remark ,'1' as type FROM note where case_id = ?" + "UNION "
+				+ "SELECT id,name,time as start_time,'' as end_time , remark ,'2' as type FROM procedure where case_id = ?" + "UNION "
+				+ "SELECT id,name,time as start_time,'' as end_time , remark ,'3' as type FROM clock where case_id = ?) a "
+				+ "WHERE a.name LIKE ? and a.type = ? ORDER BY a.start_time desc";
+		List<CaseItemVO> caseItems = new ArrayList<>();
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setInt(1, caseId);
+			ps.setInt(2, caseId);
+			ps.setInt(3, caseId);
+			ps.setString(4, "%" + keyWord + "%");
+			ps.setString(5, itemType);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				CaseItemVO caseItemVO = new CaseItemVO(rs.getInt("id"), rs.getString("name"), rs.getString("start_time"), rs.getString("end_time"),
+						rs.getString("remark"), rs.getString("type"));
+				caseItems.add(caseItemVO);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return caseItems;
+	}
+
+	public static void main(String[] args) {
+
+	}
 
 }

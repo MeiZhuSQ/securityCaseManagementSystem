@@ -52,8 +52,8 @@ public class NoteTableModel extends AbstractTableModel {
             return note.getPlace();
         if (columnIndex == 5)
             return note.getFileName();
-        if (columnIndex == 6)
-            return note.getPoliceList();
+        /*if (columnIndex == 6)
+            return note.getPoliceList();*/
         if (columnIndex == 7)
             return note.getRemark();
         return null;

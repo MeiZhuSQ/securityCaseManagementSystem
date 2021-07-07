@@ -102,10 +102,18 @@ public class OtherPersonDialog extends JDialog {
                 Integer otherSex = sexComboBox.getSelectedIndex();
                 String idCard = idCardField.getText();
                 
-                String selectedOtherType = otherTypeGroup.getSelection().getActionCommand();;
+                String selectedOtherType = otherTypeGroup.getSelection().getActionCommand();
+                NotePanel notePanel = NotePanel.getInstance();
+                int noteId;
+                if (notePanel.noteId == 0) {
+                    //新增笔录
+                    noteId = notePanel.newNoteId;
+                } else {
+                    noteId = notePanel.noteId;
+                }
                 //新增
                 if (otherPersonId == 0) {
-                    resultDTO = caseService.addOtherPerson(NotePanel.noteId, otherName, String.valueOf(otherSex), idCard, selectedOtherType);
+                    resultDTO = caseService.addOtherPerson(noteId, otherName, String.valueOf(otherSex), idCard, selectedOtherType);
                 } else {
                     //更新
                     OtherPerson otherPerson = caseService.selectOtherPersonById(otherPersonId);

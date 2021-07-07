@@ -1,17 +1,27 @@
 package swing;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.border.LineBorder;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.eltima.components.ui.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.components.DateTimePicker;
+import com.github.lgooddatepicker.components.TimePickerSettings;
 
 import constant.CommonConstant;
 import dto.ResultDTO;
@@ -29,9 +39,10 @@ public class ClockDialog extends JDialog {
     
     private static final long serialVersionUID = 7334759086622449699L;
     public JTextField clockNameField;
-    public DatePicker datePickerField;
+    //public DatePicker datePickerField;
+    public DateTimePicker dateTimePicker;
     private static ClockDialog instance;
-    public JTextField remarkField;
+    public JTextArea remarkField;
     private int clockId = 0;
     
     public static ClockDialog getInstance () {
@@ -46,29 +57,38 @@ public class ClockDialog extends JDialog {
         getContentPane().setLayout(null);
         
         JLabel caseName = new JLabel("闹钟名称");
-        caseName.setBounds(81, 49, 72, 18);
+        caseName.setBounds(51, 49, 72, 18);
         getContentPane().add(caseName);
         
         clockNameField = new JTextField();
-        clockNameField.setBounds(167, 46, 208, 24);
+        clockNameField.setBounds(127, 46, 280, 24);
         getContentPane().add(clockNameField);
         clockNameField.setColumns(10);
         JButton saveButton = new JButton("保存");
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String name = clockNameField.getText();
-                String time = datePickerField.getText();
                 String remark = remarkField.getText();
                 CaseService caseService = new CaseService();
+                if (StringUtils.isBlank(name)) {
+                    MainFrame.alert("请填写案件名称");
+                    return;
+                }
+                LocalDateTime localDateTime = dateTimePicker.getDateTimePermissive();
+                if (localDateTime == null) {
+                    MainFrame.alert("请填写开始时间");
+                    return;
+                }
+                String clockTime = localDateTime.toString().replace("T", " ") + ":00";
                 ResultDTO resultDTO = new ResultDTO();
                 //新增
                 if (clockId == 0) {
-                    resultDTO = caseService.addClock(name, time, remark);
+                    resultDTO = caseService.addClock(name, clockTime, remark, ViewCasePanel.getInstance().getCaseId());
                 } else {
                     //更新
                     Clock clock = caseService.getClockById(clockId);
                     clock.setName(name);
-                    clock.setTime(time);
+                    clock.setTime(clockTime);
                     clock.setRemark(remark);
                     resultDTO = caseService.updateClock(clock);
                 }
@@ -78,41 +98,51 @@ public class ClockDialog extends JDialog {
                 }
                 MainFrame.alert("保存成功");
                 getInstance().setVisible(false);
+                ViewCasePanel.getInstance().updateCaseDetailTable();
                 MainFrame.getInstance().clockListModel.removeAllElements();
-                List<Clock> clocks = new CaseService().getClocks();
+                List<Clock> clocks = new CaseService().getClocksInThreeDaysAndLastDay();
                 for (Clock clock : clocks) {
                 	MainFrame.getInstance().clockListModel.addElement(clock);
                 }
+                
             }
         });
-        saveButton.setBounds(90, 254, 113, 27);
+        saveButton.setBounds(121, 334, 113, 27);
         getContentPane().add(saveButton);        
         
         JLabel lblNewLabel = new JLabel("闹钟时间");
-        lblNewLabel.setBounds(81, 90, 72, 18);
+        lblNewLabel.setBounds(51, 90, 72, 18);
         getContentPane().add(lblNewLabel);
 
-        datePickerField = DateUtil.getDatePicker();
-        datePickerField.setBounds(167, 90, 181, 24);
-        getContentPane().add(datePickerField);
+        //datePickerField = DateUtil.getDatePicker(DateUtil.FORMAT_YYYYMMDDHHMMSS);
+        DatePickerSettings dateSettings = new DatePickerSettings();
+        TimePickerSettings timeSettings = new TimePickerSettings();
+        timeSettings.setDisplaySpinnerButtons(true);
+        timeSettings.use24HourClockFormat();
+        dateTimePicker = new DateTimePicker(dateSettings, timeSettings);
+        dateTimePicker.setBounds(127, 90, 280, 24);
+        getContentPane().add(dateTimePicker);
         
         JLabel label = new JLabel("备注");
-        label.setBounds(81, 136, 72, 18);
+        label.setBounds(51, 136, 72, 18);
         getContentPane().add(label);
         
-        remarkField = new JTextField();
-        remarkField.setBounds(167, 133, 208, 82);
-        getContentPane().add(remarkField);
-        remarkField.setColumns(10);
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(127, 133, 280, 180);
+        getContentPane().add(scrollPane);
+        remarkField = new JTextArea();
+        remarkField.setBorder(new LineBorder(Color.LIGHT_GRAY));
+        remarkField.setLineWrap(true);        
+        remarkField.setWrapStyleWord(true);
+        scrollPane.setViewportView(remarkField);
         
         JButton cancelButton = new JButton("取消");
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MainFrame.frame.setEnabled(true);
                 getInstance().setVisible(false);
             }
         });
-        cancelButton.setBounds(248, 254, 113, 27);
+        cancelButton.setBounds(279, 334, 113, 27);
         getContentPane().add(cancelButton);
 
     }

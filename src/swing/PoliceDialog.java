@@ -11,8 +11,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-
 import constant.CommonConstant;
 import dto.ResultDTO;
 import entity.Police;
@@ -23,7 +21,7 @@ public class PoliceDialog extends JDialog{
     private static final long serialVersionUID = 4805081264547840359L;
     public JTextField policeNameField;
     public JComboBox<String> policeSexField;
-    public JTextField policeCodeField;
+//    public JTextField policeCodeField;
     private int policeId = 0;
     private static PoliceDialog instance;
     
@@ -56,37 +54,44 @@ public class PoliceDialog extends JDialog{
         policeSexField.setBounds(126, 85, 162, 24);
         getContentPane().add(policeSexField);
         
-        JLabel lblNewLabel_2 = new JLabel("警号");
+        /*JLabel lblNewLabel_2 = new JLabel("警号");
         lblNewLabel_2.setBounds(28, 149, 72, 18);
         getContentPane().add(lblNewLabel_2);
         
         policeCodeField = new JTextField();
         policeCodeField.setBounds(126, 146, 162, 24);
         getContentPane().add(policeCodeField);
-        policeCodeField.setColumns(10);
+        policeCodeField.setColumns(10);*/
         
         JButton btnNewButton = new JButton("保存");
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 CaseService caseService = new CaseService();
                 ResultDTO resultDTO = new ResultDTO();
-                //新增
-                if (policeId == 0) {
-                    resultDTO = caseService.addPolice(policeNameField.getText(), String.valueOf(policeSexField.getSelectedIndex()), policeCodeField.getText());
+                NotePanel notePanel = NotePanel.getInstance();
+                int noteId;
+                if (notePanel.noteId == 0) {
+                    //新增笔录
+                    noteId = notePanel.newNoteId;
                 } else {
-                    //更新
+                    noteId = notePanel.noteId;
+                }
+                if (policeId == 0) {
+                    //新增民警
+                    resultDTO = caseService.addPolice(policeNameField.getText(), String.valueOf(policeSexField.getSelectedIndex()), noteId);
+                } else {
+                    //更新民警
                     Police police = caseService.selectPoliceById(policeId);
                     police.setName(policeNameField.getText());
                     police.setSex(String.valueOf(policeSexField.getSelectedIndex()));
-                    police.setPoliceNumber(policeCodeField.getText());
-                    resultDTO = caseService.updatePolice(police);
+                    resultDTO = caseService.updatePolice(police, noteId);
                 }
                 if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
                     MainFrame.alert(resultDTO.getMessage());
                     return;
                 }
                 MainFrame.alert("保存成功");
-                PolicePanel.getInstance().updateTable();
+                notePanel.updatePoliceTable();
                 PoliceDialog.this.setVisible(false);
             }
         });

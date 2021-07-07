@@ -12,7 +12,7 @@ import util.JDBCUtil;
 import entity.AskedPerson;
 
 public class AskedPersonDAO {
-	public void add(AskedPerson askedPerson) throws Exception {
+	public int add(AskedPerson askedPerson) throws Exception {
 		String sql = "insert into asked_person (`name`,`sex`,type,adult_flag,id_card,disabled_flag) values (?,?,?,?,?,?)";
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, askedPerson.getName());
@@ -23,10 +23,12 @@ public class AskedPersonDAO {
 			ps.setString(6, askedPerson.getDisabledFlag());
 			ps.execute();
 			ResultSet rs = ps.getGeneratedKeys();
+			int id = 0;
 			if (rs.next()) {
-				int id = rs.getInt(1);
+				id = rs.getInt(1);
 				askedPerson.setId(id);
 			}
+			return id;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
@@ -86,27 +88,9 @@ public class AskedPersonDAO {
 		return list(0, Short.MAX_VALUE);
 	}
 
-	public List<AskedPerson> selectByNoteId(int noteId) {
-		String sql = "select * from asked_person where note_id = ?";
-		List<AskedPerson> askedPersons = new ArrayList<>();
-		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
-			ps.setInt(1, noteId);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				AskedPerson askedPerson = new AskedPerson(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
-						rs.getString("type"), rs.getString("adult_flag"), rs.getString("id_card"),
-						rs.getString("disabled_flag"));
-				askedPersons.add(askedPerson);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return askedPersons;
-	}
-
 	public AskedPerson selectById(int id) {
 		String sql = "select * from asked_person where id = ?";
-		AskedPerson askedPerson = new AskedPerson();
+		AskedPerson askedPerson = null;
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
@@ -126,6 +110,25 @@ public class AskedPersonDAO {
 		AskedPerson askedPerson = null;
 		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
 			ps.setString(1, idCard);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				askedPerson = new AskedPerson(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),
+						rs.getString("type"), rs.getString("adult_flag"), rs.getString("id_card"),
+						rs.getString("disabled_flag"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return askedPerson;
+	}
+
+	public AskedPerson selectByIdCardInCase(String idCard, int caseId) {
+		String sql = "select * from note LEFT JOIN asked_person on note.asked_person_id = asked_person.id"
+				+ " where asked_person.id_card = ? and note.case_id = ?";
+		AskedPerson askedPerson = null;
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setString(1, idCard);
+			ps.setInt(2, caseId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				askedPerson = new AskedPerson(rs.getInt("id"), rs.getString("name"), rs.getString("sex"),

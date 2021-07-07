@@ -18,6 +18,11 @@ import util.GUIUtil;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * 2019-01-08 弃用
+ * @author lpf
+ *
+ */
 public class AskedPersonPanel extends JPanel {
 
     private static final long serialVersionUID = -6102284463671287341L;
@@ -61,10 +66,10 @@ public class AskedPersonPanel extends JPanel {
                 GUIUtil.setCenter(policeDialog);
                 int i = policeTable.getSelectedRow();
                 policeDialog.setPoliceId(Integer.parseInt(policeTableModel.getValueAt(i, 0) + ""));
-                policeDialog.policeNameField.setText(policeTableModel.getValueAt(i, 1) + "");
-                String sex = policeTableModel.getValueAt(i, 2) + "";
+                policeDialog.policeNameField.setText(policeTableModel.getValueAt(i, 2) + "");
+                String sex = policeTableModel.getValueAt(i, 3) + "";
                 policeDialog.policeSexField.setSelectedIndex(sex.equals("男") ? 0 : 1);
-                policeDialog.policeCodeField.setText(policeTableModel.getValueAt(i, 3) + "");
+                //policeDialog.policeCodeField.setText(policeTableModel.getValueAt(i, 3) + "");
                 // MainFrame.frame.setEnabled(false);
                 policeDialog.setVisible(true);
             }
@@ -127,7 +132,7 @@ public class AskedPersonPanel extends JPanel {
      */
 
     public void updateTable() {
-        policeTableModel.list = new CaseService().listPolice();
+        //policeTableModel.list = new CaseService().listPolice();
         //或 policeTableModel.fireTableDataChanged();
         policeTable.updateUI();
     }

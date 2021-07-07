@@ -9,10 +9,10 @@ public class Note {
 	private String remark;
 	private String place;
 	private String fileName;
-	private String askedPersonIdcard;
+	private int askedPersonId;
 
 	public Note(int caseId, String name, String startTime, String endTime, String remark, String place,
-			String fileName, String askedPersonIdcard) {
+			String fileName, int askedPersonId) {
 		this.setCaseId(caseId);
 		this.setName(name);
 		this.setStartTime(startTime);
@@ -20,11 +20,11 @@ public class Note {
 		this.setRemark(remark);
 		this.setPlace(place);
 		this.setFileName(fileName);
-		this.setAskedPersonIdcard(askedPersonIdcard);
+		this.setAskedPersonId(askedPersonId);
 	}
 
 	public Note(int id, int caseId, String name, String startTime, String endTime, String remark, String place,
-			String fileName, String askedPersonIdcard) {
+			String fileName, int askedPersonId) {
 		this.setId(id);
 		this.setCaseId(caseId);
 		this.setName(name);
@@ -33,7 +33,7 @@ public class Note {
 		this.setRemark(remark);
 		this.setPlace(place);
 		this.setFileName(fileName);
-		this.setAskedPersonIdcard(askedPersonIdcard);
+		this.setAskedPersonId(askedPersonId);
 	}
 
 	public int getId() {
@@ -100,12 +100,11 @@ public class Note {
 		this.fileName = fileName;
 	}
 
-
-	public String getAskedPersonIdcard() {
-		return askedPersonIdcard;
+	public int getAskedPersonId() {
+		return askedPersonId;
 	}
 
-	public void setAskedPersonIdcard(String askedPersonIdcard) {
-		this.askedPersonIdcard = askedPersonIdcard;
+	public void setAskedPersonId(int askedPersonId) {
+		this.askedPersonId = askedPersonId;
 	}
 }

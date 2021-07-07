@@ -3,6 +3,7 @@ package swing;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -29,25 +30,29 @@ import javax.swing.JButton;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import javax.swing.JSlider;
+import javax.swing.JComboBox;
 
 public class ViewCasePanel extends JPanel {
 
     private static final long serialVersionUID = 7334759086622449699L;
     public  JTable caseDetailTable;
     public  CaseDetailTableModel caseDetailTableModel;
-    private JTextField caseTimeField;
-    private JTextField caseRemarkField;
+    public JTextField caseNameField;
+    public JTextField caseTimeField;
+    public JTextField caseRemarkField;
     private JTable procedureTable;
     private ProcedureTableModel procedureTableModel;
     private ArrayList<String> btnName = new ArrayList<String>();
     // 记录案子ID
     private int caseId;
-    
     private static ViewCasePanel instance;
-    private JTextField textField;
+    public JTextField searchNametextField;
+    public JComboBox<String> searchTypeComboBox;
     
     public static ViewCasePanel getInstance() {
         if (instance == null) {
@@ -57,16 +62,10 @@ public class ViewCasePanel extends JPanel {
     }
     
     public ViewCasePanel() {
-        // 更新选中的caseId
-        //int i = MainFrame.getInstance().caseTable.getSelectedRow();
-        //this.caseId = Integer.parseInt(MainFrame.getInstance().caseTableModel.getValueAt(i, 0) + "");
-        //CaseService caseService = new CaseService();
-        //LegalCase legalCase = caseService.selectCaseById(caseId);
-
         setLayout(null);
 
         JPanel casePanel = new JPanel();
-        casePanel.setBounds(0, 0, 1000, 77);
+        casePanel.setBounds(15, 15, 1150, 65);
         add(casePanel);
         casePanel.setLayout(null);
 
@@ -81,33 +80,33 @@ public class ViewCasePanel extends JPanel {
         casePanel.add(caseTimeLabel);
 
         JLabel caseRemarkLabel = new JLabel("案件备注");
-        caseRemarkLabel.setBounds(547, 29, 84, 18);
+        caseRemarkLabel.setBounds(617, 29, 84, 18);
         casePanel.add(caseRemarkLabel);
 
         caseTimeField = new JTextField();
         caseTimeField.setEditable(false);
-        caseTimeField.setBounds(398, 26, 135, 24);
+        caseTimeField.setBounds(398, 26, 176, 24);
         casePanel.add(caseTimeField);
         caseTimeField.setColumns(10);
 
         caseRemarkField = new JTextField();
         caseRemarkField.setEditable(false);
-        caseRemarkField.setBounds(619, 26, 182, 24);
+        caseRemarkField.setBounds(689, 26, 182, 24);
         casePanel.add(caseRemarkField);
         caseRemarkField.setColumns(10);
         
-        textField = new JTextField();
-        textField.setEditable(false);
-        textField.setColumns(10);
-        textField.setBounds(107, 26, 176, 24);
-        casePanel.add(textField);
+        caseNameField = new JTextField();
+        caseNameField.setEditable(false);
+        caseNameField.setColumns(10);
+        caseNameField.setBounds(107, 26, 176, 24);
+        casePanel.add(caseNameField);
         
         JLabel label = new JLabel("案件名称");
         label.setBounds(35, 29, 84, 18);
         casePanel.add(label);
 
         JScrollPane noteScrollPane = new JScrollPane();
-        noteScrollPane.setBounds(0, 90, 1000, 398);
+        noteScrollPane.setBounds(15, 125, 1150, 485);
         add(noteScrollPane);
 
         Border noteTitleBorder, noteLineBorder;
@@ -122,16 +121,48 @@ public class ViewCasePanel extends JPanel {
         caseDetailTable.setRowHeight(30);
         JTableHeader head = caseDetailTable.getTableHeader();
         head.setPreferredSize(new Dimension(head.getWidth(), 30));
+        GUIUtil.hideColumn(caseDetailTable, 0);
+        for (int i = 0; i < 8; i++) {
+            TableColumn column = caseDetailTable.getColumnModel().getColumn(i);
+            if (i == 1) {
+                column.setPreferredWidth(50);
+                column.setMaxWidth(50);
+                column.setMinWidth(50);
+            }
+            if (i == 2) {
+                column.setPreferredWidth(250);
+                column.setMaxWidth(250);
+                column.setMinWidth(250);
+            }
+            if (i == 3) {
+                column.setPreferredWidth(80);
+                column.setMaxWidth(80);
+                column.setMinWidth(80);
+            }
+            if (i == 4 || i == 5) {
+                column.setPreferredWidth(150);
+                column.setMaxWidth(150);
+                column.setMinWidth(150);
+            }
+            if (i == 7) {
+                column.setPreferredWidth(80);
+                column.setMaxWidth(80);
+                column.setMinWidth(80);
+            }
+        }
         
         btnName.add("修改");
         btnName.add("删除");
-        TableColumn column = caseDetailTable.getColumnModel().getColumn(5);
+        TableColumn column = caseDetailTable.getColumnModel().getColumn(7);
         column.setCellRenderer(new CaseDetailButtonRenderer());
         column.setCellEditor(new CaseDetailButtonEditor());
         noteScrollPane.setViewportView(caseDetailTable);
+        
+        JLabel lblNewLabel_1 = new JLabel("New label");
+        noteScrollPane.setColumnHeaderView(lblNewLabel_1);
 
         JPanel panel = new JPanel();
-        panel.setBounds(0, 501, 1000, 36);
+        panel.setBounds(15, 615, 1150, 36);
         add(panel);
 
         JButton createNoteButton = new JButton("新建笔录");
@@ -141,24 +172,36 @@ public class ViewCasePanel extends JPanel {
                 NotePanel notePanel = NotePanel.getInstance();
                 notePanel.setCaseId(caseId);
                 //重置noteId
-                NotePanel.noteId = 0;
+                notePanel.noteId = 0;
+                notePanel.newNoteId = 0;
                 //给两表格置空
-                notePanel.askedPersonTableModel.setList(0);
+                notePanel.policeTableModel.setList(0);
                 notePanel.otherPersonTableModel.setList(0);
+                //notePanel.askedPersonTableModel.setList(0);
+                //notePanel.otherPersonTableModel.setList(0);
                 notePanel.getNoteNameField().setText("");;
                 notePanel.getPlaceField().setText("");
-                notePanel.getFileNameField().setText("");
+                notePanel.startDateTimePiker.clear();
+                notePanel.endDateTimePiker.clear();
+                notePanel.fileNameField.setText("");
                 notePanel.getRemarkTextArea().setText("");
-                List<String> policeList = new ArrayList<>();
+                //被询问人置空
+                notePanel.askedNameField.setText("");
+                notePanel.askedIdCardField.setText("");
+                notePanel.askedSexComboBox.setSelectedIndex(0);
+                notePanel.askedTypeGroup.getElements().nextElement().setSelected(true);
+                notePanel.askedAdultTypeGroup.getElements().nextElement().setSelected(true);
+                notePanel.askedAbleTypeGroup.getElements().nextElement().setSelected(true);
+                //List<String> policeList = new ArrayList<>();
                 //Object[] defaultValue = new Object[] {};
-                CaseService caseService = new CaseService();
+                /*CaseService caseService = new CaseService();
                 List<Police> polices = caseService.listPolice();
                 for (Police police : polices) {
-                    policeList.add(/*polices.get(i).getId() + "_" + */police.getPoliceNumber());
+                    policeList.add(polices.get(i).getId() + "_" + police.getName());
 
                 }
                 Object[] defaultValue = new String[] {"请选择"};
-                notePanel.mulit.MulitCombobox_all(policeList.toArray(new String[policeList.size()]), defaultValue);
+                notePanel.mulit.MulitCombobox_all(policeList.toArray(new String[policeList.size()]), defaultValue);*/
                 MainFrame.tabbedPane.addTab("新建笔录", notePanel, null);
                 MainFrame.tabbedPane.setSelectedComponent(notePanel);
             }
@@ -168,36 +211,15 @@ public class ViewCasePanel extends JPanel {
         JButton createProcedureButton = new JButton("新建法律手续");
         createProcedureButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //NotePanel notePanel = new NotePanel(caseId);
-                NotePanel notePanel = NotePanel.getInstance();
-                notePanel.setCaseId(caseId);
-                int i = caseDetailTable.getSelectedRow();
-                int noteId = Integer.parseInt(caseDetailTableModel.getValueAt(i, 0) + "");
-                //askedPersonTableModel赋值
-                notePanel.askedPersonTableModel.setList(noteId);
-                //otherPersonTableModel赋值
-                notePanel.otherPersonTableModel.setList(noteId);
-                //传入noteId，防止新增时选中了行
-                NotePanel.noteId = noteId;
-                //给note赋值
-                Note note = new CaseService().selectNoteById(noteId);
-                notePanel.getNoteNameField().setText(note.getName());
-                notePanel.getPlaceField().setText(note.getPlace());
-                notePanel.getFileNameField().setText(note.getFileName());
-                notePanel.getRemarkTextArea().setText(note.getRemark());
-                
-                List<String> policeList = new ArrayList<>();
-                //Object[] defaultValue = new Object[] {};
-                CaseService caseService = new CaseService();
-                List<Police> polices = caseService.listPolice();
-                for (Police police : polices) {
-                    policeList.add(/*polices.get(i).getId() + "_" + */police.getPoliceNumber());
-
-                }
-                String[] defaultValue = note.getPoliceList().split(",");
-                notePanel.mulit.MulitCombobox_all(policeList.toArray(new String[policeList.size()]), defaultValue);
-                MainFrame.tabbedPane.addTab("修改笔录", notePanel, null);
-                MainFrame.tabbedPane.setSelectedComponent(notePanel);
+                ProcedureDialog procedureDialog = ProcedureDialog.getInstance();
+                procedureDialog.setTitle("新建法律手续");
+                procedureDialog.setSize(new Dimension(500, 430));
+                procedureDialog.setProcedureId(0);
+                procedureDialog.procedureNameField.setText("");
+                procedureDialog.remarkField.setText("");
+                procedureDialog.dateTimePicker.clear();
+                GUIUtil.setCenter(procedureDialog);
+                procedureDialog.setVisible(true);
             }
         });
         panel.add(createProcedureButton);
@@ -205,26 +227,50 @@ public class ViewCasePanel extends JPanel {
         JButton createClockButton = new JButton("新建闹钟");
         createClockButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	if (caseDetailTable.getSelectedRow() <= 0) {
-	           		 MainFrame.alert("请选择一行！");
-	           		 return;
-            	}
-            	if (MainFrame.prompt("确定删除该笔录吗？")){
-                    int i = caseDetailTable.getSelectedRow();
-                    String noteId = caseDetailTableModel.getValueAt(i, 0)+"";
-                    CaseService caseService = new CaseService();
-                    ResultDTO resultDTO = caseService.delNote(Integer.valueOf(noteId));
-                    if (CommonConstant.RESULT_CODE_FAIL.equals(resultDTO.getCode())) {
-                        MainFrame.alert(resultDTO.getMessage());
-                        return;
-                    }
-                    MainFrame.alert("删除成功");
-                    updateNoteTable();
-                }
+                ClockDialog clockDialog = ClockDialog.getInstance();
+                clockDialog.setTitle("新建闹钟");
+                clockDialog.setSize(new Dimension(500, 430));
+                clockDialog.setClockId(0);
+                clockDialog.clockNameField.setText("");
+                clockDialog.remarkField.setText("");
+                clockDialog.dateTimePicker.clear();
+                GUIUtil.setCenter(clockDialog);
+                clockDialog.setVisible(true);
             }
         });
         panel.add(createClockButton);
+        
+        JPanel searchPanel = new JPanel();
+        searchPanel.setBounds(25, 85, 661, 30);
+        add(searchPanel);
+        searchPanel.setLayout(null);
+        
+        searchNametextField = new JTextField();
+        searchNametextField.setBounds(99, 2, 176, 24);
+        searchPanel.add(searchNametextField);
+        
+        JLabel label_1 = new JLabel("按名称搜索");
+        label_1.setBounds(14, 5, 104, 18);
+        searchPanel.add(label_1);
+        
+        searchTypeComboBox = new JComboBox<String>();
+        searchTypeComboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"全部", "笔录", "法律手续", "闹钟"}));
+        searchTypeComboBox.setBounds(403, 2, 163, 24);
+        searchPanel.add(searchTypeComboBox);
+        
+        JLabel lblNewLabel = new JLabel("按类型搜索");
+        lblNewLabel.setBounds(315, 5, 96, 18);
+        searchPanel.add(lblNewLabel);
 
+        ImageButton searchButton = new ImageButton("search.png","案件搜索");
+        searchButton.setLocation(580, 5);
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCaseDetailTable();
+            }
+        });
+        searchPanel.add(searchButton);
         /*JButton viewNoteButton = new JButton("详情");
         viewNoteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -365,15 +411,20 @@ public class ViewCasePanel extends JPanel {
      * 
      * }
      */
-    public void updateNoteTable() {
-        caseDetailTableModel.setList(caseId);
+    public void updateCaseDetailTable() {
+        String searchName = searchNametextField.getText();
+        int selectedIndex = searchTypeComboBox.getSelectedIndex();
+        caseDetailTableModel.setList(caseId, searchName, String.valueOf(selectedIndex));
         caseDetailTable.updateUI();
+        caseDetailTable.setRowHeight(30);
+        JTableHeader head = caseDetailTable.getTableHeader();
+        head.setPreferredSize(new Dimension(head.getWidth(), 30));
     }
 
-    public void updateProcedureTable() {
+    /*public void updateProcedureTable() {
         procedureTableModel.setList(caseId);
         procedureTable.updateUI();
-    }
+    }*/
 
 	public int getCaseId() {
 		return caseId;

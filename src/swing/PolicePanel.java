@@ -17,7 +17,11 @@ import util.GUIUtil;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+/**
+ * 弃用
+ * @author lpf
+ *
+ */
 public class PolicePanel extends JPanel {
 
     private static final long serialVersionUID = -6102284463671287341L;
@@ -60,10 +64,10 @@ public class PolicePanel extends JPanel {
                 GUIUtil.setCenter(policeDialog);
                 int i = policeTable.getSelectedRow();
                 policeDialog.setPoliceId(Integer.parseInt(policeTableModel.getValueAt(i, 0) + ""));
-                policeDialog.policeNameField.setText(policeTableModel.getValueAt(i, 1) + "");
-                String sex = policeTableModel.getValueAt(i, 2) + "";
+                policeDialog.policeNameField.setText(policeTableModel.getValueAt(i, 2) + "");
+                String sex = policeTableModel.getValueAt(i, 3) + "";
                 policeDialog.policeSexField.setSelectedIndex(sex.equals("男") ? 0 : 1);
-                policeDialog.policeCodeField.setText(policeTableModel.getValueAt(i, 3) + "");
+                //policeDialog.policeCodeField.setText(policeTableModel.getValueAt(i, 3) + "");
                 policeDialog.setVisible(true);
             }
         });
@@ -84,7 +88,7 @@ public class PolicePanel extends JPanel {
                     }
                     MainFrame.alert("删除成功");
                 }
-                instance.updateTable();
+                instance.updatePoliceTable();
             }
         });
         btnNewButton_2.setBounds(380, 348, 113, 27);
@@ -124,9 +128,15 @@ public class PolicePanel extends JPanel {
      * }
      */
 
-    public void updateTable() {
-        policeTableModel.list = new CaseService().listPolice();
-        //或 policeTableModel.fireTableDataChanged();
+    public void updatePoliceTable() {
+        //区分新增和修改
+        if (NotePanel.getInstance().noteId == 0) {
+            policeTableModel.setList(NotePanel.getInstance().newNoteId);
+        } else {
+            policeTableModel.setList(NotePanel.getInstance().noteId);
+        }
+        //policeTableModel.list = new CaseService().listPolice();
+        //policeTableModel.fireTableDataChanged();
         policeTable.updateUI();
     }
 

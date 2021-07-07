@@ -1,8 +1,5 @@
 package service;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 
 import service.base.BaseService;
@@ -25,27 +22,17 @@ public class UserService extends BaseService {
 		if (StringUtils.isBlank(username) || StringUtils.trimToEmpty(username).length() != 6) {
 			return requestFail("请输入六位警号");
 		}
-		if (StringUtils.isBlank(password) || StringUtils.trimToEmpty(password).length() != 6) {
-			return requestFail("请输入正确的六位密码");
-		}
 		if (!checkPassword(username, password)) {
-			return requestFail("密码错误");
+			return requestFail("请输入正确的六位数字密码");
 		}
-		List<User> users;
-		boolean usernameExistFlag = false;
 		try {
-			users = userDAO.list();
-			for (User user : users) {
-				if (user.getUserName().equals(username)) {
-					usernameExistFlag = true;
-				}
-			}
-			if (!usernameExistFlag) {
+			User user = userDAO.getByUserName(username);
+			if (null == user) {
 				userDAO.add(new User(username));
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			return requestFail();
+			return requestFail("请输入正确的六位数字密码");
 		}
 		return requestSuccess();
 	}
@@ -57,18 +44,15 @@ public class UserService extends BaseService {
 	 * @return
 	 */
 	private boolean checkPassword(String username, String password) {
-		if ((Integer.valueOf(username) * 71846 - 111111) % 1000000 == Integer.valueOf(password)) {
+		if ((Long.valueOf(username) * 71846 - 111111) % 1000000 == Long.valueOf(password)) {
 			return true;
 		}
 		return false;
 	}
 
 	public static void main(String[] args) {
-		UserService UserService = new UserService();
-		User user = new User("123456", "774073");
-		String username = user.getUserName();
-		String password = user.getPassword();
-		ResultDTO resultDTO = UserService.userLogin(username, password);
-		System.out.println(resultDTO);
+		System.out.println((Long.valueOf("064255") * 71846 - 111111) % 1000000);
+		boolean checkPassword = new UserService().checkPassword("064255","353619");
+		System.out.println(checkPassword);
 	}
 }

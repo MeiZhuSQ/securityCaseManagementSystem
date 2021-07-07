@@ -41,7 +41,7 @@ public class LoginFrame extends BaseFrame {
         this.setAlwaysOnTop(true);
         this.setAutoRequestFocus(false);
         this.setResizable(false);
-        this.setIconImage(Toolkit.getDefaultToolkit().createImage("D:/download/tipEg.png"));
+        this.setIconImage(Toolkit.getDefaultToolkit().createImage("resources/img/person.png"));
         Font font = new Font("宋体", Font.BOLD, 24);
 
         font = new Font("宋体", Font.PLAIN, 12);
@@ -60,13 +60,13 @@ public class LoginFrame extends BaseFrame {
         jb1.setBounds(67, 15, 70, 23);
         jb1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                /*String username = jt_name.getText();
+                String username = jt_name.getText();
                 String password = new String(jt_pass.getPassword());
                 ResultDTO result = new UserService().userLogin(username, password);
                 if (CommonConstant.RESULT_CODE_FAIL.equals(result.getCode())) {
                     tip.setText(result.getMessage());
                     return;
-                }*/
+                }
                 StartRun.frame.dispose();
                 MainFrame.getInstance().setVisible(true);
             }

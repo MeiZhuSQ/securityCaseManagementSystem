@@ -61,10 +61,10 @@ public class OtherPersonPanel extends JPanel {
                 GUIUtil.setCenter(policeDialog);
                 int i = policeTable.getSelectedRow();
                 policeDialog.setPoliceId(Integer.parseInt(policeTableModel.getValueAt(i, 0) + ""));
-                policeDialog.policeNameField.setText(policeTableModel.getValueAt(i, 1) + "");
-                String sex = policeTableModel.getValueAt(i, 2) + "";
+                policeDialog.policeNameField.setText(policeTableModel.getValueAt(i, 2) + "");
+                String sex = policeTableModel.getValueAt(i, 3) + "";
                 policeDialog.policeSexField.setSelectedIndex(sex.equals("男") ? 0 : 1);
-                policeDialog.policeCodeField.setText(policeTableModel.getValueAt(i, 3) + "");
+                //policeDialog.policeCodeField.setText(policeTableModel.getValueAt(i, 3) + "");
                 // MainFrame.frame.setEnabled(false);
                 policeDialog.setVisible(true);
             }
@@ -127,7 +127,7 @@ public class OtherPersonPanel extends JPanel {
      */
 
     public void updateTable() {
-        policeTableModel.list = new CaseService().listPolice();
+        //policeTableModel.list = new CaseService().listPolice();
         //或 policeTableModel.fireTableDataChanged();
         policeTable.updateUI();
     }

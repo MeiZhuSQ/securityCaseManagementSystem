@@ -144,4 +144,22 @@ public class OtherPersonDAO {
 		}
 		return otherPerson;
 	}
+
+	public OtherPerson selectByIdCardInCase(String idCard, int caseId){
+		String sql = "select * from note LEFT JOIN other_person on note.id = other_person.note_id "
+				+ "where other_person.id_card = ? and other_person.type = '1' and note.case_id = ?";
+		OtherPerson otherPerson = null;
+		try (Connection c = JDBCUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+			ps.setString(1, idCard);
+			ps.setInt(2, caseId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				otherPerson = new OtherPerson(rs.getInt("id"), rs.getInt("note_id"), rs.getString("name"),
+						rs.getString("sex"), rs.getString("type"), rs.getString("id_card"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return otherPerson;
+	}
 }

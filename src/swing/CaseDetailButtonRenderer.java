@@ -29,8 +29,8 @@ public class CaseDetailButtonRenderer implements TableCellRenderer {
 
     private void initButton() {
 
-        button = new ImageButton("view.png");
-        button1 = new ImageButton("edit.png");
+        button = new ImageButton("edit.png","");
+        button1 = new ImageButton("delete.png","");
         /*button.setSize(new Dimension(16, 16));
         button1.setSize(new Dimension(50, 25));
         button2.setSize(new Dimension(50, 25));*/
@@ -44,9 +44,9 @@ public class CaseDetailButtonRenderer implements TableCellRenderer {
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
             int row, int column) {
-        btnName = (ArrayList<String>) value;
-        button = new ImageButton("view.png");
-        button1 = new ImageButton("edit.png");
+        //btnName = (ArrayList<String>) value;
+        /*button = new ImageButton("edit.png");
+        button1 = new ImageButton("delete.png");*/
         return panel;
     }
 

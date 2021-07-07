@@ -9,9 +9,13 @@ import service.CaseService;
 public class PoliceTableModel extends AbstractTableModel {
 
     private static final long serialVersionUID = -1425685789812673396L;
-    private String[] columnNames = new String[] { "序号", "姓名", "性别", "警号" };
-    public List<Police> list = new CaseService().listPolice();
+    private String[] columnNames = new String[] {"ID", "序号", "姓名", "性别"};
+    public List<Police> list = new ArrayList<>();
 
+    public void setList(int noteId) {
+        list = new CaseService().selectPoliceForNote(noteId);
+    }
+    
     @Override
     public int getRowCount() {
         return list.size();
@@ -38,11 +42,13 @@ public class PoliceTableModel extends AbstractTableModel {
         if (columnIndex == 0)
             return police.getId();
         if (columnIndex == 1)
-            return police.getName();
+            return rowIndex + 1;
         if (columnIndex == 2)
-            return police.getSex().equals("0") ? "男" : "女";
+            return police.getName();
         if (columnIndex == 3)
-            return police.getPoliceNumber();
+            return police.getSex().equals("0") ? "男" : "女";
+        /*if (columnIndex == 3)
+            return police.getPoliceNumber();*/
         return null;
     }
 
